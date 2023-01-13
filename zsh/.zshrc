@@ -35,6 +35,10 @@ source $ZSH/oh-my-zsh.sh
 eval "$(op completion zsh)"
 compdef _op op
 
+# restore up/down arrow behavior for history completion
+bindkey '\e[A' history-beginning-search-backward
+bindkey '\e[B' history-beginning-search-forward
+
 # bindkey '^\ ' autosuggest-clear
 # bindkey -s '\er' 'exec zsh ^M'
 # bindkey -v
