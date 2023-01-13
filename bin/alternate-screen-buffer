@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+
+# source: [Terminal control/Preserve screen - Rosetta Code](https://rosettacode.org/wiki/Terminal_control/Preserve_screen#UNIX_Shell)
+# tput smcup    # Save the display
+# echo 'Hello'
+# sleep 5       # Wait five seconds
+# tput rmcup    # Restore the display
+
+tput smcup                  # save screen
+printf '\e[3J'              # clear scrollback buffer history in alternate screen buffer
+printf "%s\n\n"             # move cursor down 2 lines
+$1                          # run command
+printf "%s\n\n"             # move cursor down 2 lines
+read -s -d "q" "quit?:"     # wait for q keystroke
+tput rmcup                  # restore screen

@@ -1,0 +1,36 @@
+[core]
+  editor = code
+  excludesfile = ~/.gitignore_global
+  autocrlf = input
+
+[alias]
+  l = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+  h = log --graph --decorate --abbrev-commit --date=relative --oneline --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)'
+  ec = config --global -e
+
+# [credential]
+# helper = osxkeychain
+
+[filter "lfs"]
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+
+[commit]
+  template = /Users/mac/.stCommitMsg
+
+[init]
+  defaultBranch = main
+
+[difftool "sourcetree"]
+  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+  path = 
+
+[mergetool "sourcetree"]
+  cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\"
+  trustExitCode = true
+
+# use separate file for username / email / github token / etc
+[include]
+  path = ~/.dotfiles/git/.gitconfig.local

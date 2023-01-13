@@ -1,0 +1,26 @@
+#!/usr/bin/env zsh
+
+source "$ZDOTDIR/custom/check-errs.zsh"
+input=$1
+
+if [[ -z "$input" ]]; then
+  echo 'Enter a search' && return 1
+fi
+
+if [[ -n "$input" ]]; then
+  where_resp_arr=(${(@f)"$(where $input)"})
+  check_errs "$?" "${where_resp_arr[1]}"
+
+  if [[ "$?" -eq "0" ]] && [[ ! "${where_resp_arr[1]}" == "$input: shell built-in command" ]]; then
+    for path in "${where_resp_arr[@]}"
+      do
+        echo "$(readlink $path)"
+      done
+    return 0
+  fi
+
+  if [[ "$?" -eq "0" ]] && [[ "${where_resp_arr[1]}" == "$input: shell built-in command" ]]; then
+    where_path="${where_resp_arr[2]}"
+    echo "$(readlink $where_path)" && return 0
+  fi
+fi

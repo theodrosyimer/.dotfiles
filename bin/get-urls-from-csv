@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+filepath=${1:-"./urls.csv"}
+
+# awk -F ',' '{i=2; while(i<=NF) { print i ":"$i; i++;}}' ./urls.csv
+# awk -F ',' '{i=2; if(NR>1) { print i ":"$i; i++;}}' ./urls.csv
+# awk -F ',' '{i=2; if(NR>1) { print $i; i++;}}' ./urls.csv
+# awk -F ',' '{i=2; if(NR>1) { print $NF}}' ./urls.csv
+awk -F ',' '{i=2; if(NR>1) { print $NF}}' "$filepath"

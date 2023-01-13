@@ -1,0 +1,313 @@
+{:profiles {:Default {:default true
+                      :sim 100 ;50   ;; simultaneous_threshold_milliseconds (def: 50)
+                      ;; keys need to be pressed within this threshold to be considered simultaneous
+                      :delay 200 ;80   ;; to_delayed_action_delay_milliseconds (def: 500)
+                      ;; basically it means time after which the key press is count delayed
+                      :alone 200 ;200  ;; to_if_alone_timeout_milliseconds (def: 1000)
+                      ;; hold for 995s and single tap registered; hold for 1005s and seen as modifier
+                      :held 250}} ;; 80 to_if_held_down_threshold_milliseconds (def: 500)
+                      ;; key is fired twice when 500 ms is elapsed (otherwise seen as a hold command)
+
+ :templates {:alfred "osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\" with argument \"%s\"'"
+             :code-project "osascript -e 'tell application \"Visual Studio Code\" to activate' && open -a 'Visual Studio Code' %s -g %s"
+             :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             :launch "osascript -e 'tell application \"%s\" to activate'"
+             :open "open \"%s\""
+             :open-a "open -a '%s'"
+             :open-chrome "osascript -e <<-EndOfScript
+                            'set adress to \"%s\"
+                            tell application \"Google Chrome\"
+                              activate
+                              if not (exists) then reopen
+                              repeat with w in windows
+                                set i to 1
+                                repeat with t in tabs of w
+                                  if URL of t contains adress then
+                                    set active tab index of w to i
+                                    set index of w to 1
+                                    return
+                                  end if
+                                  set i to i + 1
+                                end repeat
+                              end repeat
+                              open location \"https://\" & adress
+                            end tell'
+                            EndOfScript"
+             :popclip "tell application \"PopClip\" to appear"
+             ;
+             }
+
+ :application {:chrome ["com.google.Chrome"]
+               :code ["com.microsoft.VSCode"]
+               :lpx ["com.apple.logic10"]
+               ;
+               }
+ :layers {; :tab-mode {:key :tab :alone {:key :tab}
+          ;; :caps_lock {:key :caps_lock :alone {:key :caps_lock}}
+          ;
+          }
+
+ :simlayers-threshold 250
+
+ :simlayers {;
+            ;;   :semicolon-mode {:key :semicolon}
+             :q-mode {:key :q} ; (q=a)
+            ;;  :w-mode {:key :w} ; (w=z)
+            ;;  :e-mode {:key :e}
+            ;;  :r-mode {:key :r}
+            ;;  :t-mode {:key :t}
+            ;;  :i-mode {:key :i}
+            ;;  :o-mode {:key :o}
+            ;;  :p-mode {:key :p}
+             :a-mode {:key :a} ; (a=q)
+             :s-mode {:key :s}
+             :d-mode {:key :d}
+            ;;  :f-mode {:key :f}
+            ;;  :j-mode {:key :j}
+             :l-mode {:key :l}
+            ;;  :g-mode {:key :g}
+            ;;  :z-mode {:key :z} ; (z=w)
+            ;;  :x-mode {:key :x}
+            ;;  :c-mode {:key :c}
+            ;;  :v-mode {:key :v}
+            ;;  :b-mode {:key :b}
+            ;;  :n-mode {:key :n}
+            ;;  :m-mode {:key :m} ; (m=,)
+             :spacebar-mode {:key :spacebar}
+             :tilde-mode {:key :grave_accent_and_tilde}
+             ;
+             }
+ :main [;
+        {:des "caps_lock to esc when pressed alone, to hyper as modifier"
+         :rules [;
+                 ;
+                 [:##caps_lock :!TCOleft_shift nil {:alone :escape}]
+                 ;
+                 ]}
+
+        {:des "Desactivate Hyper+z"
+         :rules [:caps_lock
+                 [:w :escape]
+                 ;
+                 ]}
+
+        {:des "Both shift keys toggles caps lock"
+         :rules [[:!S#Pright_shift :caps_lock]
+                 [:!R#Pleft_shift :caps_lock]
+                 ;
+                 ]}
+
+        {:des "w-mode (w=z) Undo and Redo"
+         :rules [:s-mode ;
+                 ;
+                ;;  [:d :!Cw] ; (w=z)
+                ;;  [:f :!CSw] ; (w=z)
+                  ;
+                 ]}
+
+        ;; {:des "enter and cmd+enter"
+        ;;  :rules [;
+        ;;          ;
+        ;;          [[:d :f] :return_or_enter]
+        ;;          [[:d :s] :!Creturn_or_enter]
+        ;;          [[:s :f] :!CSreturn_or_enter]
+        ;;          ;
+        ;;          ]}
+
+        {:des "homerow"
+         :rules [:a-mode ; (a=q)
+                 ;
+                 ; Modifiers
+                 [:##c :left_control]
+                 [:##f :left_option]
+                 [:##d :left_shift]
+                 [:##s :left_command]
+
+                ; Select word
+                 [:spacebar :!Cd]
+
+                ; Shrink/Expand selection (VSCode)
+                ;;  [:g :!CSTleft_arrow]
+                ;;  [:h :!CSTright_arrow]
+
+                 ; Navigation
+                 [:##h :left_arrow]
+                 [:##j :down_arrow]
+                 [:##k :up_arrow]
+                 [:##l :right_arrow]
+
+                 [:##u :home]
+                 [:##o :end]
+
+                ;; ; Jump directly to Spaces 1,2,3 (create Space(s) and then setup keystrokes in System Preferences/Keyboard/Shortcuts/Mission Control)
+                ;;  [:##w :!COSf16] ; (w=z)
+                ;;  [:##e :!COSf17]
+                ;;  [:##r :!COSf18]
+
+                ; Go to Left/Right Space
+                 [:##e :!COSf14]
+                 [:##r :!COSf15]
+                 ;
+                 ]}
+
+        {:des "Delete"
+         :rules [:d-mode
+                  ;
+                  ; Delete back/forward by character
+                 [:j :delete_or_backspace]
+                 [:k :delete_forward]
+
+                  ; Delete back/forward by word
+                ;;  [:u :!Odelete_or_backspace]
+                 [:u :!Tz]
+                 [:i :!Odelete_forward]
+                 ;
+                  ; Delete line (only in iTerm2)
+                 [:l :!Tu]
+                 ;
+                 ]}
+
+        {:des "Symbols and Symbols strings"
+         :rules [:spacebar-mode
+
+                 [:a :!OS5] ;[]
+                 [:s :!OShyphen] ;]
+
+                 [:d :5] ;()
+                 [:f :hyphen] ;)
+
+                 [:g :3] ;""
+                 [:h :4] ;'
+
+                 [:j :!O5] ;{}
+                 [:k :!Ohyphen] ;}
+
+                 [:l :grave_accent_and_tilde] ;<
+                 [:semicolon :!Sgrave_accent_and_tilde];>
+
+                  ;sequences
+                 [:w [:spacebar :slash :!Sgrave_accent_and_tilde :spacebar :!O5 :!Ohyphen :left_arrow]]; => {} ;(w=z)
+                 [:e [:spacebar :slash :!Sgrave_accent_and_tilde :spacebar :!O5 :!Ohyphen :left_arrow]]; => {}
+                 [:r [:spacebar :slash :!Sgrave_accent_and_tilde :spacebar]]; =>
+                 [:u [:spacebar :slash :spacebar]]; =
+                 [:i [:spacebar :slash :spacebar :4 :4 :left_arrow]]; = ''
+                 [:o [:period :spacebar :4 :4 :left_arrow]];: ''
+                 [:quote [:!Cd :!Cx :close_bracket :!O5 :!Cv :!Ohyphen :left_arrow]];${}
+
+                  ; Code block
+                 [:b [:km "41)Create Fenced Code Line or Block from Selection"]]
+
+                  ;comment/uncomment then save file
+                 [:c [:!CSperiod :!Cs]]
+                  ;
+                 ]}
+
+        {:des "Google Chrome"
+         :rules [:chrome
+                 [:button1 :!TOleft_arrow]
+                 ;
+                 ]}
+
+        {:des "Code"
+         :rules [:code
+                  ;
+                  ;;  [:left_shift :left_shift nil {:alone :!CSp}]
+                 [:a :t :code] ; launch Alfred
+                 [:g [:!Sspacebar]]
+                 [[:d :f] :!Cd]
+
+                  ;
+                 ]}
+
+        {:des "Listen to Music"
+         :rules [:tilde-mode ; tilde = grave_accent_and_tilde
+                ;
+                 [:t [:km "Launch - Quit Spotify and Simplify"]]
+                 [:x [:km "Toggle Spotify"]]
+
+                ; Simplify control
+                 [:w :!CTSf12]; volume increment ; (w=z)
+                 [:s :!CTSf11]; volume decrement
+                 [:a :!CTSf7]; previous track ; (a=q)
+                 [:spacebar :!CTSf8]; play/pause
+                 [:d :!CTSf9]; next track
+                 [:z :!CTSf5]; rewind ; (z=w)
+                 [:c :!CTSf6]; fast-forward
+                 [:e :!CTSf4]; switch current player
+                 [:r :!CTSf3]; toggle controller
+                ;
+                 ]}
+
+        {:des "launch things"
+         :rules [:l-mode
+                 ;
+                 [:a :!Ospacebar] ; launch Alfred
+                 [:c [:alfred "code" "com.ty.alfred.vs-code.open"]]
+                 [:t [:alfred "plantMe" "com.ty.alfred.plantme"]]
+                 ;
+                 ]}
+
+        {:des "trackpad"
+         :rules [;
+                 ; condition: any number of finger using the trackpad
+                 :multitouch_extension_finger_count_total
+                 ; click f and drag mouse around
+                 [:f :button1]
+                 ; click s and drag to expand the selection
+                 [:s {:pkey :button1 :modi :left_shift}]
+
+                 ; Copy
+                 [:c :!Cc]
+                 ; Paste
+                 [:v :!Cv]
+                 ;
+                 ]}
+
+        {:des "trackpad2: examples using :condi"
+         :rules [;
+                 ; condition (using a parameter to setup the condition): only when using 2 fingers
+                 [:condi ["multitouch_extension_finger_count_total" 2]]
+                 ; click f and get the right-click
+                 [:f :button2]
+                 ; click v and get left-click + paste
+                 [:v [:button1 :!Cv]]
+                 ;
+                 ]}
+
+        ;; {:des "Delayed example "
+        ;;   :rules [;
+        ;;           [:grave_accent_and_tilde :a nil {:delayed {:invoked [:y] :canceled [:x]}}]
+        ;;           ;
+        ;;          ]}
+
+        ;; {:des "taps"
+        ;;   :rules [;
+        ;;          ;
+        ;;          ; Delete back/forward by word
+        ;;          [:##left_shift :left_shift nil {:alone :delete_or_backspace}]
+        ;;          [:##right_shift :right_shift nil {:alone :delete_forward}]
+        ;;         ;;  [:z :left_shift nil {:alone :z}]
+        ;;         ;;  [:slash :right_command nil {:alone :slash}]
+        ;;          ;
+        ;;          ]}
+        ]}
+
+;; rule [:period ["period-mode" 1] nil {:afterup ["period-mode" 0] :alone :period}]
+;;       |_____| |_______________| |_| |_________________________________________|
+;;        <from>    <to>      <conditions>         <other options>
+
+    ;; !  | means mandatory
+    ;; #  | means optional
+    ;; C  | left_command
+    ;; T  | left_control
+    ;; O  | left_option
+    ;; S  | left_shift
+    ;; F  | fn
+    ;; Q  | right_command
+    ;; W  | right_control
+    ;; E  | right_option
+    ;; R  | right_shift
+    ;;
+    ;; !! | mandatory command + control + optional + shift (hyper)
+    ;; ## | optional any
+;;

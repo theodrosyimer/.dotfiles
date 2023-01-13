@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+brew_path="$DOTFILES/brew"
+dir_path="${1:-"${brew_path:-"$(pwd)"}"}"
+
+# echo $dir_path
+cd "$dir_path" &&
+	brew bundle dump --force --describe &&
+	bat "$dir_path/Brewfile"

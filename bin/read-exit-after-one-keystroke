@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+read -s -d 'q' -p "Press any key..."

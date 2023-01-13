@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+url=(${(@)@})
+
+chrome --new-window &&
+
+for u in "${url[@]}"; do
+  echo $u
+  open $u
+done

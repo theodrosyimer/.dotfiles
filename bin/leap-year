@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+
+# inspiration: [Leap Year - Explanation, Evaluation, Examples and FAQs](https://www.vedantu.com/maths/leap-year)
+#
+# How to Determine Whether Any Year is a Leap Year?
+#
+# To determine whether any given year is a leap year, follow these steps:
+#   - If the year is evenly divisible by four, then go to step 2. Otherwise, go to step 5.
+#   - If the year is evenly divisible by a hundred, then go to step 3. Otherwise, go to step 4.
+#   - If the year is evenly divisible by four hundred, then go to step 4. Otherwise, you can go to step 5.
+#   - The year is a leap year (if it has 366 days).
+#   - The year is not a leap year (if it has 365 days).
+
+# TODO: finish this script
+# using C style for loop syntax
+for ((YEAR="$(date +%Y)"; YEAR<=(($YEAR + 5)); YEAR++))
+  do
+  if [[ $(($YEAR % 4)) -eq 0 ]]
+  then
+    echo "$YEAR"
+    break
+  else
+    # echo "$YEAR =  not a leap year"
+  fi
+done

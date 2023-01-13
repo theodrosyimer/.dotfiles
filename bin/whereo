@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+
+input=$1
+input_path=$(wherep $input)
+input_path_array=(${(@f)input_path})
+
+# echo "$input_path_array[1]"
+
+if [[ "$?" -eq "1" ]]; then
+  printf "%b\n" "$input_path"
+  return 1
+fi
+
+dir="$(dirname $input_path_array[1])"
+open "$dir"

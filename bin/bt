@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+
+blueutil --connect 6c-b1-33-80-c0-89
+echo "Theo's AirPods connected!"

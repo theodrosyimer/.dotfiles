@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+####
+## A nice and shorter way to achieve the same result, works ONLY in zsh (?)
+## See [zsh: 14 Expansion](http://zsh.sourceforge.net/Doc/Release/Expansion.html#Process-Substitution)
+## > The temporary file created by the process substitution will be deleted when the function exits.
+####
+
+ext=md
+input="${@:-"$(pbpaste)"}"
+
+() {
+  printf "%s\n" "$input" > "$1.$ext"
+  open -a /Applications/iThoughtsX.localized/iThoughtsX.app "$1.$ext"
+} =(print "$input")
+

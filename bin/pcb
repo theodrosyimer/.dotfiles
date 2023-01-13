@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+
+# Respect text formatting (new line etc..)
+# printf "%b\n" "$(pbpaste)"
+
+bat "$(pbpaste)"
