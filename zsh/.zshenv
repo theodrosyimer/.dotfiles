@@ -12,6 +12,7 @@ export KEYTIMEOUT=1
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=true
 export HOMEBREW_CASK_OPTS="--no-quarantine"
+export HOMEBREW_NO_AUTO_UPDATE=1
 
 # Need to be set because of completion problem
 # -> repeat 2 first character when TAB to completion
