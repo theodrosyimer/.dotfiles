@@ -35,7 +35,8 @@ source $ZSH/oh-my-zsh.sh
 eval "$(op completion zsh)"
 compdef _op op
 
-# restore up/down arrow behavior for history completion
+# zsh-vi-mode plugin disabled the arrow behavior for history completion
+# restore up/down arrow behavior
 bindkey '\e[A' history-beginning-search-backward
 bindkey '\e[B' history-beginning-search-forward
 
