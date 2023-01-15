@@ -99,6 +99,7 @@ function mkzfc() {
 function mkweb() {
   local default_path="$CODE_REFS/html-css"
   # local flags_project_name=("my-project")
+  local project_name="${1:-"my-project"}"
   local output_path=("${default_path}")
   local usage=(
     "mkweb [ -h | --help ]"
@@ -112,7 +113,6 @@ function mkweb() {
 
   [[ ! -z "$flag_help" ]] && { print -l $usage && return }
 
-  local project_name="${1:-"my-project"}"
   local project_name_formatted="$(echo ${project_name:l} | sed -e 's/ /-/g')"
 
   if [[ -d "$output_path[-1]/$project_name_formatted" ]]; then
