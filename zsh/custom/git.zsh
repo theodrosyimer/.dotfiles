@@ -100,11 +100,11 @@ function git_init() {
 function git_open_remote_at_gh() {
   local remote_url="$(git_get_remote_url_from_cwd)"
 
-  if contains $remote_url "gp:"; then
+  if contains "gp:" $remote_url; then
     local url="$(echo $remote_url | sed s/gp:/https:\\/\\/github.com\\//g)"
   fi
 
-  if $(contains $remote_url "git@github.com:"); then
+  if $(contains "git@github.com:" $remote_url); then
     local url="$(echo $remote_url | sed s/git@github.com:/https:\\/\\/github.com\\//g)"
   fi
 

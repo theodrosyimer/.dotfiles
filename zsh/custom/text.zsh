@@ -1,12 +1,12 @@
 function contains() {
-  local string="$1"
-  local regex="$2"
+  local regex="$1"
+  local string="$2"
 
 	local flag_help flag_sensitive
 	local output_path=("${PWD}\/my-file.txt") # sets a default path
 	local usage=(
 	"contains [ -h | --help ]"
-	"contains [ - | -- ] [ -o | --output <path/to/file> ]"
+	"contains [ -s | --sensitive ] [ -o | --output <path/to/file> ]"
 	)
 
 	zmodload zsh/zutil
