@@ -98,7 +98,7 @@ function mkzfc() {
 
 function mkweb() {
   local default_path="$CODE_REFS/html-css"
-  local flags_project_name=("my-project")
+  # local flags_project_name=("my-project")
   local output_path=("${default_path}")
   local usage=(
     "mkweb [ -h | --help ]"
@@ -106,16 +106,14 @@ function mkweb() {
   )
 
   zmodload zsh/zutil
-  zparseopts -D -F -K -- \
+  zparseopts -D -F -K -E -- \
     {h,-help}=flag_help \
-    {n,--name}:=flags_project_name \
-    {o,-output}:=output_path ||
-    return 1
+    {o,-output}:=output_path || return 1
 
   [[ ! -z "$flag_help" ]] && { print -l $usage && return }
 
-if [[ ! -z $flags_project_name ]]; then
-  local project_name_formatted="$(echo ${flags_project_name[-1]:l} | sed -e 's/ /-/g')"
+  local project_name="${1:-"my-project"}"
+  local project_name_formatted="$(echo ${project_name:l} | sed -e 's/ /-/g')"
 
   if [[ -d "$output_path[-1]/$project_name_formatted" ]]; then
     echo -e "\nCreating $project_name_formatted project at $output_path[-1]/"
@@ -135,5 +133,4 @@ if [[ ! -z $flags_project_name ]]; then
       code -gn . src/index.html:17:5 src/* &&
       echo -e "\nDone!"
   fi
-fi
 }
