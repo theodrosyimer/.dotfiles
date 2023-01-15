@@ -34,8 +34,7 @@ function ytd() {
 
   is_installed yt-dlp $error_message || return 1
 
-  local source_url=("$(chrome_get_front_window_url)")
-  local title=$(chrome_get_front_window_title)
+  local source_url=("${1:-$(chrome_get_front_window_url)}")
   local output_path=("${PWD}")
 
   local format='bv[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv+ba/b'
@@ -46,9 +45,8 @@ function ytd() {
   )
 
   zmodload zsh/zutil
-  zparseopts -D -F -K -- \
+  zparseopts -D -F -K -E -- \
     {h,-help}=flag_help \
-    {s,-source}:=source_url \
     {p,-playlist}=flag_playlist \
     {o,-output}:=output_path || return 1
 
@@ -60,6 +58,7 @@ function ytd() {
     return 1; }
 
   if [ -n "$flag_playlist" ]; then
+    local title=$(chrome_get_front_window_title)
     [[ ! -d "$output_path[-1]/$title" ]] && mkdir -p "$output_path[-1]/$title"
 
     local output_template='%(playlist_index)02d - %(title)s.%(ext)s'
