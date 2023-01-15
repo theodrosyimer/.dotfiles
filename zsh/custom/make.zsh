@@ -21,7 +21,7 @@ function mkn() {
 # TODO: create new file (reference) for a specified language
 # sh, zsh, js, ts, py, rust, md
 function mkref() {
-  dir="${2:-"${CODE_REFS:-"$(pwd)"}"}"
+  output_path="${2:-"${CODE_REFS:-"$(pwd)"}"}"
   editor=code
   editor_args=-gn
   filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
@@ -46,44 +46,45 @@ function mkrustp() {
 
 # TODO: add flag to switch between stdin and clipboard (mks and mksc)
 function mks() {
-  dir_path="${2:-"${BIN:-"$(pwd)"}"}"
+  output_path="${2:-"${BIN:-"$(pwd)"}"}"
   editor=code
   editor_args=-gn
   filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
 
-    echo -e "#!/usr/bin/env ${SHELL:t}\n\n" >$dir_path/$filename &&
-    chmod u+x $dir_path/$filename &&
-    $editor $editor_args "$dir_path" $dir_path/$filename:3
+    echo -e "#!/usr/bin/env ${SHELL:t}\n\n" >$output_path/$filename &&
+    chmod u+x $output_path/$filename &&
+    $editor $editor_args "$output_path" $output_path/$filename:3
 }
 
 function mksc() {
-  dir_path="${2:-"${BIN:-"$(pwd)"}"}"
+  output_path="${2:-"${BIN:-"$(pwd)"}"}"
   editor=code
   editor_args=-gn
   filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   content=$(pbpaste)
 
-    printf "%b\n" "#!/usr/bin/env ${SHELL:t}\n\n$content" >"$dir_path/$filename" &&
-    chmod u+x "$dir_path/$filename" &&
-    $editor $editor_args "$dir_path" "$dir_path/$filename:3"
+    printf "%b\n" "#!/usr/bin/env ${SHELL:t}\n\n$content" >"$output_path/$filename" &&
+    chmod u+x "$output_path/$filename" &&
+    $editor $editor_args "$output_path" "$output_path/$filename:3"
 }
 
 # TODO: add flag to switch between stdin and clipboard (mkzf and mkzfc)
 function mkzf() {
-  dir="$ZDOTDIR/custom"
+  my_functions_dir="$ZDOTDIR/custom"
+  output_path="${2:-"${my_functions_dir:-"$(pwd)"}"}"
   editor=code
   editor_args=-gn
   filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   funcname="$(echo $filename | sed s/-/_/g)"
   content="function $funcname() {\n\n}"
 
-  cd $dir &&
-    printf "%b\n" "$content" >$filename.zsh &&
-    $editor $editor_args . $filename.zsh:2:3
+  printf "%b\n" "$content" >"$output_path/$filename.zsh" &&
+  $editor $editor_args . "$output_path/$filename.zsh":2:3
 }
 
 function mkzfc() {
-  dir="$ZDOTDIR/custom"
+  my_functions_dir="$ZDOTDIR/custom"
+  output_path="${2:-"${my_functions_dir:-"$(pwd)"}"}"
   editor=code
   editor_args=-gn
   filename="$(echo ${1:l} | sed -e 's/^ */-/g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
@@ -91,9 +92,8 @@ function mkzfc() {
   funcname="$(echo $filename | sed s/-/_/g)"
   content=$(pbpaste)
 
-  cd $dir &&
-    printf "%b\n" "function $funcname() {\n\t$content\n}" >$filename.zsh &&
-    $editor $editor_args . $filename.zsh:1:10
+  printf "%b\n" "function $funcname() {\n\t$content\n}" >"$output_path/$filename.zsh" &&
+  $editor $editor_args . "$output_path/$filename.zsh":1:10
 }
 
 function mkweb() {
@@ -115,7 +115,7 @@ function mkweb() {
   [[ ! -z "$flag_help" ]] && { print -l $usage && return }
 
 if [[ ! -z $flags_project_name ]]; then
-  local project_name_formatted="$(echo ${flags_project_name[-1]:l} | sed s/" "/-/g)"
+  local project_name_formatted="$(echo ${flags_project_name[-1]:l} | sed -e 's/ /-/g')"
 
   if [[ -d "$output_path[-1]/$project_name_formatted" ]]; then
     echo -e "\nCreating $project_name_formatted project at $output_path[-1]/"
