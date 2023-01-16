@@ -10,10 +10,12 @@ function check_errs() {
 }
 
 ### `catch` function
+#
 # `$1` is the function to run
 # `$2` is the custom error message to display on failure. (optional)
 # if no custom error message is provided,
 # then the error message is from the output of the function
+
 function catch() {
   if [[ -z $2 ]]; then
     error_message=$($1 2>&1) || { \
