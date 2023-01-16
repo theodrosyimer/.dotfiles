@@ -63,4 +63,7 @@ eval "$(rbenv init -)"
 eval "$(fnm env)"
 # eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
 
+# brew auto-completion
+FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
 source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh

@@ -62,7 +62,3 @@ export FZF_ALT_C_COMMAND='fd --type d . --color=never --hidden -E node_modules'
 export FZF_ALT_C_OPTS="--preview 'exa \
 --group-directories-first \
 --tree --level=3 {} | head -50'"
-
-# brew auto-completion
-FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
-
