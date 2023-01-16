@@ -22,7 +22,7 @@ function catch() {
     local exit_code="$?"
     printf >&2 "%b\n" \
     "$_red\n[ ERROR ]$_reset # "$_red$exit_code$_reset" : $_yellow$error_message$_reset" && \
-    return "$exit_code"; }
+    unset error_message && return "$exit_code"; }
   else
     $1 2>/dev/null 1>/dev/null || { \
     local exit_code="$?"
