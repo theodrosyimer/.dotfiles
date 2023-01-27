@@ -21,6 +21,7 @@ export LANG=en_US.UTF-8 # LANG=fr_FR.UTF-8
 
 export RIPGREP_CONFIG_PATH="$DOTFILES/ripgrep/.ripgreprc"
 
+# fzf
 FZF_COLORS="bg+:-1,\
 fg:gray,\
 fg+:white,\
@@ -34,13 +35,13 @@ marker:red,\
 prompt:gray,\
 hl+:red"
 
-# fzf
 export FZF_DEFAULT_COMMAND='rg --files \
 --no-ignore \
 --hidden \
 --follow \
 --glob "!.git/" --glob "!node_modules/" --glob "!.DS_Store" \
 --sort path'
+
 export FZF_DEFAULT_OPTS="--prompt=\"🔭 \" \
 --prompt '∷ ' \
 --pointer ▶ \
@@ -56,6 +57,7 @@ export FZF_DEFAULT_OPTS="--prompt=\"🔭 \" \
 export FZF_CTRL_R_OPTS="--preview-window hidden"
 
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers {}'"
 
 export FZF_ALT_C_COMMAND='fd --type d . --color=never --hidden -E node_modules'
