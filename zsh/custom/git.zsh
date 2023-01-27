@@ -57,8 +57,8 @@ function git_create_multiple_branches() {
     local branch_name_formatted="$(trim $branch)"
     echo "$branch_name_formatted"
 
-    #  git_create_branch_and_push_origin branch_name_formatted &&
-    #  git checkout main
+     git_create_branch_and_push_origin $branch_name_formatted &&
+     git checkout main
     #
     done
 }
@@ -80,19 +80,27 @@ function git_get_remote_url_from_cb() {
 # ! dependency to download `gh` cli:
 # !   - macos -> brew install gh
 # !   - linux -> https://github.com/cli/cli/blob/trunk/docs/install_linux.md#debian-ubuntu-linux-raspberry-pi-os-apt
+# TODO: add an option to only init local repo, without creating a remote repo
 function git_init() {
   local comment='first commit'
   local repo_visibility="${1:-private}"
   local repo_description=$2
 
   if git rev-parse --git-dir 2>/dev/null; then
-    echo -e "\nYour project is already initialized!" && cd ../ && return 1
+    printf "%s\n\n" "$_green""Your project is already initialized!$_reset" && cd ../ && return 1
   else
-    git init &&
+    printf "%b\n\n" "$_green""\nInitializing your project...$_reset" &&
+      git init &&
       git_set_remote_url_from_cwd &&
       git_add_all_commit "$comment" &&
+      printf "%b\n\n" "$_green""\nCreating remote repository...$_reset" &&
       gh_repo_create_from_cwd "$repo_visibility" "$repo_description" &&
-      git push -u origin main
+      git push -u origin main &&
+      printf "%b\n\n" "$_green""\nCreating \"dev\" branch...$_reset" &&
+      git_create_branch_and_push_origin "dev" &&
+      git checkout dev &&
+      printf "%b\n" "$_green""\nYour project is initialized!$_reset"
+      printf "%s\n" "$_green""You are in the$_yellow dev$_reset$_green branch.$_reset"
   fi
 }
 
