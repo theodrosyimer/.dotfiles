@@ -73,3 +73,36 @@ function slugify() {
   local input_lowercased="$(trim ${@:l})"
   spaced_by "$input_lowercased"
 }
+
+# source: https://dirask.com/posts/Bash-JavaScript-encodeURIComponent-equivalent-DKo8xD
+function create_utf8_code() {
+	local code="$(echo -n "$1" | xxd -ps)"
+	local length="${#code}"
+
+	local i
+
+	for (( i = 0; i < length; i += 2 ))
+	do
+		echo -n "%${code:$i:2}" | tr '[:lower:]' '[:upper:]'
+	done
+}
+
+function encode_uri_component() {
+	local text="${1}"
+	local length="${#text}"
+
+	local i char
+
+	for (( i = 0; i < length; ++i ))
+	do
+		char="${text:$i:1}"
+		[[ "$char" =~ [-_.!~*\'\(\)a-zA-Z0-9] ]] && echo -n "$char" || create_utf8_code "$char"
+	done
+}
+
+# i added this very simple decode_uri_component function
+function decode_uri_component() {
+	local text="${1}"
+
+  printf "%s" $(echo "$text" | xxd -r -ps)
+}
