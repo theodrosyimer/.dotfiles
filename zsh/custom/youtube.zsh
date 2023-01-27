@@ -34,7 +34,6 @@ function ytd() {
 
   is_installed yt-dlp $error_message || return 1
 
-  local source_url=("${1:-$(chrome_get_front_window_url)}")
   local output_path=("${PWD}")
 
   local format='bv[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv+ba/b'
@@ -52,8 +51,9 @@ function ytd() {
 
   [[ -n "$flag_help" ]] && { print -l $usage && return; }
 
+  local source_url=("${1:-$(chrome_get_front_window_url)}")
 
-  [[ $source_url =~ "https://www.yout" ]] || { \
+  [[ "$source_url" =~ "https://www.yout" ]] || { \
     echo "$_red\nNo youtube video found on chrome's front tab.$_reset" && \
     return 1; }
 
