@@ -87,7 +87,7 @@ function mkzfc() {
   output_path="${2:-"${my_functions_dir:-"$(pwd)"}"}"
   editor=code
   editor_args=-gn
-  filename="$(echo ${1:l} | sed -e 's/^ */-/g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
+  filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
 
   funcname="$(echo $filename | sed s/-/_/g)"
   content=$(pbpaste)
