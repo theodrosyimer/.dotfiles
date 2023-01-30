@@ -98,9 +98,8 @@ function mkzfc() {
 
 function mkweb() {
   local default_path="$CODE_REFS/html-css"
-  # local flags_project_name=("my-project")
   local project_name="${1:-"my-project"}"
-  local output_path=("${default_path}")
+  local output_path=("${default_path:-"$(pwd)"}")
   local usage=(
     "mkweb [ -h | --help ]"
     "mkweb [ -n | --name <filename> ] [ -o | --output <path/to/directory> ]"
@@ -113,24 +112,31 @@ function mkweb() {
 
   [[ ! -z "$flag_help" ]] && { print -l $usage && return }
 
+  # slugify input
   local project_name_formatted="$(echo ${project_name:l} | sed -e 's/ /-/g')"
 
+  # if output path does not exist, create it
   if [[ -d "$output_path[-1]/$project_name_formatted" ]]; then
     echo -e "\nCreating $project_name_formatted project at $output_path[-1]/"
-
+    # copy template files to new project directory
     cp -Rf /Users/mac/Code/_templates/dev/vanilla-html-css/ "$output_path[-1]/$project_name_formatted" &&
+    # copy my css reset to new project directory
+    cp -f /Users/mac/Code/_templates/dev/css/style.css "$output_path[-1]/$project_name_formatted/src" &&
       cd "$output_path[-1]/$project_name_formatted" &&
-      code -gn . src/index.html:17:5 src/* &&
+      code -gn . src/index.html:18:7 src/* &&
       echo -e "\nDone!"
   fi
-
+  # if output path does not exist, create it
   if [[ ! -d "$output_path[-1]/$project_name_formatted" ]]; then
     echo -e "\nCreating $project_name_formatted project at $output_path[-1]/"
 
     mkdir -p "$output_path[-1]/$project_name_formatted" &&
+      # copy template files to new project directory
       cp -Rf /Users/mac/Code/_templates/dev/vanilla-html-css/ "$output_path[-1]/$project_name_formatted" &&
+      # copy my css reset to new project directory
+      cp -f /Users/mac/Code/_templates/dev/css/style.css "$output_path[-1]/$project_name_formatted/src" &&
       cd "$output_path[-1]/$project_name_formatted" &&
-      code -gn . src/index.html:17:5 src/* &&
+      code -gn . src/index.html:18:7 src/* vite.config.js &&
       echo -e "\nDone!"
   fi
 }
