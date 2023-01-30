@@ -1,0 +1,198 @@
+{
+  "main": {
+    "id": "c3c9c947cbbc572d",
+    "type": "split",
+    "children": [
+      {
+        "id": "40e4fa2627eede76",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "29e02c6683ab2015",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "201707130503 Liste Artistes Live.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "cfb93aa6ca816663",
+    "type": "split",
+    "children": [
+      {
+        "id": "9d57794232dd544d",
+        "type": "tabs",
+        "dimension": 40.586565752128664,
+        "children": [
+          {
+            "id": "8cc9d561b12c600e",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "zsh",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "5995fc630d929a69",
+            "type": "leaf",
+            "state": {
+              "type": "recent-files",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 1
+      },
+      {
+        "id": "6a15f80ddcb09297",
+        "type": "tabs",
+        "dimension": 33.58561967833491,
+        "children": [
+          {
+            "id": "c083860747f86f9d",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      },
+      {
+        "id": "c3424cc4020bc1a0",
+        "type": "tabs",
+        "dimension": 25.82781456953642,
+        "children": [
+          {
+            "id": "01d35fb3791b5b66",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "201707130503 Liste Artistes Live.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "1b89fc5579bd320d",
+    "type": "split",
+    "children": [
+      {
+        "id": "ff5867aa44172de3",
+        "type": "tabs",
+        "dimension": 67.86389413988658,
+        "children": [
+          {
+            "id": "d92bfdc230b9a207",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabeticalReverse"
+              }
+            }
+          },
+          {
+            "id": "06ecfc21708764fc",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "5942ad53241a0077",
+        "type": "tabs",
+        "dimension": 32.136105860113425,
+        "children": [
+          {
+            "id": "c11c6abe7352e8b8",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "201707130503 Liste Artistes Live.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "2d9d1a92d1eee733",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "201707130503 Liste Artistes Live.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": true,
+      "canvas:Create new canvas": true,
+      "templates:Insert template": true,
+      "command-palette:Open command palette": true,
+      "workspaces:Manage workspace layouts": false,
+      "templater-obsidian:Templater": false,
+      "cmdr:New window": false,
+      "cmdr:Outline": false,
+      "dbfolder:Create a new database table": false,
+      "obsidian-full-calendar:Open Full Calendar": false,
+      "obsidian-kindle-plugin:Sync your Kindle highlights": false
+    }
+  },
+  "active": "29e02c6683ab2015",
+  "lastOpenFiles": [
+    "201711150400 Lonely Notes.md",
+    "201711230559 How to manually Start or Stop PostgresSQL on Mac.md",
+    "201711191221 Gain Staging.md",
+    "201802121037 Welcome to The Archive.md",
+    "201802121036 Acknowledgements.md",
+    "201802151044 How to use the ls command.md",
+    "201802151055 How to use the pwd command.md",
+    "201810120400 How to get keyboard type from terminal (country code infos for karabiner).md",
+    "201810271904 Checklist - Drum Recording.md",
+    "201810301001 How to use Find command line.md"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "amazonRegion": "france",
+  "highlightsFolder": "/",
+  "lastSyncMode": "amazon",
+  "isLoggedIn": false,
+  "syncOnBoot": false,
+  "downloadBookMetadata": false
+}
