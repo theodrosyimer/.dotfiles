@@ -12,7 +12,11 @@ function excalidraw() {
 # )
 # print -l $template > "$1.excalidraw.json" && code -n "$_.json"
 
-filename="$(slugify "$1")"
+input_trimmed="$(slugify "$1")"
+filename="$input_trimmed.excalidraw.json"
 
-touch "$filename" && code "$filename"
+touch "$filename" && code -r "$filename"
+
 }
+
+alias xcal='excalidraw'

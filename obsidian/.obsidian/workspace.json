@@ -4,22 +4,35 @@
     "type": "split",
     "children": [
       {
-        "id": "40e4fa2627eede76",
+        "id": "79b2cf339d98e540",
         "type": "tabs",
         "children": [
           {
-            "id": "29e02c6683ab2015",
+            "id": "a833252f548981b5",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "201707130503 Liste Artistes Live.md",
+                "file": "201806162352 Pinboard.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "afefc07e7da4e928",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "20230228190205 Basic Full Stack Project Requisites.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -39,10 +52,10 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "zsh",
-                "matchingCase": false,
+                "query": "souten",
+                "matchingCase": true,
                 "explainSearch": false,
-                "collapseAll": false,
+                "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical"
               }
@@ -56,8 +69,7 @@
               "state": {}
             }
           }
-        ],
-        "currentTab": 1
+        ]
       },
       {
         "id": "6a15f80ddcb09297",
@@ -85,7 +97,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "201707130503 Liste Artistes Live.md"
+                "file": "20230228190205 Basic Full Stack Project Requisites.md"
               }
             }
           }
@@ -138,7 +150,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "201707130503 Liste Artistes Live.md",
+                "file": "20230228190205 Basic Full Stack Project Requisites.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -150,7 +162,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "201707130503 Liste Artistes Live.md",
+                "file": "20230228190205 Basic Full Stack Project Requisites.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -170,11 +182,11 @@
   "left-ribbon": {
     "hiddenItems": {
       "switcher:Open quick switcher": true,
+      "templater-obsidian:Templater": false,
       "canvas:Create new canvas": true,
       "templates:Insert template": true,
       "command-palette:Open command palette": true,
       "workspaces:Manage workspace layouts": false,
-      "templater-obsidian:Templater": false,
       "cmdr:New window": false,
       "cmdr:Outline": false,
       "dbfolder:Create a new database table": false,
@@ -182,17 +194,33 @@
       "obsidian-kindle-plugin:Sync your Kindle highlights": false
     }
   },
-  "active": "29e02c6683ab2015",
+  "active": "afefc07e7da4e928",
   "lastOpenFiles": [
+    "20230218200956 Most important criteria.md",
+    "20230228180536 List of Web components to make.md",
+    "20230228190205 Basic Full Stack Project Requisites.md",
+    "20230201002635 Html - Break Long Word With Css - Stack Overflow.md",
+    "20230113032043 Bash - How Do I Reset The Scrollback In The Terminal Via A Shell Command? - Ask Different.md",
+    "20230113110139 Console - Zsh Script Prompt Reading Single Keystroke: Add Newline When Appropriate? - Unix & Linux Stack Exchange.md",
+    "20230114154738 Difference between exec, source and . (dot) commands.md",
+    "20230118094222 Benchmark website.md",
+    "20230119171900 Figma - Workflow.md",
+    "20230120221233 theo_figma_eco.md",
+    "20230119183427 Mermaid - examples.md",
+    "20230114174655 List Of Shells That Support `Local` Keyword For Defining Local Variables - Unix & Linux Stack Exchange.md",
+    "20230114182145 List Of Shells That Support `Local` Keyword For Defining Local Variables - Unix & Linux Stack Exchange.md",
+    "20230220100415 Web Components.md",
+    "20230210122647 unsplash random images - syntax.md",
+    "20230208213724 Flexbox - cheatsheet.md",
+    "20230116135345 Conventional commit Rules type.md",
+    "20230129235435 How to insert a recaptcha on a web page.md",
+    "Untitled.md",
+    "20221208155741 Présentation Du Projet De Fin D'année - Assofac Soutenance.md",
+    "20230130110122 luxury-kitchen.md",
+    "201707130503 Liste Artistes Live.md",
     "201711150400 Lonely Notes.md",
     "201711230559 How to manually Start or Stop PostgresSQL on Mac.md",
     "201711191221 Gain Staging.md",
-    "201802121037 Welcome to The Archive.md",
-    "201802121036 Acknowledgements.md",
-    "201802151044 How to use the ls command.md",
-    "201802151055 How to use the pwd command.md",
-    "201810120400 How to get keyboard type from terminal (country code infos for karabiner).md",
-    "201810271904 Checklist - Drum Recording.md",
-    "201810301001 How to use Find command line.md"
+    "201802121037 Welcome to The Archive.md"
   ]
 }

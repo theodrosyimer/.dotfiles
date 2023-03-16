@@ -21,10 +21,10 @@ function mkn() {
 # TODO: create new file (reference) for a specified language
 # sh, zsh, js, ts, py, rust, md
 function mkref() {
-  output_path="${2:-"${CODE_REFS:-"$(pwd)"}"}"
-  editor=code
-  editor_args=-gn
-  filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
+  local output_path="${2:-"${CODE_REFS:-"$(pwd)"}"}"
+  local editor=code
+  local editor_args=-gn
+  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
 }
 
 ### * Create a new rust project and open it in vscode
@@ -35,9 +35,9 @@ function mkref() {
 # * mkrustp <path/to/project_name>
 # *
 function mkrustp() {
-  project_name="$1"
-  editor=code
-  editor_args=-gn
+  local project_name="$1"
+  local editor=code
+  local editor_args=-gn
 
   cargo new "$project_name" &&
     cd "$project_name" &&
@@ -46,10 +46,10 @@ function mkrustp() {
 
 # TODO: add flag to switch between stdin and clipboard (mks and mksc)
 function mks() {
-  output_path="${2:-"${BIN:-"$(pwd)"}"}"
-  editor=code
-  editor_args=-gn
-  filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
+  local output_path="${2:-"${BIN:-"$(pwd)"}"}"
+  local editor=code
+  local editor_args=-gn
+  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
 
     echo -e "#!/usr/bin/env ${SHELL:t}\n\n" >$output_path/$filename &&
     chmod u+x $output_path/$filename &&
@@ -57,11 +57,11 @@ function mks() {
 }
 
 function mksc() {
-  output_path="${2:-"${BIN:-"$(pwd)"}"}"
-  editor=code
-  editor_args=-gn
-  filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
-  content=$(pbpaste)
+  local output_path="${2:-"${BIN:-"$(pwd)"}"}"
+  local editor=code
+  local editor_args=-gn
+  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
+  local content=$(pbpaste)
 
     printf "%b\n" "#!/usr/bin/env ${SHELL:t}\n\n$content" >"$output_path/$filename" &&
     chmod u+x "$output_path/$filename" &&
@@ -70,30 +70,32 @@ function mksc() {
 
 # TODO: add flag to switch between stdin and clipboard (mkzf and mkzfc)
 function mkzf() {
-  my_functions_dir="$ZDOTDIR/custom"
-  output_path="${2:-"${my_functions_dir:-"$(pwd)"}"}"
-  editor=code
-  editor_args=-gn
-  filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
-  funcname="$(echo $filename | sed s/-/_/g)"
-  content="function $funcname() {\n\n}"
+  local root_dir="${DOTFILES}"
+  local my_functions_dir="$ZDOTDIR/custom"
+  local output_path="${2:-"${my_functions_dir:-"$(pwd)"}"}"
+  local editor=code
+  local editor_args=-gn
+  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
+  local funcname="$(echo $filename | sed s/-/_/g)"
+  local content="function $funcname() {\n\n}"
 
   printf "%b\n" "$content" >"$output_path/$filename.zsh" &&
-  $editor $editor_args . "$output_path/$filename.zsh":2:3
+  $editor $editor_args $root_dir "$output_path/$filename.zsh":2:3
 }
 
 function mkzfc() {
-  my_functions_dir="$ZDOTDIR/custom"
-  output_path="${2:-"${my_functions_dir:-"$(pwd)"}"}"
-  editor=code
-  editor_args=-gn
-  filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
+  local root_dir="${DOTFILES}"
+  local my_functions_dir="$ZDOTDIR/custom"
+  local output_path="${2:-"${my_functions_dir:-"$(pwd)"}"}"
+  local editor=code
+  local editor_args=-gn
+  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
 
-  funcname="$(echo $filename | sed s/-/_/g)"
-  content=$(pbpaste)
+  local funcname="$(echo $filename | sed s/-/_/g)"
+  local content=$(pbpaste)
 
   printf "%b\n" "function $funcname() {\n\t$content\n}" >"$output_path/$filename.zsh" &&
-  $editor $editor_args . "$output_path/$filename.zsh":1:10
+  $editor $editor_args $root_dir "$output_path/$filename.zsh":1:10
 }
 
 function mkweb() {
@@ -123,8 +125,17 @@ function mkweb() {
     # copy my css reset to new project directory
     cp -f /Users/mac/Code/_templates/dev/css/style.css "$output_path[-1]/$project_name_formatted/src" &&
       cd "$output_path[-1]/$project_name_formatted" &&
-      code -gn . src/index.html:18:7 src/* &&
+      npm pkg set 'name'="$project_name_formatted" &&
       echo -e "\nDone!"
+
+      echo -e "\nRunning:\n"
+      echo -e "  pnpm install:latest"
+
+
+      pnpm install:latest &&
+        echo -e "  pnpm dev\n" &&
+        code -gn . src/index.html:18:7 src/* vite.config.js &&
+        pnpm dev
   fi
   # if output path does not exist, create it
   if [[ ! -d "$output_path[-1]/$project_name_formatted" ]]; then
@@ -136,7 +147,16 @@ function mkweb() {
       # copy my css reset to new project directory
       cp -f /Users/mac/Code/_templates/dev/css/style.css "$output_path[-1]/$project_name_formatted/src" &&
       cd "$output_path[-1]/$project_name_formatted" &&
-      code -gn . src/index.html:18:7 src/* vite.config.js &&
+      npm pkg set 'name'="$project_name_formatted" &&
       echo -e "\nDone!"
+
+      echo -e "\nRunning:\n"
+      echo -e "  pnpm install:latest"
+
+      pnpm install:latest &&
+        echo -e "  pnpm dev\n" &&
+        code -gn . src/index.html:18:7 src/* vite.config.js &&
+        pnpm dev
+
   fi
 }

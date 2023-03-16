@@ -34,7 +34,7 @@ echo -e "  npm install"
 echo -e "  npm run dev\n"
 
 cd "$project_name" &&
-  code -gn . index.html style.css *.js &&
+  code -gn . index.html &&
   npm install &&
   npm run dev
 

@@ -30,4 +30,5 @@ function _edit-command-line-inplace() {
 }
 
 zle -N _edit-command-line-inplace
+bindkey -v
 bindkey '^xx' _edit-command-line-inplace

@@ -21,7 +21,8 @@ function git_clone_clean_from_front_tab_chrome() {
   local repo=${url:t2}
   local project_name=${1:-"${repo:t}"}
 
-  local dir_path="${2:-"${CODE_PROJECTS:-"$(pwd)"}"}"
+  # local dir_path="${2:-"${CODE_PROJECTS:-"$(pwd)"}"}"
+  local dir_path="${2:-"$(pwd)"}"
 
   tiged "git@github.com:$repo" "$dir_path/$project_name" && cd "$dir_path/$project_name" && code -gn .
 }
@@ -34,46 +35,56 @@ function git_clone_clean_from_cb() {
   is_installed tiged "run -> npm i -g tiged" || return 1
 
   local url="$(pbpaste)"
-  local dir_path="${1:-"${CODE_PROJECTS:-"$(pwd)"}"}"
+    # local dir_path="${2:-"${CODE_PROJECTS:-"$(pwd)"}"}"
+  local dir_path="${2:-"$(pwd)"}"
 
-  tiged $url $dir_path && code -gn $dir_path
+  tiged "$url" "$dir_path" && code -gn "$dir_path"
 }
 
 function git_create_branch_and_push_origin() {
   local branch_name="$(echo ${1:l} | sed s/" "/-/g)"
 
-  git checkout -b $branch_name &&
-    git push -u origin $branch_name
+  git checkout -b "$branch_name" &&
+    git push -u origin "$branch_name"
 }
 
 # ! dependency: text.zsh -> available in the repository
-# TODO finish this function
-function git_create_multiple_branches() {
+function git_create_branches_and_push_origin() {
+
+  local branches=(${(@)@})
+
+  (( "#$branches[@]" = 1 )) && git_create_branch_and_push_origin "$branches[1]"
+
+  for branch in "${branches[@]}"
+    do
+      local branch_name_formatted="$(trim $branch)"
+      # echo "$branch_name_formatted"
+
+      git_create_branch_and_push_origin "$branch_name_formatted" &&
+      git checkout main
+    done
+}
+
+function git_delete_branch_local_and_origin() {
+  local branch_name="$(echo ${1:l} | sed s/" "/-/g)"
+
+  git branch --delete "$branch_name" &&
+    git push origin --delete "$branch_name"
+
+}
+
+# ! dependency: text.zsh -> available in the repository
+function git_delete_branches_local_and_origin() {
 
   local branches=(${(@)@})
 
   for branch in "${branches[@]}"
     do
-    local branch_name_formatted="$(trim $branch)"
-    echo "$branch_name_formatted"
+      local branch_name_formatted="$(trim $branch)"
+      # echo "$branch_name_formatted"
 
-     git_create_branch_and_push_origin $branch_name_formatted &&
-     git checkout main
-    #
+      git_delete_branch_local_and_origin "$branch_name_formatted"
     done
-}
-
-# get remote origin's' url from current, already initialized, working directory
-function git_get_remote_url_from_cwd() {
-  local url="$(git config --get remote.origin.url)"
-  echo "$url"
-}
-
-# same as above but copy the url to clipboard
-function git_get_remote_url_from_cb() {
-  local url="$(git config --get remote.origin.url)"
-  echo "$url" | pbcopy
-  echo "URL copied to clipboard > ${url}"
 }
 
 # ! dependency: github.zsh -> available in the repository
@@ -104,6 +115,34 @@ function git_init() {
   fi
 }
 
+# get remote origin's' url from current, already initialized, working directory
+function git_get_remote_url_from_cwd() {
+  local url="$(git config --get remote.origin.url)"
+  echo "$url"
+}
+
+# same as above but copy the url to clipboard
+function git_get_remote_url_from_cb() {
+  local url="$(git config --get remote.origin.url)"
+  echo "$url" | pbcopy
+  echo "URL copied to clipboard > ${url}"
+}
+
+# INFO: run this function from your project's root directory
+# TODO: check if user uses ssh or https
+function git_set_remote_url_from_cwd() {
+  local dir=$(basename $(pwd))
+
+  # if `https` is used,
+  # local url=https://github.com/<username>
+  # i use `ssh` and `gp` is my `ssh` alias for github.com
+  local url=git@github.com:theodrosyimer
+
+  echo "$url/$dir.git"
+
+  git remote add origin "$url/$dir.git"
+}
+
 # ! dependency: text.zsh -> available in the repository
 function git_open_remote_at_gh() {
   local remote_url="$(git_get_remote_url_from_cwd)"
@@ -119,29 +158,24 @@ function git_open_remote_at_gh() {
   open $url
 }
 
-# INFO: run this function from your project's root directory
-# TODO: check if user uses ssh or https
-function git_set_remote_url_from_cwd() {
-  local dir=$(basename $(pwd))
-
-  # if `https` is used,
-  # local url=https://github.com/<username>
-  # i use `ssh` and `gp` is my `ssh` alias for github.com
-  local url=gp:theodrosyimer
-
-  echo $url/$dir.git
-
-  git remote add origin $url/$dir.git
-}
-
-alias gi=git_init
+alias ginit=git_init
 alias gor='git_open_remote_at_gh'
+alias gbcreate='git_create_branches_and_push_origin'
+alias gbdelete='git_delete_branches_local_and_origin'
 
 # run this function from your project's root directory
-alias gdel='rm -rf ./.git'
+alias gdelete='rm -rf ./.git'
 # or the safer version
 # 'rm -ri ./.git'
 
 # run this function from your project's root directory
-# delete local .git folder and github repo
-alias greset='ghrd && gdel'
+# delete local .git folder and remote github repo
+alias greset='ghrd && gdelete'
+
+alias gac='git_add_all_commit'
+alias gacp='git_add_all_commit_push'
+
+alias gc='git_clone_clean_from_front_tab_chrome'
+alias gccb='git_clone_clean_from_cb'
+
+alias gurl=git_get_remote_url_from_cwd
