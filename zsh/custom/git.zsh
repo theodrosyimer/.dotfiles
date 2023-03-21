@@ -48,6 +48,10 @@ function git_create_branch_and_push_origin() {
     git push -u origin "$branch_name"
 }
 
+function git_get_current_branch_name() {
+  printf "%s" "$(git rev-parse --abbrev-ref HEAD)"
+}
+
 # ! dependency: text.zsh -> available in the repository
 function git_create_branches_and_push_origin() {
 
@@ -158,8 +162,27 @@ function git_open_remote_at_gh() {
   open $url
 }
 
+# ! dependency: text.zsh -> available in the repository
+function git_open_current_branch_remote_at_gh() {
+  local remote_url="$(git_get_remote_url_from_cwd)"
+  local current_branch="$(git rev-parse --abbrev-ref HEAD)"
+  remote_url="$(echo $remote_url | sed s/.git$//g)"
+
+
+  if contains "gp:" $remote_url; then
+    local url="$(echo $remote_url | sed s/gp:/https:\\/\\/github.com\\//g)"
+  fi
+
+  if $(contains "git@github.com:" $remote_url); then
+    local url="$(echo $remote_url | sed s/git@github.com:/https:\\/\\/github.com\\//g)"
+  fi
+
+  open $url/tree/$current_branch
+}
+
 alias ginit=git_init
 alias gor='git_open_remote_at_gh'
+alias gorb='git_open_current_branch_remote_at_gh'
 alias gbcreate='git_create_branches_and_push_origin'
 alias gbdelete='git_delete_branches_local_and_origin'
 
