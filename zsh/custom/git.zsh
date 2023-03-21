@@ -17,14 +17,14 @@ function git_add_all_commit_push() {
 function git_clone_clean_from_front_tab_chrome() {
   is_installed tiged "run -> npm i -g tiged" || return 1
 
+  local dir_path="${1:-"${CODE_PROJECTS:-"$(pwd)"}"}"
+  # local dir_path="${1:-"$(pwd)"}"
+
   local url="$(chrome_get_front_window_url)"
   local repo=${url:t2}
-  local project_name=${1:-"${repo:t}"}
+  local project_name=${2:-"${repo:t}"}
 
-  # local dir_path="${2:-"${CODE_PROJECTS:-"$(pwd)"}"}"
-  local dir_path="${2:-"$(pwd)"}"
-
-  tiged "git@github.com:$repo" "$dir_path/$project_name" && cd "$dir_path/$project_name" && code -gn .
+  tiged "git@github.com:$repo" "$dir_path/$project_name" && code -gn "$dir_path/$project_name"
 }
 
 # ! dependency: is_installed.zsh -> available in the repository
@@ -119,6 +119,11 @@ function git_init() {
   fi
 }
 
+function git_is_main_or_master() {
+  ! git rev-parse --abbrev-ref master >/dev/null 2>/dev/null &&
+    printf "%s" 'main' || printf "%s" 'master'
+}
+
 # get remote origin's' url from current, already initialized, working directory
 function git_get_remote_url_from_cwd() {
   local url="$(git config --get remote.origin.url)"
@@ -148,7 +153,7 @@ function git_set_remote_url_from_cwd() {
 }
 
 # ! dependency: text.zsh -> available in the repository
-function git_open_remote_at_gh() {
+function git_open_project_at_gh() {
   local remote_url="$(git_get_remote_url_from_cwd)"
 
   if contains "gp:" $remote_url; then
@@ -161,6 +166,20 @@ function git_open_remote_at_gh() {
 
   open $url
 }
+# # ! dependency: text.zsh -> available in the repository
+# function git_open_main_or_master_remote_at_gh() {
+#   local remote_url="$(git_get_remote_url_from_cwd)"
+
+#   if contains "gp:" $remote_url; then
+#     local url="$(echo $remote_url | sed s/gp:/https:\\/\\/github.com\\//g)"
+#   fi
+
+#   if $(contains "git@github.com:" $remote_url); then
+#     local url="$(echo $remote_url | sed s/git@github.com:/https:\\/\\/github.com\\//g)"
+#   fi
+
+#   open $url
+# }
 
 # ! dependency: text.zsh -> available in the repository
 function git_open_current_branch_remote_at_gh() {
@@ -181,8 +200,9 @@ function git_open_current_branch_remote_at_gh() {
 }
 
 alias ginit=git_init
-alias gor='git_open_remote_at_gh'
-alias gorb='git_open_current_branch_remote_at_gh'
+alias gop='git_open_project_at_gh'
+# alias gom='git_open_main_or_master_remote_at_gh'
+alias gob='git_open_current_branch_remote_at_gh'
 alias gbcreate='git_create_branches_and_push_origin'
 alias gbdelete='git_delete_branches_local_and_origin'
 
