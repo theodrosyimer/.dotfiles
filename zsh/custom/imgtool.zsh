@@ -34,3 +34,38 @@ function optimg() {
 	# 	echo -e '\nYou need to provide an image as an input and a width.\n' && print -l $usage && return
 	# fi
 }
+
+function from_webp() {
+	local extension="${1:-"jpg"}"
+	local webpFiles="$(fd -e webp)"
+
+	local files=(${(@f)webpFiles})
+
+	for file in "${files[@]}"
+  do
+    dwebp "$file" -o "$file:r.$extension"
+  done
+}
+
+function to_webp() {
+
+	if [[ -d "$1" ]]; then
+			local list="$1/*"
+	fi
+
+	if (($#@ > 1)); then
+			local files=(${(@f)@})
+			local list="${files[@]}"
+	fi
+
+	for file in $list
+  do
+    cwebp "$file" -o "${file%.*}.webp"
+    # cwebp -q 50 "$file" -o "${file%.*}.webp"
+  done
+}
+
+
+function hil() {
+	(($#@ > 1)) && echo yes || no
+}
