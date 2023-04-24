@@ -14,6 +14,7 @@
              :launch "osascript -e 'tell application \"%s\" to activate'"
              :open "open \"%s\""
              :open-a "open -a '%s'"
+             :open-b "open -b '%s'"
              :open-chrome "osascript -e <<-EndOfScript
                             'set adress to \"%s\"
                             tell application \"Google Chrome\"
@@ -37,11 +38,12 @@
              ;
              }
 
- :application {:chrome ["com.google.Chrome"]
-               :code ["com.microsoft.VSCode"]
-               :lpx ["com.apple.logic10"]
+ :applications {:chrome ["com.google.Chrome"]
+                :code ["com.microsoft.VSCode"]
+                :lpx ["com.apple.logic10"]
+                :finder ["^com\\.apple\\.finder$"]
                ;
-               }
+                }
  :layers {; :tab-mode {:key :tab :alone {:key :tab}
           ;; :caps_lock {:key :caps_lock :alone {:key :caps_lock}}
           ;
@@ -78,10 +80,31 @@
              ;
              }
  :main [;
+        ;; {:des "caps_lock to esc when pressed alone, to hyper as modifier"
+        ;;  :rules [;
+        ;;          ;
+        ;;          [:##caps_lock :!TCOleft_shift nil {:alone :escape}]
+        ;;          ;
+        ;;          ]}
+
         {:des "caps_lock to esc when pressed alone, to hyper as modifier"
          :rules [;
                  ;
-                 [:##caps_lock :!TCOleft_shift nil {:alone :escape}]
+                 [:##caps_lock :left_control nil {:alone :escape}]
+                 [:!T1 :!CTOS1] ; 
+                 [:!T2 :!CTOS2]
+                 [:!T3 :!CTOS3]
+                 [:!T4 :!CTOS4] ; 
+                 [:!T5 :!CTOS5]
+                 [:!T6 :!CTOS6]
+                 ;
+                 ]}
+
+        {:des "Hyper + key to action"
+         :rules [;
+                 ;
+                 [:!T5 :!O5]
+                 [:!Tv [:open-b "com.microsoft.VSCode"]]
                  ;
                  ]}
 
@@ -202,6 +225,18 @@
                   ;
                  ]}
 
+        ;; {:des "Finder: Return => Cmd+O (Open in new tab)"
+        ;;  :rules [[:return_or_enter :!CTo [:finder]]]}
+
+        ;; {:des "Finder: Return => Cmd+O (Open in new window)"
+        ;;  :rules [[:!Treturn_or_enter :!COdown_arrow [:finder]]]}
+
+        ;; {:des "Finder: F2 => Return (Rename)"
+        ;;  :rules [[:f2 :return_or_enter [:finder]]]}
+
+        ;; {:des "Finder: Delete => Cmd+Backspace (Delete)"
+        ;;  :rules [[:delete_forward :!Cdelete_or_backspace [:finder]]]}
+
         {:des "Google Chrome"
          :rules [:chrome
                  [:button1 :!TOleft_arrow]
@@ -212,8 +247,8 @@
          :rules [:code
                   ;
                   ;;  [:left_shift :left_shift nil {:alone :!CSp}]
-                 [:a :t :code] ; launch Alfred
-                 [:g [:!Sspacebar]]
+                ;;  [:a :t :code] ; launch Alfred
+                ;;  [:g [:!Sspacebar]]
                  [[:d :f] :!Cd]
 
                   ;
@@ -241,7 +276,7 @@
         {:des "launch things"
          :rules [:l-mode
                  ;
-                 [:a :!Ospacebar] ; launch Alfred
+                 [:a :!Ospacebar] ; launch Alfred ; (a=q)
                  [:c [:alfred "code" "com.ty.alfred.vs-code.open"]]
                  [:t [:alfred "plantMe" "com.ty.alfred.plantme"]]
                  ;
