@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-source "$ZDOTDIR/custom/check-errs.zsh"
+source "$ZDOTDIR/custom/catch.zsh"
 input=$1
 
 if [[ -z "$input" ]]; then
@@ -14,13 +14,15 @@ if [[ -n "$input" ]]; then
   if [[ "$?" -eq "0" ]] && [[ ! "${where_resp_arr[1]}" == "$input: shell built-in command" ]]; then
     for path in "${where_resp_arr[@]}"
       do
-        echo "$(readlink $path)"
+        # echo "$(readlink $path)"
+        echo "$path:A"
       done
     return 0
   fi
 
   if [[ "$?" -eq "0" ]] && [[ "${where_resp_arr[1]}" == "$input: shell built-in command" ]]; then
     where_path="${where_resp_arr[2]}"
-    echo "$(readlink $where_path)" && return 0
+    # echo "$(readlink $where_path)" && return 0
+    echo "$where_path:A" && return 0
   fi
 fi
