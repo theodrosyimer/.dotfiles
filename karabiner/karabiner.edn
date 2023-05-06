@@ -5,7 +5,7 @@
                       ;; basically it means time after which the key press is count delayed
                       :alone 200 ;200  ;; to_if_alone_timeout_milliseconds (def: 1000)
                       ;; hold for 995s and single tap registered; hold for 1005s and seen as modifier
-                      :held 250}} ;; 80 to_if_held_down_threshold_milliseconds (def: 500)
+                      :held 40}} ;; 250 to_if_held_down_threshold_milliseconds (def: 500)
                       ;; key is fired twice when 500 ms is elapsed (otherwise seen as a hold command)
 
  :templates {:alfred "osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\" with argument \"%s\"'"
@@ -87,7 +87,7 @@
         ;;          ;
         ;;          ]}
 
-        {:des "caps_lock to esc when pressed alone, to hyper as modifier"
+        {:des "caps_lock to esc when pressed alone, to control as modifier"
          :rules [;
                  ;
                  [:##caps_lock :left_control nil {:alone :escape}]
@@ -100,17 +100,18 @@
                  ;
                  ]}
 
-        {:des "Hyper + key to action"
-         :rules [;
+        {:des "launch things"
+         :rules [:l-mode
                  ;
-                 [:!T5 :!O5]
-                 [:!Tv [:open-b "com.microsoft.VSCode"]]
-                 ;
-                 ]}
-
-        {:des "Desactivate Hyper+z"
-         :rules [:caps_lock
-                 [:w :escape]
+                 [:a :!Ospacebar] ; launch Alfred ; (a=q)
+                 [:c [:alfred "code" "com.ty.alfred.vs-code.open"]]
+                 [:t [:alfred "plantMe" "com.ty.alfred.plantme"]]
+                 [:s :!CTOSd] ; launch Moom
+                 [:d [:open-b "com.google.Chrome"]]
+                 [:f [:open-b "com.microsoft.VSCode"]]
+                 [:k [:open-b "com.stairways.keyboardmaestro.editor"]]
+                 [:spacebar :!CTOleft_shiftspacebar] ; launch Dash
+                 [:w :!CTOSo] ; w=z
                  ;
                  ]}
 
@@ -189,6 +190,7 @@
                  [:l :!Tu]
                  ;
                  ]}
+
 
         {:des "Symbols and Symbols strings"
          :rules [:spacebar-mode
@@ -273,14 +275,7 @@
                 ;
                  ]}
 
-        {:des "launch things"
-         :rules [:l-mode
-                 ;
-                 [:a :!Ospacebar] ; launch Alfred ; (a=q)
-                 [:c [:alfred "code" "com.ty.alfred.vs-code.open"]]
-                 [:t [:alfred "plantMe" "com.ty.alfred.plantme"]]
-                 ;
-                 ]}
+
 
         {:des "trackpad"
          :rules [;
