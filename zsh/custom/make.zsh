@@ -7,15 +7,20 @@ function mkdocset() {
 }
 
 function mkn() {
+  local editor=code
   local extension=md
   local input_trimmed="$(trim $1)"
   local filename="$(spaced_by $input_trimmed ' ')"
 
   local output_path="${2:-"${NOTES:-"$(pwd)")}"}"
 
+  [[ -f "$output_path/$filename.zsh" ]] && { \
+    echo -e "\nFile already exists at $output_path/$filename.zsh\n" && \
+      read -s -d "q" "quit?:" && return 1 }
+
   zettID="$(zetid)"
 
-  cd "$output_path" && echo "# $filename\n\n" >"$zettID $filename.$extension" && code -gn . "$zettID $filename.$extension":2
+  cd "$output_path" && echo "# $filename\n\n" >"$zettID $filename.$extension" && code -g . "$zettID $filename.$extension":2
 }
 
 # TODO: create new file (reference) for a specified language
@@ -23,7 +28,7 @@ function mkn() {
 function mkref() {
   local output_path="${2:-"${CODE_REFS:-"$(pwd)"}"}"
   local editor=code
-  local editor_args=-gn
+  local editor_args=-g
   local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
 }
 
@@ -48,24 +53,24 @@ function mkrustp() {
 function mks() {
   local output_path="${2:-"${BIN:-"$(pwd)"}"}"
   local editor=code
-  local editor_args=-gn
+  local editor_args=-g
   local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
 
     echo -e "#!/usr/bin/env ${SHELL:t}\n\n" >$output_path/$filename &&
     chmod u+x $output_path/$filename &&
-    $editor $editor_args "$output_path" $output_path/$filename:3
+    $editor $editor_args "$output_path/$filename:3"
 }
 
 function mksc() {
   local output_path="${2:-"${BIN:-"$(pwd)"}"}"
   local editor=code
-  local editor_args=-gn
+  local editor_args=-g
   local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local content=$(pbpaste)
 
     printf "%b\n" "#!/usr/bin/env ${SHELL:t}\n\n$content" >"$output_path/$filename" &&
     chmod u+x "$output_path/$filename" &&
-    $editor $editor_args "$output_path" "$output_path/$filename:3"
+    $editor $editor_args "$output_path/$filename:3"
 }
 
 # TODO: add flag to switch between stdin and clipboard (mkzf and mkzfc)
@@ -74,13 +79,13 @@ function mkzf() {
   local my_functions_dir="$ZDOTDIR/custom"
   local output_path="${2:-"${my_functions_dir:-"$(pwd)"}"}"
   local editor=code
-  local editor_args=-gn
+  local editor_args=-g
   local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local funcname="$(echo $filename | sed s/-/_/g)"
   local content="function $funcname() {\n\n}"
 
   printf "%b\n" "$content" >"$output_path/$filename.zsh" &&
-  $editor $editor_args $root_dir "$output_path/$filename.zsh":2:3
+  $editor $editor_args "$output_path/$filename.zsh":2:3
 }
 
 function mkzfc() {
@@ -88,14 +93,16 @@ function mkzfc() {
   local my_functions_dir="$ZDOTDIR/custom"
   local output_path="${2:-"${my_functions_dir:-"$(pwd)"}"}"
   local editor=code
-  local editor_args=-gn
+  local editor_args=-g
   local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
 
   local funcname="$(echo $filename | sed s/-/_/g)"
   local content=$(pbpaste)
 
+  [[ -f "$output_path/$filename.zsh" ]] && { echo -e "\nFile already exists at $output_path/$filename.zsh\n" && return 1 }
+
   printf "%b\n" "function $funcname() {\n\t$content\n}" >"$output_path/$filename.zsh" &&
-  $editor $editor_args $root_dir "$output_path/$filename.zsh":1:10
+  $editor $editor_args "$output_path/$filename.zsh":1:10
 }
 
 function mkweb() {
