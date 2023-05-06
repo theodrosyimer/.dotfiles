@@ -41,19 +41,17 @@ bindkey '\e[A' history-beginning-search-backward
 bindkey '\e[B' history-beginning-search-forward
 
 # bindkey '^\ ' autosuggest-clear
-# bindkey -s '\er' 'exec zsh ^M'
-# bindkey -v
 
 # edit current command line with vim (vim-mode, then CTRL-v)
 # autoload -Uz edit-command-line
 # zle -N edit-command-line
 # bindkey -M vicmd '^v' edit-command-line
 
-if [[ "$TERM_PROGRAM" == 'vscode' ]]; then
-  alias 'rg'='rgd'
+# if [[ "$TERM_PROGRAM" == 'vscode' ]]; then
+#   alias 'rg'='rgd'
 # else
 #   alias 'rg'='rg --smart-case --hidden --no-heading --column'
-fi
+# fi
 
 # WINDOW CONFIGURATION
 ################################################################################
