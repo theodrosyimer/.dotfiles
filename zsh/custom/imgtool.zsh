@@ -35,37 +35,42 @@ function optimg() {
 	# fi
 }
 
+function img_convert_to() {
+	# local extensions=("${1:-"jpg"}")
+	local extensions=(jpg jpeg png webp)
+	local output_path="${2:-"$(pwd)/images-converted"}"
+	local images=(${(@f)$(fd -e jpg -e png -e jpeg -e webp -d 1)})
+
+	for extension in "${extensions[@]}"; do
+		[[ ! -d "$output_path/$extension" ]] && mkdir -p "$output_path/$extension"
+	done
+
+	time parallel -j+0 convert -resize {3} -quality {2} {1} $output_path/{4}/{1.}_{3}_q{2}.{4} ::: ${images[@]} ::: 80 90 100 ::: 50% 25% 10% ::: ${extensions[@]}
+}
+
 function from_webp() {
-	local extension="${1:-"jpg"}"
-	local webpFiles="$(fd -e webp)"
+	# local extension="${1:-"jpg"}"
+	local extensions=(jpg jpeg png)
+	local output_path="${2:-"$(pwd)/images-converted"}"
+	local images=(${(@f)$(fd -e webp -d 1)})
 
-	local files=(${(@f)webpFiles})
+	for extension in "${extensions[@]}"; do
+		[[ ! -d "$output_path/$extension" ]] && mkdir -p "$output_path/$extension"
+	done
 
-	for file in "${files[@]}"
-  do
-    dwebp "$file" -o "$file:r.$extension"
-  done
+  time parallel -j+0 dwebp {1} -o $output_path/{2}/{1.}.{2} ::: ${images[@]} ::: ${extensions[@]}
 }
 
 function to_webp() {
-
 	if [[ -d "$1" ]]; then
-			local list="$1/*"
+			# local list="$1/*"
+			local images=(${(@f)$(fd -e jpg -e png -e jpeg --base-directory "$1" -d 1)})
 	fi
 
 	if (($#@ > 1)); then
-			local files=(${(@f)@})
-			local list="${files[@]}"
+			local images=(${(@f)@})
+			local list="${images[@]}"
 	fi
 
-	for file in $list
-  do
-    cwebp "$file" -o "${file%.*}.webp"
-    # cwebp -q 50 "$file" -o "${file%.*}.webp"
-  done
-}
-
-
-function hil() {
-	(($#@ > 1)) && echo yes || no
+  time parallel -j+0 cwebp -q 80 {1} -o {1.}.webp ::: ${images[@]}
 }
