@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+selected="$(find ~/Code/projects ~/ ~/Code ~/Code/courses ~/Code/_templates ~/Code/_templates/dev ~/Code/_templates/dev/ts ~/Code/_templates/dev/js ~/Code/refs ~/Code/refs/js/sandbox ~/Design  -mindepth 1 -maxdepth 1 -type d | fzf --bind 'ctrl-f:execute-silent(open -b "com.apple.finder" {})+close' --preview-window hidden --preview 'exa --group-directories-first --tree --level=3 {} | head -50')"
+
+[[ -z $selected ]] && return 1
+
+"$EDITOR" "$selected"

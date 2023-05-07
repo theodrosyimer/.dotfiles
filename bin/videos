@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+root_dir="/volumes/Librairies Samples/Videos"
+
+
+selected="$(find "$root_dir" "$root_dir/_new" "$root_dir/Coding" "$root_dir/Coding/" -mindepth 1 -maxdepth 2 -type d | fzf --bind 'ctrl-f:execute-silent(open -b "com.apple.finder" {})+close'  --preview-window hidden --preview 'exa --group-directories-first --tree --level=3 {} | head -50')"
+
+[[ -z $selected ]] && return 1
+
+open "$selected"
