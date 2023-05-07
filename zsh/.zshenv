@@ -52,7 +52,7 @@ export FZF_DEFAULT_OPTS="--prompt=\"🔭 \" \
 --color="$FZF_COLORS"
 --margin 5% \
 --bind \"?:toggle-preview\" \
---preview 'bat --color=always --style=numbers {}'"
+--preview '[[ -f {} ]] && bat --color=always --style=numbers {}'"
 
 export FZF_CTRL_R_OPTS="--preview-window hidden"
 
