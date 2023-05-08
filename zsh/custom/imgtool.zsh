@@ -45,7 +45,7 @@ function img_convert_to() {
 		[[ ! -d "$output_path/$extension" ]] && mkdir -p "$output_path/$extension"
 	done
 
-	time parallel -j+0 convert -resize {3} -quality {2} {1} $output_path/{4}/{1.}_{3}_q{2}.{4} ::: ${images[@]} ::: 80 90 100 ::: 50% 25% 10% ::: ${extensions[@]}
+	time parallel --shuf --eta -j+0 convert -resize {3} -quality {2} {1} $output_path/{4}/{1.}_{3}_q{2}.{4} ::: ${images[@]} ::: 80 90 100 ::: 50% 25% 10% ::: ${extensions[@]}
 }
 
 function from_webp() {
@@ -58,7 +58,7 @@ function from_webp() {
 		[[ ! -d "$output_path/$extension" ]] && mkdir -p "$output_path/$extension"
 	done
 
-  time parallel -j+0 dwebp {1} -o $output_path/{2}/{1.}.{2} ::: ${images[@]} ::: ${extensions[@]}
+  time parallel --shuf --eta -j+0 dwebp {1} -o $output_path/{2}/{1.}.{2} ::: ${images[@]} ::: ${extensions[@]}
 }
 
 function to_webp() {
@@ -72,5 +72,5 @@ function to_webp() {
 			local list="${images[@]}"
 	fi
 
-  time parallel -j+0 cwebp -q 80 {1} -o {1.}.webp ::: ${images[@]}
+  time parallel --shuf --eta -j+0 cwebp -q 80 {1} -o {1.}.webp ::: ${images[@]}
 }
