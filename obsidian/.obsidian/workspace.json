@@ -30,9 +30,31 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "3ee1b2297dc1b7c6",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "20211110032231 New Technology, Tools and Services.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "0d54311cac0022d9",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.2.7"
+              }
+            }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -52,8 +74,8 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "souten",
-                "matchingCase": true,
+                "query": "new technology",
+                "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
                 "extraContext": false,
@@ -66,6 +88,14 @@
             "type": "leaf",
             "state": {
               "type": "recent-files",
+              "state": {}
+            }
+          },
+          {
+            "id": "591536507a399afa",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
               "state": {}
             }
           }
@@ -97,7 +127,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "20230228190205 Basic Full Stack Project Requisites.md"
+                "file": "20211110032231 New Technology, Tools and Services.md"
               }
             }
           }
@@ -150,7 +180,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "20230228190205 Basic Full Stack Project Requisites.md",
+                "file": "20211110032231 New Technology, Tools and Services.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -162,7 +192,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "20230228190205 Basic Full Stack Project Requisites.md",
+                "file": "20211110032231 New Technology, Tools and Services.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -194,8 +224,12 @@
       "obsidian-kindle-plugin:Sync your Kindle highlights": false
     }
   },
-  "active": "afefc07e7da4e928",
+  "active": "0d54311cac0022d9",
   "lastOpenFiles": [
+    "20230426192455 Modern Tech Stack & Serverless Services.md",
+    "201807290720 How to choose the right USB Type-C for Thunderbolt compatibility.md",
+    "201903280437 How to choose a new technology.md",
+    "20221013093255 cv.md",
     "20230218200956 Most important criteria.md",
     "20230228180536 List of Web components to make.md",
     "20230228190205 Basic Full Stack Project Requisites.md",
@@ -217,10 +251,6 @@
     "Untitled.md",
     "20221208155741 Présentation Du Projet De Fin D'année - Assofac Soutenance.md",
     "20230130110122 luxury-kitchen.md",
-    "201707130503 Liste Artistes Live.md",
-    "201711150400 Lonely Notes.md",
-    "201711230559 How to manually Start or Stop PostgresSQL on Mac.md",
-    "201711191221 Gain Staging.md",
-    "201802121037 Welcome to The Archive.md"
+    "201707130503 Liste Artistes Live.md"
   ]
 }

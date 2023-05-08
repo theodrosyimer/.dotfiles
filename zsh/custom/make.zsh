@@ -1,3 +1,7 @@
+function mcd() {
+	mkdir -p $1 && cd $1
+}
+
 function mkdocset() {
   docsets_path="$DOCSETS"
   filename="$1"
