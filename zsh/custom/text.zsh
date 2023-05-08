@@ -15,7 +15,7 @@ function contains() {
 		{s,-sensitive}=flag_sensitive \
 		{o,-output}:=output_path || return 1
 
-	[[ -n "$flag_help" ]] && { print -l $usage && return; }
+	[[ -n "$flag_help" ]] && { print -l $usage && return 0; }
 
 	if [[ -n "$flag_sensitive" ]]; then
 		[[ "$string" =~ "$regex" ]] && return 0 || return 1
@@ -38,7 +38,7 @@ zparseopts -D -F -K -- \
 	{w,-write}=flag_write \
 	{o,-output}:=output_path || return 1
 
-[[ -n "$flag_help" ]] && { print -l $usage && return; }
+[[ -n "$flag_help" ]] && { print -l $usage && return 0; }
 
 if [[ -n "$flag_write" ]]; then
 	local input_array=(${(@)@})
@@ -48,7 +48,7 @@ if [[ -n "$flag_write" ]]; then
 				local result="$(echo -e "$input" | tr -d '\\n' | tr -d '\n' | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g')"
 				echo -e "$result" >>"$output_path[-1]"
 			done
-	return
+	return 0
 fi
 
 if [[ -z "$flag_write" ]]; then
@@ -58,7 +58,7 @@ if [[ -z "$flag_write" ]]; then
 			do
 				local result_formatted="$(echo -e "$input" | tr -d '\\n' | tr -d '\n' | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g')" && echo -e $result_formatted
 			done
-	return
+	return 0
 fi
 }
 
@@ -70,8 +70,30 @@ function spaced_by() {
 
 
 function slugify() {
-  local input_lowercased="$(trim ${@:l})"
-  spaced_by "$input_lowercased"
+	local flag_help
+	local flag_delimiter=()
+	local output_path=("${PWD}\/my-file.txt") # sets a default path
+	local usage=(
+	"slugify [ -h | --help ]"
+	"slugify [ - | -- ] [ -o | --output <path/to/file> ]"
+	)
+
+	zmodload zsh/zutil
+	zparseopts -D -F -K -E -- \
+		{h,-help}=flag_help \
+		{d,-delimiter}:=flag_delimiter \
+		{o,-output}:=output_path || return 1
+
+	[[ -n "$flag_help" ]] && { print -l $usage && return 0; }
+
+	if [[ -n "$flag_delimiter" ]]; then
+  	local input_lowercased="$(trim ${@:l})"
+		spaced_by "$input_lowercased" $flag_delimiter[-1]
+		return 0
+	fi
+
+	local input_lowercased="$(trim ${@:l})"
+	spaced_by "$input_lowercased"
 }
 
 # source: https://dirask.com/posts/Bash-JavaScript-encodeURIComponent-equivalent-DKo8xD
