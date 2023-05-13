@@ -1,8 +1,16 @@
 #!/usr/bin/env zsh
 
-selected="$(find "$NOTES" -mindepth 1 -maxdepth 1 -type f | sort -r | fzf --bind 'ctrl-f:execute-silent(open -b "com.apple.finder" {})+close' --bind 'ctrl-p:execute-silent(echo {})+close')"
+# bind actions
+open_finder="ctrl-o:execute-silent(open -b "com.apple.finder" {})+close"
 
-[[ -z $selected ]] && return 1
+selected="$(find "$NOTES" -mindepth 1 -maxdepth 1 -type f ! -name "Home.canvas" | \
+  sort -r | \
+  fzf \
+  --bind "enter:execute("$EDITOR" {})" \
+  --bind "$open_finder" \
+  --bind 'ctrl-p:execute-silent(echo {})+close')"
 
-"${EDITOR:-code}" "$selected"
+# [[ -z $selected ]] && return 1
+
+# "${EDITOR:-code}" "$selected"
 

@@ -1,9 +1,26 @@
 #!/usr/bin/env zsh
 
 root_dir="/volumes/Librairies Samples/Videos"
+dir_list="$(find "$root_dir" "$root_dir/_new" "$root_dir/Coding" "$root_dir/Coding/Javascript" "$root_dir/Coding/CSS" -mindepth 1 -maxdepth 2 -type d)"
 
+# bind actions
+open_finder="ctrl-o:execute-silent(open -b "com.apple.finder" {})+close"
+enter_dir="ctrl-f:reload(find {} -type f -iname \"*.mp4\")"
+# exit_dir="ctrl-r:reload(echo \"$dir_list\")"
+# enter_key="enter:accept+close"
 
-selected="$(find "$root_dir" "$root_dir/_new" "$root_dir/Coding" "$root_dir/Coding/" -mindepth 1 -maxdepth 2 -type d | fzf --bind 'ctrl-f:execute-silent(open -b "com.apple.finder" {})+close'  --preview-window hidden --preview 'exa --group-directories-first --tree --level=3 {} | head -50')"
+selected="$(echo "$dir_list" | \
+  fzf \
+  --bind "$open_finder" \
+  --bind "$enter_dir" \
+  --bind "ctrl-r:+change-preview(exa --group-directories-first --tree --level=3 {} | head -50)" \
+  --bind "ctrl-r:+toggle-preview" \
+  --bind "ctrl-d:change-prompt()" \
+  --bind "ctrl-d:+reload(find {} -type d -mindepth 1 -maxdepth 1)" \
+  --bind "ctrl-d:+change-preview(exa --group-directories-first --tree --level=3 {} | head -50)" \
+  --bind "ctrl-d:+toggle-preview" \
+  --preview-window hidden \
+  --preview 'exa --group-directories-first --tree --level=3 {} | head -50')"
 
 [[ -z $selected ]] && return 1
 
