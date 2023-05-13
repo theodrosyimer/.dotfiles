@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+
+query="$1"
+
+osascript <<-EndOfScript
+tell application "Google Chrome"
+	activate
+	if not (exists) then reopen
+	repeat with w in windows
+		set i to 1
+		repeat with t in tabs of w
+			if URL of t contains "$query" or title of t contains "$query" then
+				set active tab index of w to i
+				set index of w to 1
+				return
+			end if
+			set i to i + 1
+		end repeat
+	end repeat
+	--open location "https://duckduckgo.com/?q=" & "$query"
+	tell its window 1
+		set URL of (make new tab) to "https://duckduckgo.com/?q=$query"
+	end tell
+end tell
+EndOfScript
