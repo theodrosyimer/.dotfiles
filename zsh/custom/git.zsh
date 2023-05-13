@@ -222,3 +222,4 @@ alias gc='git_clone_clean_from_front_tab_chrome'
 alias gccb='git_clone_clean_from_cb'
 
 alias gurl=git_get_remote_url_from_cwd
+alias glf="git log --oneline | fzf --multi --preview 'git show {+1}'"

@@ -2,7 +2,8 @@ function contains() {
   local regex="$1"
   local string="$2"
 
-	local flag_help flag_sensitive
+	local flag_help
+	local flag_sensitive
 	local output_path=("${PWD}\/my-file.txt") # sets a default path
 	local usage=(
 	"contains [ -h | --help ]"
@@ -25,7 +26,8 @@ function contains() {
 }
 
 function trim() {
-local flag_write flag_help
+local flag_write
+local flag_help
 local output_path=("${PWD}/my-file.txt") # sets a default path
 local usage=(
 "trim [ -h | --help ]"

@@ -128,7 +128,7 @@ function chrome_get_all_urls_from_front_window() {
 }
 
 function chrome_open_urls_from_file() {
-local chrome="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+  local chrome="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 	[[ ! -x $chrome ]] && { \
     printf '%b\n' '\n[ERROR]: chrome is not installed or not found' && return 1; }
@@ -184,3 +184,4 @@ function getUrlsFromFile() {
 
   printf "%s" "${urls:-"$(cat $file)"}"
 }
+

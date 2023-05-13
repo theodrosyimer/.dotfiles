@@ -7,23 +7,33 @@ function getExtension() {
 # i use this because ls 'separates filenames with newlines'
 # see: [ParsingLs - Greg's Wiki](https://mywiki.wooledge.org/ParsingLs)
 function list() {
+  local paths=()
   for f in ${@:-*}; do
-    echo "$(pwd)/$f";
+    if [[ -a $f ]]; then
+      paths+="$(pwd)/$f";
+      # continue
+    fi
   done
+
+  print -l $paths;
+}
+
+function listp() {
+  local paths=()
+  for f in ${@:-*}
+    if [[ -a $f ]]; then
+      parallel --shuf --eta -j+0 paths+="$(pwd)/$f";
+    fi
+
+  print -l $paths;
 }
 
 function get_basename_no_ext() {
-  local current_dir="${1:-$PWD}"
-  # local path_basename=$(basename $current_dir)
-  local basename_no_ext="${${current_dir:t}%.*}"
-
-  # echo ${path_basename%.*}
-  echo $basename_no_ext
+  local path="${1:-$PWD}"
+  echo "${${path:t}%%.*}"
 }
 
 function get_parent_dirname() {
-  local current_dir="${1:-$PWD}"
-
-  # echo "$(dirname $current_dir)"
-  echo "${current_dir:h}"
+  local path="${1:-$PWD}"
+  echo "${path:h}"
 }

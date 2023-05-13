@@ -26,7 +26,7 @@ function _add_alias() {
 
   # [[ "${${BUFFER}[1]}" = "'" ]] && local str="$(echo $buffer | rg -No --no-column "^(')(.*)(')$" -r $1 $3 '$2' | awk 'BEGIN {FS = "' '"} {print $1"\n"$2"\n"$3}')"
 
-  [[ -z "$str" ]] && return
+  [[ -z "$str" ]] && return 1
 
   local args=(${(@f)str})
 

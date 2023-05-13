@@ -11,10 +11,11 @@
  :templates {:alfred "osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\" with argument \"%s\"'"
              :code-project "osascript -e 'tell application \"Visual Studio Code\" to activate' && open -a 'Visual Studio Code' %s -g %s"
              :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
+             :scriptkit "~/.kit/kar \"%s\""
              :launch "osascript -e 'tell application \"%s\" to activate'"
              :open "open \"%s\""
-             :open-a "open -a '%s'"
-             :open-b "open -b '%s'"
+             :open-a "open -a \"%s\""
+             :open-b "open -b \"%s\""
              :open-chrome "osascript -e <<-EndOfScript
                             'set adress to \"%s\"
                             tell application \"Google Chrome\"
@@ -91,10 +92,10 @@
          :rules [;
                  ;
                  [:##caps_lock :left_control nil {:alone :escape}]
-                 [:!T1 :!CTOS1] ; 
+                 [:!T1 :!CTOS1] ;
                  [:!T2 :!CTOS2]
                  [:!T3 :!CTOS3]
-                 [:!T4 :!CTOS4] ; 
+                 [:!T4 :!CTOS4] ;
                  [:!T5 :!CTOS5]
                  [:!T6 :!CTOS6]
                  ;
@@ -105,13 +106,15 @@
                  ;
                  [:a :!Ospacebar] ; launch Alfred ; (a=q)
                  [:c [:alfred "code" "com.ty.alfred.vs-code.open"]]
-                 [:t [:alfred "plantMe" "com.ty.alfred.plantme"]]
-                 [:s :!CTOSd] ; launch Moom
-                 [:d [:open-b "com.google.Chrome"]]
-                 [:f [:open-b "com.microsoft.VSCode"]]
-                 [:k [:open-b "com.stairways.keyboardmaestro.editor"]]
-                 [:spacebar :!CTOleft_shiftspacebar] ; launch Dash
-                 [:w :!CTOSo] ; w=z
+                 [:n [:alfred "plantMe" "com.ty.alfred.plantme"]]
+                 [:d :!CTOSd] ; launch Moom
+                 [:k [:open-b "com.google.Chrome"]]
+                ;;  [:j [:open-b "com.microsoft.VSCode"]]
+                 [:j :!CTOSe]
+                 [:f :!TOspacebar]
+                 [:t [:scriptkit "open-tab"]]
+                ;;  [:k [:open-b "com.stairways.keyboardmaestro.editor"]]
+                 [:w :!CTOSo] ; launch 1Password (w=z)
                  ;
                  ]}
 
@@ -147,8 +150,10 @@
                  [:##d :left_shift]
                  [:##s :left_command]
 
-                ; Select word
-                 [:spacebar :!Cd]
+                ;; ; Select word
+                ;;  [:spacebar :!Cd]
+
+                 [:spacebar :!CTOSspacebar] ; launch Dash
 
                 ; Shrink/Expand selection (VSCode)
                 ;;  [:g :!CSTleft_arrow]

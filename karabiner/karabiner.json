@@ -524,7 +524,7 @@
           }
         }, {
           "from" : {
-            "key_code" : "t"
+            "key_code" : "n"
           },
           "to" : [ {
             "shell_command" : "osascript -e 'tell application \"Alfred 4\" to run trigger \"plantMe\" in workflow \"com.ty.alfred.plantme\" with argument \"\"'"
@@ -552,7 +552,7 @@
             "simultaneous" : [ {
               "key_code" : "l"
             }, {
-              "key_code" : "t"
+              "key_code" : "n"
             } ],
             "simultaneous_options" : {
               "detect_key_down_uninterruptedly" : true,
@@ -616,100 +616,10 @@
           }
         }, {
           "from" : {
-            "key_code" : "s"
-          },
-          "to" : [ {
-            "shell_command" : "open -b 'com.google.Chrome'"
-          } ],
-          "conditions" : [ {
-            "name" : "l-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "l-mode",
-              "value" : 1
-            }
-          }, {
-            "shell_command" : "open -b 'com.google.Chrome'"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "l"
-            }, {
-              "key_code" : "s"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "l-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "e"
-          },
-          "to" : [ {
-            "shell_command" : "open -b 'com.microsoft.VSCode'"
-          } ],
-          "conditions" : [ {
-            "name" : "l-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "l-mode",
-              "value" : 1
-            }
-          }, {
-            "shell_command" : "open -b 'com.microsoft.VSCode'"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "l"
-            }, {
-              "key_code" : "e"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "l-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
             "key_code" : "k"
           },
           "to" : [ {
-            "shell_command" : "open -b 'com.stairways.keyboardmaestro.editor'"
+            "shell_command" : "open -b \"com.google.Chrome\""
           } ],
           "conditions" : [ {
             "name" : "l-mode",
@@ -728,7 +638,7 @@
               "value" : 1
             }
           }, {
-            "shell_command" : "open -b 'com.stairways.keyboardmaestro.editor'"
+            "shell_command" : "open -b \"com.google.Chrome\""
           } ],
           "from" : {
             "simultaneous" : [ {
@@ -751,10 +661,10 @@
           }
         }, {
           "from" : {
-            "key_code" : "spacebar"
+            "key_code" : "j"
           },
           "to" : [ {
-            "key_code" : "spacebar",
+            "key_code" : "e",
             "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
           } ],
           "conditions" : [ {
@@ -774,14 +684,14 @@
               "value" : 1
             }
           }, {
-            "key_code" : "spacebar",
+            "key_code" : "e",
             "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
           } ],
           "from" : {
             "simultaneous" : [ {
               "key_code" : "l"
             }, {
-              "key_code" : "spacebar"
+              "key_code" : "j"
             } ],
             "simultaneous_options" : {
               "detect_key_down_uninterruptedly" : true,
@@ -796,22 +706,145 @@
               } ]
             }
           }
-        } ]
-      }, {
-        "description" : "Desactivate Hyper+z",
-        "manipulators" : [ {
+        }, {
           "from" : {
-            "key_code" : "w"
+            "key_code" : "f"
           },
           "to" : [ {
-            "key_code" : "escape"
+            "key_code" : "spacebar",
+            "modifiers" : [ "left_control", "left_option" ]
           } ],
           "conditions" : [ {
-            "name" : "caps_lock",
+            "name" : "l-mode",
             "value" : 1,
             "type" : "variable_if"
           } ],
           "type" : "basic"
+        }, {
+          "type" : "basic",
+          "parameters" : {
+            "basic.simultaneous_threshold_milliseconds" : 250
+          },
+          "to" : [ {
+            "set_variable" : {
+              "name" : "l-mode",
+              "value" : 1
+            }
+          }, {
+            "key_code" : "spacebar",
+            "modifiers" : [ "left_control", "left_option" ]
+          } ],
+          "from" : {
+            "simultaneous" : [ {
+              "key_code" : "l"
+            }, {
+              "key_code" : "f"
+            } ],
+            "simultaneous_options" : {
+              "detect_key_down_uninterruptedly" : true,
+              "key_down_order" : "strict",
+              "key_up_order" : "strict_inverse",
+              "key_up_when" : "any",
+              "to_after_key_up" : [ {
+                "set_variable" : {
+                  "name" : "l-mode",
+                  "value" : 0
+                }
+              } ]
+            }
+          }
+        }, {
+          "from" : {
+            "key_code" : "t"
+          },
+          "to" : [ {
+            "shell_command" : "~/.kit/kar \"open-tab\""
+          } ],
+          "conditions" : [ {
+            "name" : "l-mode",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "type" : "basic",
+          "parameters" : {
+            "basic.simultaneous_threshold_milliseconds" : 250
+          },
+          "to" : [ {
+            "set_variable" : {
+              "name" : "l-mode",
+              "value" : 1
+            }
+          }, {
+            "shell_command" : "~/.kit/kar \"open-tab\""
+          } ],
+          "from" : {
+            "simultaneous" : [ {
+              "key_code" : "l"
+            }, {
+              "key_code" : "t"
+            } ],
+            "simultaneous_options" : {
+              "detect_key_down_uninterruptedly" : true,
+              "key_down_order" : "strict",
+              "key_up_order" : "strict_inverse",
+              "key_up_when" : "any",
+              "to_after_key_up" : [ {
+                "set_variable" : {
+                  "name" : "l-mode",
+                  "value" : 0
+                }
+              } ]
+            }
+          }
+        }, {
+          "from" : {
+            "key_code" : "w"
+          },
+          "to" : [ {
+            "key_code" : "o",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
+          } ],
+          "conditions" : [ {
+            "name" : "l-mode",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "type" : "basic",
+          "parameters" : {
+            "basic.simultaneous_threshold_milliseconds" : 250
+          },
+          "to" : [ {
+            "set_variable" : {
+              "name" : "l-mode",
+              "value" : 1
+            }
+          }, {
+            "key_code" : "o",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
+          } ],
+          "from" : {
+            "simultaneous" : [ {
+              "key_code" : "l"
+            }, {
+              "key_code" : "w"
+            } ],
+            "simultaneous_options" : {
+              "detect_key_down_uninterruptedly" : true,
+              "key_down_order" : "strict",
+              "key_up_order" : "strict_inverse",
+              "key_up_when" : "any",
+              "to_after_key_up" : [ {
+                "set_variable" : {
+                  "name" : "l-mode",
+                  "value" : 0
+                }
+              } ]
+            }
+          }
         } ]
       }, {
         "description" : "Both shift keys toggles caps lock",
@@ -1039,8 +1072,8 @@
             "key_code" : "spacebar"
           },
           "to" : [ {
-            "key_code" : "d",
-            "modifiers" : [ "left_command" ]
+            "key_code" : "spacebar",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
           } ],
           "conditions" : [ {
             "name" : "a-mode",
@@ -1059,8 +1092,8 @@
               "value" : 1
             }
           }, {
-            "key_code" : "d",
-            "modifiers" : [ "left_command" ]
+            "key_code" : "spacebar",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
           } ],
           "from" : {
             "simultaneous" : [ {
