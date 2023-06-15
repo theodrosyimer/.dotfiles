@@ -1,14 +1,21 @@
 alias churl='chrome_get_front_window_url'
 alias cht='chrome_get_front_window_title'
+alias churls='chrome_get_all_urls_from_front_window'
+alias chourls='chrome_open_urls_from_file'
+alias chrurls='get_urls_from_file | chrome_open_urls_from_file'
 
+# ! Only works for macos as it uses osascript to execute applescript
 function chrome_get_front_window_url() {
   echo $(osascript -e 'tell application "Google Chrome" to return URL of active tab of front window')
 }
 
+# ! Only works for macos as it uses osascript to execute applescript
 function chrome_get_front_window_title() {
   echo $(osascript -e 'tell application "Google Chrome" to return title of active tab of front window') | sed -E 's/^(\([0-9]*\) )(.+)$/\2/g'
 }
 
+# ! Only works for macos as it uses osascript to execute JXA (applescript alternative)
+# ! Dependencies: json
 function chrome_get_all_urls_from_front_window() {
   local to_json_script="browser='Google Chrome'
   var tabsCollection = []
@@ -127,6 +134,7 @@ function chrome_get_all_urls_from_front_window() {
 
 }
 
+# ! Dependency: get_urls_from_file function
 function chrome_open_urls_from_file() {
   local chrome="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
@@ -156,7 +164,7 @@ function chrome_open_urls_from_file() {
 
     if [[ -f $1 ]]; then
         sleep "${sleep_time:-0}"
-        file_content="$(getUrlsFromFile $1)"
+        file_content="$(get_urls_from_file $1)"
         urls=(${(@f)file_content})
       else
         urls=(${(@)@})
@@ -164,14 +172,15 @@ function chrome_open_urls_from_file() {
 
     open "${urls[@]}"
 
-    # It is way faster to open all urls at once than to open them one by one, so don't do that:
+    # It is way faster to open all urls at once than to open them one by one in a loop, so don't do that:
     # for u in "${urls[@]}"; do
     #   echo $u
     #   open $u
     # done
 }
 
-function getUrlsFromFile() {
+# ! Dependencies: rg, jq, awk
+function get_urls_from_file() {
   local file=$1
   local extension=${file##*.}
   local urls=""

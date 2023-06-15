@@ -19,7 +19,7 @@ export HOMEBREW_NO_AUTO_UPDATE=1
 # source: https://superuser.com/a/1738607
 export LANG=en_US.UTF-8 # LANG=fr_FR.UTF-8
 
-export RIPGREP_CONFIG_PATH="$DOTFILES/ripgrep/.ripgreprc"
+export RIPGREP_CONFIG_PATH="$HOME/.dotfiles/ripgrep/.ripgreprc"
 
 # fzf
 FZF_COLORS="bg+:-1,\

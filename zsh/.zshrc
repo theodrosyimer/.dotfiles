@@ -47,11 +47,11 @@ bindkey '\e[B' history-beginning-search-forward
 # zle -N edit-command-line
 # bindkey -M vicmd '^v' edit-command-line
 
-# if [[ "$TERM_PROGRAM" == 'vscode' ]]; then
-#   alias 'rg'='rgd'
-# else
-#   alias 'rg'='rg --smart-case --hidden --no-heading --column'
-# fi
+if [[ "$TERM_PROGRAM" == 'vscode' ]]; then
+  alias 'rg'='rgd'
+else
+  alias 'rg'='rg --smart-case --hidden --no-heading --column'
+fi
 
 # WINDOW CONFIGURATION
 ################################################################################
