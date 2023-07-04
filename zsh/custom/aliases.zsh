@@ -3,7 +3,7 @@
 # Safer default
 alias cp="cp -i"
 alias mv="mv -i"
-alias rm="rm -i"
+alias rm="trash"
 
 alias sz='source ~/.zshrc'
 alias sb='source ~/.bash_profile'
