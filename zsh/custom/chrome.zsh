@@ -86,6 +86,10 @@ function chrome_get_all_urls_from_front_window() {
   local usage=(
     "chrome_get_all_urls_from_front_window [ -h | --help ]"
     "chrome_get_all_urls_from_front_window [ -p | --pretty-print ] [ -o | --output <path/to/file> ]"
+    "chrome_get_all_urls_from_front_window [ -c | --csv ] [ -o | --output <path/to/file> ]"
+    "chrome_get_all_urls_from_front_window [ -j | --json ] [ -o | --output <path/to/file> ]"
+    "chrome_get_all_urls_from_front_window [ -md | --markdown ] [ -o | --output <path/to/file> ]"
+    "chrome_get_all_urls_from_front_window [ -ne | --no-extension ] [ -o | --output <path/to/file> ]"
   )
 
   zmodload zsh/zutil
