@@ -52,9 +52,19 @@
                 "currentVersion": "1.2.7"
               }
             }
+          },
+          {
+            "id": "d2ce44bbf7fb16fe",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.2.8"
+              }
+            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -224,8 +234,10 @@
       "obsidian-kindle-plugin:Sync your Kindle highlights": false
     }
   },
-  "active": "0d54311cac0022d9",
+  "active": "d2ce44bbf7fb16fe",
   "lastOpenFiles": [
+    "20230627014854 Data Structures and Algorithms to know.md",
+    "20230627014854.md",
     "20230426192455 Modern Tech Stack & Serverless Services.md",
     "201807290720 How to choose the right USB Type-C for Thunderbolt compatibility.md",
     "201903280437 How to choose a new technology.md",
@@ -249,8 +261,6 @@
     "20230116135345 Conventional commit Rules type.md",
     "20230129235435 How to insert a recaptcha on a web page.md",
     "Untitled.md",
-    "20221208155741 Présentation Du Projet De Fin D'année - Assofac Soutenance.md",
-    "20230130110122 luxury-kitchen.md",
-    "201707130503 Liste Artistes Live.md"
+    "20221208155741 Présentation Du Projet De Fin D'année - Assofac Soutenance.md"
   ]
 }
