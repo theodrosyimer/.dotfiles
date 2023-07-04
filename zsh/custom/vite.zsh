@@ -27,24 +27,8 @@ select template in ${(@)templates}
 
 ## NPM ##
 
-# cd "$dir_path" &&
-# npm create "vite@$version" "$project_name" -- --template "${template}" &&
-
-# echo -e "Running:\n"
-# echo "  cd $project_name"
-# echo -e "  npm install"
-# echo -e "  npm run dev\n"
-
-# cd "$project_name" &&
-#   code -gn . index.html &&
-#   npm install &&
-#   npm run dev
-
-
-## PNPM ##
-
 cd "$dir_path" &&
-pnpm create vite "$project_name" -- --template "${template}" &&
+npm create "vite@$version" "$project_name" -- --template "${template}" &&
 
 echo -e "Running:\n"
 echo "  cd $project_name"
@@ -52,7 +36,23 @@ echo -e "  npm install"
 echo -e "  npm run dev\n"
 
 cd "$project_name" &&
-  code -gn . &&
-  pnpm install &&
-  pnpm run dev
+  code -gn . index.html &&
+  npm install &&
+  npm run dev
+
+
+## PNPM ##
+
+# cd "$dir_path" &&
+# sudo pnpm create vite "$project_name" --template "$template" &&
+
+# echo -e "Running:\n"
+# echo "  cd $project_name"
+# echo -e "  npm install"
+# echo -e "  npm run dev\n"
+
+# cd "$project_name" &&
+#   code -gn . &&
+#   pnpm install &&
+#   pnpm run dev
 }
