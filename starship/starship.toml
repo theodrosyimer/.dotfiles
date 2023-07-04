@@ -1,0 +1,79 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$git_metrics\
+$fill\
+$nodejs\
+$python\
+$rust\
+$golang\
+$cmd_duration $jobs $time\
+$line_break\
+$character"""
+
+add_newline = false
+palette = 'onedarkcustom'
+
+# Define custom colors
+[palettes.onedarkcustom]
+blue = '21'
+# Define new color
+mustard = '#af8700'
+
+[fill]
+symbol = " "
+
+[directory]
+style = "cyan"
+read_only = " 🔒"
+truncation_length = 1
+truncate_to_repo = false
+
+# [directory.substitutions]
+# "Documents" = "󰈙 "
+# "Downloads" = " "
+# "Music" = " "
+# "Pictures" = " "
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"
+
+[git_branch]
+symbol =  " "
+style = "bright-black"
+format = '[$symbol$branch ]($style)'
+
+[jobs]
+symbol = ""
+style = "bold red"
+number_threshold = 1
+format = '[$symbol]($style)'
+
+[nodejs]
+symbol = " "
+style = "green"
+format = '[$symbol($version )]($style)'
+
+[python]
+symbol = " "
+style = 'yellow bold'
+format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+pyenv_version_name = true
+
+[cmd_duration]
+format = '[$duration]($style)'
+
+
+[time]
+disabled = false
+# time_format = "%R" # Hour:Minute Format
+style = "white"
+format = '[$time]($style)'
