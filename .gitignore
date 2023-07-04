@@ -9,4 +9,5 @@ skhd
 yabai
 Brewfile
 personal/*
-ansible
+ansible/*
+nvim/undo/*
