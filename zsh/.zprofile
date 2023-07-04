@@ -19,6 +19,9 @@ export DOTFILES="$HOME/.dotfiles"
 export ZDOTDIR="$DOTFILES/zsh"
 export BIN="$DOTFILES/bin"
 
+# Starship
+export STARSHIP_CONFIG="$DOTFILES/starship/starship.toml"
+
 # Add my scripts to `$PATH`
 export PATH="$PATH:$BIN"
 export PATH="$PATH:$HOME/.js"
