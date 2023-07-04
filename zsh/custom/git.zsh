@@ -110,7 +110,6 @@ function git_init() {
       git_add_all_commit "$comment" &&
       printf "%b\n\n" "$_green""\nCreating remote repository...$_reset" &&
       gh_repo_create_from_cwd "$repo_visibility" "$repo_description" &&
-      git push -u origin main &&
       printf "%b\n\n" "$_green""\nCreating \"dev\" branch...$_reset" &&
       git_create_branch_and_push_origin "dev" &&
       git checkout dev &&
