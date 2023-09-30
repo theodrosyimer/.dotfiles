@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+size=${1:="32"}
+command="$(openssl rand -base64 $size)"
+
+printf "%s" "$command" | pbcopy
+
+echo "$_red""\nCopied to clipboard: "
+printf "%s" "$command"
