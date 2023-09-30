@@ -38,7 +38,7 @@ function optimg() {
 function img_convert_to() {
 	# local extensions=("${1:-"jpg"}")
 	local extensions=(jpg jpeg png webp)
-	local output_path="${2:-"$(pwd)/images-converted"}"
+	local output_path="${1:-"$(pwd)/images-converted"}"
 	local images=(${(@f)$(fd -e jpg -e png -e jpeg -e webp -d 1)})
 
 	for extension in "${extensions[@]}"; do
@@ -53,12 +53,17 @@ function from_webp() {
 	local extensions=(jpg jpeg png)
 	local output_path="${2:-"$(pwd)/images-converted"}"
 	local images=(${(@f)$(fd -e webp -d 1)})
-
+  # echo "$(pwd)"/$images
+  echo $images
 	for extension in "${extensions[@]}"; do
 		[[ ! -d "$output_path/$extension" ]] && mkdir -p "$output_path/$extension"
 	done
 
-  time parallel --shuf --eta -j+0 dwebp {1} -o $output_path/{2}/{1.}.{2} ::: ${images[@]} ::: ${extensions[@]}
+	for photo in "(${(@f)$(fd -e webp -d 1)})"; do
+		dwebp $photo -o ${photo%.*}.jpg;
+	done
+
+  # time parallel --shuf --eta -j+0 dwebp "$(pwd)"/{1} -o "$output_path"/{2}/{1.}.{2} ::: ${images[@]} ::: ${extensions[@]}
 }
 
 function to_webp() {
