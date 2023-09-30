@@ -30,9 +30,9 @@ Temporary Items
 
 # Most frequent
 node_modules
-build
-dist
-lib
+./build
+./dist
+./lib
 .npmrc
 .env
 .env.?*
