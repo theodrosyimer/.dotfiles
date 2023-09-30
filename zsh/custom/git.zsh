@@ -28,6 +28,44 @@ function git_clone_clean_from_front_tab_chrome() {
 }
 
 # ! dependency: is_installed.zsh -> available in the repository
+# ! dependency: chrome.zsh -> available in the repository
+# ! dependency: `git`
+# ! you need NODEJS installed to use npm
+# TODO: check if user uses ssh or https
+# TODO: add output_path as a flag
+function git_clone_from_front_tab_chrome() {
+  is_installed git "You need to install git!" || return 1
+
+  local dir_path="${1:-"${CODE_PROJECTS:-"$(pwd)"}"}"
+  # local dir_path="${1:-"$(pwd)"}"
+
+  local url="$(chrome_get_front_window_url)"
+  local repo=${url:t2}
+
+
+  # local flag_help flag_name
+  # local output_path=("${PWD}\/my-file.txt") # sets a default path
+  # local usage=(
+  # "git_clone_from_tab_chrome [ -h | --help ]"
+  # "git_clone_from_tab_chrome [ - | -- ] [ -o | --output <path/to/file> ]"
+  # )
+
+  # zmodload zsh/zutil
+  # zparseopts -D -F -K -E -- \
+  #   {h,-help}=flag_help \
+  #   {n,-name}=flag_name \
+  #   {o,-output}:=output_path || return 1
+
+  # [[ -n "$flag_help" ]] && { print -l $usage && return; }
+
+  # [[ -n "$flag_name" ]] && {  git clone "git@github.com:$repo" "$dir_path/$flag_name" && code -gn "$dir_path/$flag_name" && return; }
+
+  local project_name=${2:-"${repo:t}"}
+
+  git clone "git@github.com:$repo" "$dir_path/$project_name" && code -gn "$dir_path/$project_name"
+}
+
+# ! dependency: is_installed.zsh -> available in the repository
 # ! dependency to download: tiged -> npm install -g tiged
 # TODO: check if user uses ssh or https
 # git clone url from clipboard (no test yet!)
@@ -217,7 +255,8 @@ alias greset='ghrd && gdelete'
 alias gac='git_add_all_commit'
 alias gacp='git_add_all_commit_push'
 
-alias gc='git_clone_clean_from_front_tab_chrome'
+alias gc='git_clone_from_front_tab_chrome'
+alias gcc='git_clone_clean_from_front_tab_chrome'
 alias gccb='git_clone_clean_from_cb'
 
 alias gurl=git_get_remote_url_from_cwd
