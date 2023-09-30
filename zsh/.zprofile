@@ -9,10 +9,14 @@ export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 export PATH="/usr/local/opt/icu4c/sbin:$PATH"
 export PATH="/usr/local/opt/icu4c/bin:$PATH"
 
+export PATH="/usr/local/mysql/bin:$PATH"
+
 # $PATH is at beginning to not accidently override any existing system-wide commands with mine
 export PATH="$PATH:/usr/local/go/bin"
 export GOPATH="$HOME/Code/projects/go"
 export PATH="$PATH:$GOPATH/bin"
+export PATH="$PATH:$HOME/Code/tools/flutter/bin"
+
 
 # Paths i use for my automation
 export DOTFILES="$HOME/.dotfiles"
@@ -59,6 +63,13 @@ export LPX_COMPOS="$LPX/Compos"
 export AUDIO_LIBRARIES="/Volumes/Librairies Samples"
 export VIDEOS="$AUDIO_LIBRARIES/Videos"
 
+# bun completions
+[ -s "/Users/mac/.bun/_bun" ] && source "/Users/mac/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
 . "$HOME/.cargo/env"
 
 eval "$(rbenv init -)"
@@ -70,3 +81,4 @@ eval "$(fnm env)"
 FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
 source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+
