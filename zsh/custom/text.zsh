@@ -47,7 +47,7 @@ if [[ -n "$flag_write" ]]; then
 
 	for input in "${input_array[@]}"
 			do
-				local result="$(echo -e "$input" | tr -d '\\n' | tr -d '\n' | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g')"
+				local result="$(echo -e "$input" | tr -d '\n' | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g')"
 				echo -e "$result" >>"$output_path[-1]"
 			done
 	return 0
@@ -58,7 +58,7 @@ if [[ -z "$flag_write" ]]; then
 
 	for input in "${input_array[@]}"
 			do
-				local result_formatted="$(echo -e "$input" | tr -d '\\n' | tr -d '\n' | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g')" && echo -e $result_formatted
+				local result_formatted="$(echo -e "$input" | tr -d '\n' | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g')" && echo -e $result_formatted
 			done
 	return 0
 fi
