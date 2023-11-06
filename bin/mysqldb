@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+base_user=root
+base_user_pass=root
+
+NEW_DB=
+NEW_DB_USER=
+NEW_DB_USER_PASSWORD=
+
+mysql -u $base_user -p$base_user_pass -e "create database $NEW_DB; GRANT ALL PRIVILEGES ON $NEW_DB.* TO $NEW_DB_USER@localhost IDENTIFIED BY '$NEW_DB_USER_PASSWORD'"

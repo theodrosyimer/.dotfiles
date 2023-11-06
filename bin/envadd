@@ -1,0 +1,17 @@
+#!/usr/bin/env zsh
+
+source ~/.dotfiles/zsh/custom/next-add-env.zsh
+
+# You can add or remove filenames to search for here
+# by adding or removing items from the array:
+#       local env_filenames=(.env .env.development .env.local .env.local.development .env.production .env.local.production .env.test .env.local.test)
+
+local env_files=(.env .env.development .env.local .env.local.development .env.production .env.local.production .env.test .env.local.test)
+local target="${2:-development}"
+
+for env_file in "${env_files[@]}"
+    do
+        [[ -s "$env_file" ]] && [[ -f "$env_file" ]] && input_file="$env_file"
+    done
+
+cat ${1:-$input_file} | parallel --shuf -j+0 'add_env {}' "$target"

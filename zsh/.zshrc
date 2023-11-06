@@ -81,3 +81,6 @@ export PATH="$PNPM_HOME:$PATH"
 eval "$(starship init zsh)"
 
 # zprof
+
+# fpath=( "${DOTFILES}/zsh/custom" "${fpath[@]}" )
+# autoload -Uz $fpath[1]/*(.:t)

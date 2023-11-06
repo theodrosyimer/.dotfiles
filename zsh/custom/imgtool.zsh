@@ -59,11 +59,11 @@ function from_webp() {
 		[[ ! -d "$output_path/$extension" ]] && mkdir -p "$output_path/$extension"
 	done
 
-	for photo in "(${(@f)$(fd -e webp -d 1)})"; do
-		dwebp $photo -o ${photo%.*}.jpg;
-	done
+	# for photo in "(${(@f)$(fd -e webp -d 1)})"; do
+	# 	dwebp $photo -o ${photo%.*}.jpg;
+	# done
 
-  # time parallel --shuf --eta -j+0 dwebp "$(pwd)"/{1} -o "$output_path"/{2}/{1.}.{2} ::: ${images[@]} ::: ${extensions[@]}
+  time parallel --shuf --eta -j+0 'dwebp "$(pwd)"/{1} -o "$output_path"/{2}/{1.}.{2}' ::: ${images[@]} ::: ${extensions[@]}
 }
 
 function to_webp() {

@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+USER=root
+# PASSWORD=root
+DB_NAME=$1
+# mysqladmin -u$USER -p"$PASSWORD" create "$DB_NAME"
+
+mysqladmin -u$USER create "$DB_NAME" --port=8889

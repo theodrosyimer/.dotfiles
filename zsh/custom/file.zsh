@@ -18,11 +18,11 @@ function list() {
   print -l $paths;
 }
 
-function listp() {
+function listp(){
   local paths=()
   for f in ${@:-*}
     if [[ -a $f ]]; then
-      parallel --shuf --eta -j+0 paths+="$(pwd)/$f";
+      parallel --shuf -j+0 paths+={1} ::: "$f";
     fi
 
   print -l $paths;

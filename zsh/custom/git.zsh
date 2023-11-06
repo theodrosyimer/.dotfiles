@@ -79,8 +79,25 @@ function git_clone_clean_from_cb() {
   tiged "$url" "$dir_path" && code -gn "$dir_path"
 }
 
+function git_clone_with_all_branches() {
+  is_installed git "You need to install git!" || return 1
+
+  local dir_path="${1:-"${CODE_PROJECTS:-"$(pwd)"}"}"
+  # local dir_path="${1:-"$(pwd)"}"
+
+  local url="$(chrome_get_front_window_url)"
+  local repo=${url:t2}
+
+  local project_name=${2:-"${repo:t}"}
+
+  git clone --mirror "git@github.com:$repo" "$dir_path/$project_name/.git"
+  cd "$dir_path/$project_name"
+  git config --bool core.bare false
+  git checkout dev || git checkout main
+}
+
 function git_create_branch_and_push_origin() {
-  local branch_name="$(echo ${1:l} | sed s/" "/-/g)"
+  local branch_name="$(printf "%s" ${1:l} | sed s/" "/-/g)"
 
   git checkout -b "$branch_name" &&
     git push -u origin "$branch_name"
@@ -88,6 +105,11 @@ function git_create_branch_and_push_origin() {
 
 function git_get_current_branch_name() {
   printf "%s" "$(git rev-parse --abbrev-ref HEAD)"
+}
+
+function git_track_current_branch_from_remote() {
+  branch_name="$(git_get_current_branch_name)"
+  git checkout -b "$branch_name" "origin/$branch_name"
 }
 
 # ! dependency: text.zsh -> available in the repository
@@ -102,8 +124,8 @@ function git_create_branches_and_push_origin() {
       local branch_name_formatted="$(trim $branch)"
       # echo "$branch_name_formatted"
 
-      git_create_branch_and_push_origin "$branch_name_formatted" &&
-      git checkout main
+      git_create_branch_and_push_origin "$branch_name_formatted" # &&
+      # git checkout dev
     done
 }
 
@@ -112,7 +134,6 @@ function git_delete_branch_local_and_origin() {
 
   git branch --delete "$branch_name" &&
     git push origin --delete "$branch_name"
-
 }
 
 # ! dependency: text.zsh -> available in the repository

@@ -88,6 +88,13 @@
         ;;          ;
         ;;          ]}
 
+        ;; {:des "spacebar to spacebar when pressed alone, to hyper as modifier"
+        ;;  :rules [;
+        ;;          ;
+        ;;          [:##spacebar :!TCOleft_shift nil {:alone :spacebar}]
+        ;;          ;
+        ;;          ]}
+
         {:des "caps_lock to esc when pressed alone, to control as modifier"
          :rules [;
                  ;
