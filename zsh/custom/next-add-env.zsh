@@ -65,7 +65,7 @@ function add_env() {
         local name="$(echo "$input" | cut -d'=' -f1)"
         local value="$(echo "$input" | cut -d'=' -f2)"
 
-        printf "%s" "$(printf "%s" "$value"  | tr -d '\n')" | vercel env add "$name" "$target"
+        printf "%s" "$(printf "%s" "$value"  | tr -d '\n\r')" | vercel env add "$name" "$target"
     fi
 
     if [ -p /dev/stdin ]; then
