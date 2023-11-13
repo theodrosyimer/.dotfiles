@@ -5,10 +5,9 @@ function fm() {
   open_finder="ctrl-o:execute-silent(open -b "com.apple.finder" {})+close"
   enter_dir="ctrl-f:reload(find {} -type f -iname \"*.mp4\")"
 
-  selected="$(echo "$dir_list" | \
+  selected=$(echo "$dir_list" | \
     fzf \
     --bind "$enter_dir" \
-    --bind "enter:execute-silent(echo {})+accept" \
     --bind "ctrl-c:execute-silent("$EDITOR" {})+accept" \
     --bind "ctrl-i:execute(cp -Ri {} .)+accept" \
     --bind "ctrl-r:reload(echo \"$dir_list\")" \
@@ -23,5 +22,12 @@ function fm() {
     --bind "ctrl-f:+change-preview(bat --color=always --style=numbers {})" \
     --bind "ctrl-f:+toggle-preview" \
     --bind "$open_finder" \
-    --preview-window hidden)"
+    --preview-window hidden)
+
+  [[ -z "$selected" ]] && return 0
+
+  if [[ -d "$selected" ]]; then
+    echo "$selected"
+    cd "$selected" && return 0
+  fi
 }
