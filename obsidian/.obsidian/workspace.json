@@ -62,9 +62,21 @@
                 "currentVersion": "1.2.8"
               }
             }
+          },
+          {
+            "id": "3ada1afe5c7548f2",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "201903230903 Network Security Command Line.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
         ],
-        "currentTab": 4
+        "currentTab": 5
       }
     ],
     "direction": "vertical"
@@ -84,7 +96,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "new technology",
+                "query": "scanner",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": true,
@@ -137,7 +149,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "20211110032231 New Technology, Tools and Services.md"
+                "file": "201903230903 Network Security Command Line.md"
               }
             }
           }
@@ -190,7 +202,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "20211110032231 New Technology, Tools and Services.md",
+                "file": "201903230903 Network Security Command Line.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -202,7 +214,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "20211110032231 New Technology, Tools and Services.md",
+                "file": "201903230903 Network Security Command Line.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -234,13 +246,18 @@
       "obsidian-kindle-plugin:Sync your Kindle highlights": false
     }
   },
-  "active": "d2ce44bbf7fb16fe",
+  "active": "3ada1afe5c7548f2",
   "lastOpenFiles": [
+    "201803252313 How to choose a scanner or printer.md",
+    "201803252302 Things to consider when choosing a scanner.md",
+    "201803252305 What make a good scanner for Photos.md",
+    "20211110032231 New Technology, Tools and Services.md",
+    "201912081445 MongoDB Cheatsheet.md",
+    "201903280437 How to choose a new technology.md",
     "20230627014854 Data Structures and Algorithms to know.md",
     "20230627014854.md",
     "20230426192455 Modern Tech Stack & Serverless Services.md",
     "201807290720 How to choose the right USB Type-C for Thunderbolt compatibility.md",
-    "201903280437 How to choose a new technology.md",
     "20221013093255 cv.md",
     "20230218200956 Most important criteria.md",
     "20230228180536 List of Web components to make.md",
@@ -256,11 +273,6 @@
     "20230114174655 List Of Shells That Support `Local` Keyword For Defining Local Variables - Unix & Linux Stack Exchange.md",
     "20230114182145 List Of Shells That Support `Local` Keyword For Defining Local Variables - Unix & Linux Stack Exchange.md",
     "20230220100415 Web Components.md",
-    "20230210122647 unsplash random images - syntax.md",
-    "20230208213724 Flexbox - cheatsheet.md",
-    "20230116135345 Conventional commit Rules type.md",
-    "20230129235435 How to insert a recaptcha on a web page.md",
-    "Untitled.md",
-    "20221208155741 Présentation Du Projet De Fin D'année - Assofac Soutenance.md"
+    "20230210122647 unsplash random images - syntax.md"
   ]
 }

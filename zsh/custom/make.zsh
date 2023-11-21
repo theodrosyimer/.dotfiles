@@ -23,7 +23,7 @@ function mkn() {
 
   zettID="$(zetid)"
 
-  cd "$output_path" && echo "# $filename\n\n" >"$zettID $filename.$extension" && code -g . "$zettID $filename.$extension":2
+  echo "# $filename\n\n" >"$output_path/$zettID $filename.$extension" && code -g "$output_path" "$output_path/$zettID $filename.$extension":2
 }
 
 # TODO: create new file (reference) for a specified language
@@ -126,7 +126,7 @@ function mkweb() {
   local ts_template_path=/Users/mac/Code/_templates/dev/ts/vanilla-ts/
   local css_template_path=/Users/mac/Code/_templates/dev/css/style.css
 
-  local default_path="$CODE_REFS/html-css"
+  local default_path="$CODE_REFS/css"
   local project_name="${1:-"my-project"}"
   local output_path=("${default_path:-"$(pwd)"}")
   local usage=(
@@ -134,12 +134,13 @@ function mkweb() {
     "mkweb [ -n | --name <filename> ] [ -o | --output <path/to/directory> ]"
   )
 
-  local flag_typescript flag_help
+  local flag_typescript flag_help flag_next
 
   zmodload zsh/zutil
   zparseopts -D -F -K -E -- \
     {h,-help}=flag_help \
     {ts,-typescript}=flag_typescript \
+    {n,-next}=flag_next \
     {o,-output}:=output_path || return 1
 
   [[ ! -z "$flag_help" ]] && { print -l $usage && return; }

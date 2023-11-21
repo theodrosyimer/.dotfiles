@@ -1,16 +1,36 @@
 {
   "recentFiles": [
     {
+      "basename": "201903230903 Network Security Command Line",
+      "path": "201903230903 Network Security Command Line.md"
+    },
+    {
+      "basename": "201803252313 How to choose a scanner or printer",
+      "path": "201803252313 How to choose a scanner or printer.md"
+    },
+    {
+      "basename": "201803252302 Things to consider when choosing a scanner",
+      "path": "201803252302 Things to consider when choosing a scanner.md"
+    },
+    {
+      "basename": "201803252305 What make a good scanner for Photos",
+      "path": "201803252305 What make a good scanner for Photos.md"
+    },
+    {
       "basename": "20211110032231 New Technology, Tools and Services",
       "path": "20211110032231 New Technology, Tools and Services.md"
     },
     {
-      "basename": "201807290720 How to choose the right USB Type-C for Thunderbolt compatibility",
-      "path": "201807290720 How to choose the right USB Type-C for Thunderbolt compatibility.md"
+      "basename": "201912081445 MongoDB Cheatsheet",
+      "path": "201912081445 MongoDB Cheatsheet.md"
     },
     {
       "basename": "201903280437 How to choose a new technology",
       "path": "201903280437 How to choose a new technology.md"
+    },
+    {
+      "basename": "201807290720 How to choose the right USB Type-C for Thunderbolt compatibility",
+      "path": "201807290720 How to choose the right USB Type-C for Thunderbolt compatibility.md"
     },
     {
       "basename": "20221013093255 cv",
@@ -179,18 +199,6 @@
     {
       "basename": "20191222192204 FIX - mmd2cheatset script",
       "path": "20191222192204 FIX - mmd2cheatset script.md"
-    },
-    {
-      "basename": "20191223190149 Export Stems - GUM",
-      "path": "20191223190149 Export Stems - GUM.md"
-    },
-    {
-      "basename": "20230128183005 Dashboard using dataviewjs database folder",
-      "path": "20230128183005 Dashboard using dataviewjs database folder.md"
-    },
-    {
-      "basename": "Home",
-      "path": "Home.canvas"
     }
   ],
   "omittedPaths": [],
