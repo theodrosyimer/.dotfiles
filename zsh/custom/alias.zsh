@@ -30,7 +30,7 @@ function _add_alias() {
 
   local args=(${(@f)str})
 
-  [[ -z $args ]] && return
+  [[ -z $args ]] && return 1
 
   local name="$args[1]"
   local alias="$args[2]"
