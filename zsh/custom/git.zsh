@@ -17,7 +17,7 @@ function git_add_all_commit_push() {
 function git_clone_clean_from_front_tab_chrome() {
   is_installed tiged "run -> npm i -g tiged" || return 1
 
-  local dir_path="${1:-"${CODE_PROJECTS:-"$(pwd)"}"}"
+  local dir_path="${1:-"${CODE_PERSONAL:-"$(pwd)"}"}"
   # local dir_path="${1:-"$(pwd)"}"
 
   local url="$(chrome_get_front_window_url)"
@@ -36,7 +36,7 @@ function git_clone_clean_from_front_tab_chrome() {
 function git_clone_from_front_tab_chrome() {
   is_installed git "You need to install git!" || return 1
 
-  local dir_path="${1:-"${CODE_PROJECTS:-"$(pwd)"}"}"
+  local dir_path="${1:-"${CODE_PERSONAL:-"$(pwd)"}"}"
   # local dir_path="${1:-"$(pwd)"}"
 
   local url="$(chrome_get_front_window_url)"
@@ -73,7 +73,7 @@ function git_clone_clean_from_cb() {
   is_installed tiged "run -> npm i -g tiged" || return 1
 
   local url="$(pbpaste)"
-    # local dir_path="${2:-"${CODE_PROJECTS:-"$(pwd)"}"}"
+    # local dir_path="${2:-"${CODE_PERSONAL:-"$(pwd)"}"}"
   local dir_path="${2:-"$(pwd)"}"
 
   tiged "$url" "$dir_path" && code -gn "$dir_path"
@@ -82,7 +82,7 @@ function git_clone_clean_from_cb() {
 function git_clone_with_all_branches() {
   is_installed git "You need to install git!" || return 1
 
-  local dir_path="${1:-"${CODE_PROJECTS:-"$(pwd)"}"}"
+  local dir_path="${1:-"${CODE_PERSONAL:-"$(pwd)"}"}"
   # local dir_path="${1:-"$(pwd)"}"
 
   local url="$(chrome_get_front_window_url)"
@@ -168,13 +168,17 @@ function git_init() {
       git_set_remote_url_from_cwd &&
       git_add_all_commit "$comment" &&
       printf "%b\n\n" "$_green""\nCreating remote repository...$_reset" &&
-      gh_repo_create_from_cwd "$repo_visibility" "$repo_description" &&
-      printf "%b\n\n" "$_green""\nCreating \"dev\" branch...$_reset" &&
-      git_create_branch_and_push_origin "dev" &&
-      git checkout dev &&
+      gh_repo_create_from_cwd "$repo_visibility" "$repo_description" # &&
+      # printf "%b\n\n" "$_green""\nCreating \"dev\" branch...$_reset" &&
+      # git_create_branch_and_push_origin "dev" &&
       printf "%b\n" "$_green""\nYour project is initialized!$_reset"
-      printf "%s\n" "$_green""You are in the$_yellow dev$_reset$_green branch.$_reset"
+      printf "%s\n" "$_green""You are in the$_yellow $(git_get_current_branch_name)$_reset$_green branch.$_reset"
   fi
+}
+
+function git_create_dev_branch() {
+  printf "%b\n\n" "$_green""\nCreating \"dev\" branch...$_reset" &&
+  git_create_branch_and_push_origin "dev"
 }
 
 function git_is_main_or_master() {
@@ -261,6 +265,7 @@ alias ginit=git_init
 alias gop='git_open_project_at_gh'
 # alias gom='git_open_main_or_master_remote_at_gh'
 alias gob='git_open_current_branch_remote_at_gh'
+alias gbdev=git_create_dev_branch
 alias gbcreate='git_create_branches_and_push_origin'
 alias gbdelete='git_delete_branches_local_and_origin'
 

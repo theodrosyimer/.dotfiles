@@ -122,9 +122,9 @@ function mkzfc() {
 }
 
 function mkweb() {
-  local js_template_path=/Users/mac/Code/_templates/dev/js/vanilla-html-css/
-  local ts_template_path=/Users/mac/Code/_templates/dev/ts/vanilla-ts/
-  local css_template_path=/Users/mac/Code/_templates/dev/css/style.css
+  local js_template_path="$CODE_TEMPLATES/dev/js/vanilla-html-css/"
+  local ts_template_path="$CODE_TEMPLATES/dev/ts/vanilla-ts/"
+  local css_template_path="$CODE_TEMPLATES/dev/css/style.css"
 
   local default_path="$CODE_REFS/css"
   local project_name="${1:-"my-project"}"
