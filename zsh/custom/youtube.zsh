@@ -52,8 +52,9 @@ function ytd() {
   [[ -n "$flag_help" ]] && { print -l $usage && return; }
 
   local source_url=("${1:-$(chrome_get_front_window_url)}")
+  local regex='https://www.yout'
 
-  [[ "$source_url" =~ "https://www.yout" ]] || { \
+  [[ "$source_url" =~ "$regex" ]] || { \
     echo "$_red\nNo youtube video found on chrome's front tab.$_reset" && \
     return 1; }
 
