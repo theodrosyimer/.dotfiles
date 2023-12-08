@@ -13,7 +13,7 @@ export PATH="/usr/local/mysql/bin:$PATH"
 
 # $PATH is at beginning to not accidently override any existing system-wide commands with mine
 export PATH="$PATH:/usr/local/go/bin"
-export GOPATH="$HOME/Code/projects/go"
+export GOPATH="$HOME/go"
 export PATH="$PATH:$GOPATH/bin"
 export PATH="$PATH:$HOME/Code/tools/flutter/bin"
 
@@ -37,12 +37,15 @@ export PATH="$PATH:$HOME/.knode/bin"
 
 
 export CODE="$HOME/Code"
-export CODE_PROJECTS="$CODE/projects"
 export CODE_REFS="$CODE/refs"
 export CODE_TEMPLATES="$CODE/_templates"
+export CODE_PROJECTS="$CODE/projects"
+export CODE_PERSONAL="$CODE_PROJECTS/personal"
+export CODE_COURSES="$CODE_PROJECTS/courses"
+export CODE_WORK="$CODE_PROJECTS/work"
 export JS_SANDBOX="$CODE_REFS/js/sandbox"
-export DOCSETS="$CODE_PROJECTS/mydocsets"
-export TABLES="$CODE_PROJECTS/mytables"
+export DOCSETS="$CODE_PERSONAL/mydocsets"
+export TABLES="$CODE_PERSONAL/mytables"
 export TAG_LIST="$HOME/.my_tags"
 
 export ICLOUD="$HOME/Library/Mobile Documents"
