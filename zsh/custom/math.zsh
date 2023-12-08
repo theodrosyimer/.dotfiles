@@ -39,7 +39,7 @@ function is_nan() {
   is_int $1 || is_float $1 && return 1
 
   # or check for a number and float number
-  if [[ $num =~ '^[+-]?[0-9]+$' ]] || [[ $num =~ '^[+-]?[0-9]*\.?[0-9]+$' ]] && return 1
+  # if [[ $num =~ '^[+-]?[0-9]+$' ]] || [[ $num =~ '^[+-]?[0-9]*\.?[0-9]+$' ]] && return 1
 }
 
 function is_number() {
