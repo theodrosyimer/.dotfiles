@@ -17,3 +17,7 @@ function tags_show() {
 function tags_get_total_count() {
 	tags_show | wc -l
 }
+
+alias tags=tags_show
+alias tagsc=tags_get_total_count
+alias tagsw=tags_write_to_file
