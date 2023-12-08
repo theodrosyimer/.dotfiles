@@ -1,0 +1,49 @@
+#!/usr/bin/env zsh
+
+#############################################
+#
+# Usage:
+#   test-endpoint <endpoint>
+#
+# Example:
+#   test-endpoint http://localhost:3000/api/v1/endpoint
+#
+# Dependencies:
+#   - curl
+#
+# References:
+#
+#   source: https://superuser.com/a/442395
+#
+#   `-s` = Don't show download progress
+#   `-o /dev/null` = Don't display the body
+#   `-w "%{http_code}"` = Write http response code to stdout after exit
+#
+#############################################
+
+if [[ $# -eq 0 ]]; then
+    echo -e "\nNo <endpoint> was provided\nUsage: ${0:t} <endpoint>"
+    return 1
+fi
+
+endpoint=$1
+requests_count=1
+data='{}'
+
+function send_post_request() {
+    status=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d "$data" $endpoint)
+
+    if [[ $status -eq 200 ]]; then
+        echo "SUCCESS"
+    else
+        echo "ERROR"
+    fi
+}
+
+# loop to send multiple POST requests in parallel (asynchronously) to the endpoint
+for ((i=0; i<$requests_count; i++)); do
+    send_post_request &
+done
+
+# wait for all requests to finish
+wait
