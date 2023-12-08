@@ -38,7 +38,7 @@ export PATH="$PATH:$HOME/.knode/bin"
 
 export CODE="$HOME/Code"
 export CODE_REFS="$CODE/refs"
-export CODE_TEMPLATES="$CODE/_templates"
+export CODE_TEMPLATES="$CODE/templates"
 export CODE_PROJECTS="$CODE/projects"
 export CODE_PERSONAL="$CODE_PROJECTS/personal"
 export CODE_COURSES="$CODE_PROJECTS/courses"
