@@ -96,20 +96,20 @@ function git_clone_with_all_branches() {
   git checkout dev || git checkout main
 }
 
-function git_create_branch_and_push_origin() {
-  local branch_name="$(printf "%s" ${1:l} | sed s/" "/-/g)"
-
-  git checkout -b "$branch_name" &&
-    git push -u origin "$branch_name"
+function git_track_current_branch_from_remote() {
+  branch_name="$(git_get_current_branch_name)"
+  git checkout -b "$branch_name" "origin/$branch_name"
 }
 
 function git_get_current_branch_name() {
   printf "%s" "$(git rev-parse --abbrev-ref HEAD)"
 }
 
-function git_track_current_branch_from_remote() {
-  branch_name="$(git_get_current_branch_name)"
-  git checkout -b "$branch_name" "origin/$branch_name"
+function git_create_branch_and_push_origin() {
+  local branch_name="$(printf "%s" ${1:l} | sed s/" "/-/g)"
+
+  git checkout -b "$branch_name" &&
+    git push -u origin "$branch_name"
 }
 
 # ! dependency: text.zsh -> available in the repository
@@ -174,11 +174,6 @@ function git_init() {
       printf "%b\n" "$_green""\nYour project is initialized!$_reset"
       printf "%s\n" "$_green""You are in the$_yellow $(git_get_current_branch_name)$_reset$_green branch.$_reset"
   fi
-}
-
-function git_create_dev_branch() {
-  printf "%b\n\n" "$_green""\nCreating \"dev\" branch...$_reset" &&
-  git_create_branch_and_push_origin "dev"
 }
 
 function git_is_main_or_master() {
