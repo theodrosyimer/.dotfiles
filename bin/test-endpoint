@@ -12,7 +12,7 @@
 #   - curl
 #
 # References:
-#
+#   command: curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d <data> <endpoint>
 #   source: https://superuser.com/a/442395
 #
 #   `-s` = Don't show download progress
