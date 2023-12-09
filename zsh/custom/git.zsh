@@ -24,7 +24,7 @@ function git_clone_clean_from_front_tab_chrome() {
   local repo=${url:t2}
   local project_name=${2:-"${repo:t}"}
 
-  tiged "git@github.com:$repo" "$dir_path/$project_name" && code -gn "$dir_path/$project_name"
+  tiged "git@github.com:$repo" "$dir_path/$project_name" && code -gn "$dir_path/$project_name" && return 0
 }
 
 # ! dependency: is_installed.zsh -> available in the repository
@@ -76,7 +76,7 @@ function git_clone_clean_from_cb() {
     # local dir_path="${2:-"${CODE_PERSONAL:-"$(pwd)"}"}"
   local dir_path="${2:-"$(pwd)"}"
 
-  tiged "$url" "$dir_path" && code -gn "$dir_path"
+  tiged "$url" "$dir_path" && code -gn "$dir_path" && return 0
 }
 
 function git_clone_with_all_branches() {
