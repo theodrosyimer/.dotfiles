@@ -8,7 +8,7 @@ function fm() {
   selected=$(echo "$dir_list" | \
     fzf \
     --bind "$enter_dir" \
-    --bind "ctrl-c:execute-silent("$EDITOR" {})+accept" \
+    --bind "ctrl-c:execute-silent("$EDITOR" {})+close" \
     --bind "ctrl-i:execute(cp -Ri {} .)+accept" \
     --bind "ctrl-r:reload(echo \"$dir_list\")" \
     --bind "ctrl-r:+change-preview(exa --group-directories-first --tree --level=3 {} | head -50)" \
