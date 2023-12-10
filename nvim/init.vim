@@ -1,5 +1,6 @@
 " paste directly from the OS clipboard to Neovim using Neovim paste keystroke
 set clipboard+=unnamedplus
+set timeoutlen=200
 
 " Disable arrow keys
 noremap <Up> <Nop>
@@ -36,6 +37,15 @@ let mapleader = "\<space>"
 " Leader Key example
 nnoremap <leader>bn :bn<cr> ;buffer next
 nnoremap <leader>tn gt ;new tab
+
+
+" Centering automatically
+" source: https://stackoverflow.com/a/16136133/9103915
+" augroup VCenterCursor
+"   au!
+"   au BufEnter,WinEnter,WinNew,VimResized *,*.*
+"         \ let &scrolloff=winheight(win_getid())/2
+" augroup END
 
 " Disable search highlight
 " nnoremap <nowait><silent> <C-C> :noh<CR>
