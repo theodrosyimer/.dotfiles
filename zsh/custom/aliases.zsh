@@ -124,3 +124,4 @@ alias rmds="fd -H '^\.DS_Store$' -X rm"
 alias du="du -hd 1"
 
 alias cfv="code $DOTFILES/nvim/init.vim"
+alias groot="git rev-parse --git-dir"
