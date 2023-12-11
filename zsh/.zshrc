@@ -12,7 +12,7 @@ export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="kayid"
 
-ZSH_CUSTOM=$HOME/.dotfiles/zsh/custom
+export ZSH_CUSTOM=$HOME/.dotfiles/zsh/custom
 
 
 plugins=(
