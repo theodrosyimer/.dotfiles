@@ -1,6 +1,6 @@
 
-karabiner/.vscode
-karabiner/.lsp
+**/.vscode
+**/.lsp
 karabiner/automatic_backups
 karabiner/assets
 
@@ -11,3 +11,6 @@ Brewfile
 personal/*
 ansible/*
 nvim/undo/*
+
+.DS_Store
+.lsp
