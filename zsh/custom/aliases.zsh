@@ -23,7 +23,7 @@ alias cat='bat'
 # to align `clear` with ^-l keystroke behavior
 # that is modified by my .zshrc
 # ! it doesn't work', find a solution
-alias cl="unset NEW_LINE_BEFORE_PROMPT && clear"
+# alias cl="unset NEW_LINE_BEFORE_PROMPT && clear"
 
 # Rust replacement for `ls`
 alias ls='exa --sort=name --group --group-directories-first --header --git'
@@ -124,4 +124,4 @@ alias rmds="fd -H '^\.DS_Store$' -X rm"
 alias du="du -hd 1"
 
 alias cfv="code $DOTFILES/nvim/init.vim"
-alias groot="git rev-parse --git-dir"
+alias env="env | sort -s"
