@@ -3,11 +3,11 @@ function mkd() {
 }
 
 function mkdocset() {
-  docsets_path="$DOCSETS"
+  output_path="${DOCSETS:-"$(pwd)"}"
   filename="$1"
 
-  cd "$docsets_path" &&
-    mmd2cheatset "$docsets_path/$filename.md"
+  cd "$output_path" &&
+    mmd2cheatset "$output_path/$filename.md"
 }
 
 function mkn() {
@@ -29,10 +29,10 @@ function mkn() {
 # TODO: create new file (reference) for a specified language
 # sh, zsh, js, ts, py, rust, md
 function mkref() {
+  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local output_path="${2:-"${CODE_REFS:-"$(pwd)"}"}"
   local editor=code
   local editor_args=-g
-  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
 }
 
 ### * Create a new rust project and open it in vscode
@@ -57,10 +57,10 @@ function mkrustp() {
 
 # TODO: add flag to switch between stdin and clipboard (mks and mksc)
 function mks() {
+  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local output_path="${2:-"${BIN:-"$(pwd)"}"}"
   local editor=code
   local editor_args=-g
-  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
 
   [[ -f "$output_path/$filename" ]] && { \
     echo -e "\nFile already exists at $output_path/$filename" && $editor "$output_path/$filename" && return 1; }
@@ -71,10 +71,10 @@ function mks() {
 }
 
 function mksc() {
+  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local output_path="${2:-"${BIN:-"$(pwd)"}"}"
   local editor=code
   local editor_args=-g
-  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local content=$(pbpaste)
 
   [[ -f "$output_path/$filename" ]] && { \
@@ -87,12 +87,11 @@ function mksc() {
 
 # TODO: add flag to switch between stdin and clipboard (mkzf and mkzfc)
 function mkzf() {
-  local root_dir="${DOTFILES}"
-  local my_functions_dir="$ZDOTDIR/custom"
-  local output_path="${2:-"${my_functions_dir:-"$(pwd)"}"}"
+  local default_path="$ZSH_CUSTOM"
+  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
+  local output_path="${2:-"${default_path:-"$(pwd)"}"}"
   local editor=code
   local editor_args=-g
-  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local funcname="$(echo $filename | sed s/-/_/g)"
   local content="function $funcname() {\n\n}"
 
@@ -104,12 +103,11 @@ function mkzf() {
 }
 
 function mkzfc() {
-  local root_dir="${DOTFILES}"
-  local my_functions_dir="$ZDOTDIR/custom"
-  local output_path="${2:-"${my_functions_dir:-"$(pwd)"}"}"
+  local default_path="$ZSH_CUSTOM"
+  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
+  local output_path="${2:-"${default_path:-"$(pwd)"}"}"
   local editor=code
   local editor_args=-g
-  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
 
   local funcname="$(echo $filename | sed s/-/_/g)"
   local content=$(pbpaste)
@@ -122,13 +120,13 @@ function mkzfc() {
 }
 
 function mkweb() {
+  local default_path="$CODE_REFS/css"
+  local output_path=("${default_path:-"$(pwd)"}")
   local js_template_path="$CODE_TEMPLATES/dev/js/vanilla-html-css/"
   local ts_template_path="$CODE_TEMPLATES/dev/ts/vanilla-ts/"
   local css_template_path="$CODE_TEMPLATES/dev/css/style.css"
 
-  local default_path="$CODE_REFS/css"
   local project_name="${1:-"my-project"}"
-  local output_path=("${default_path:-"$(pwd)"}")
   local usage=(
     "mkweb [ -h | --help ]"
     "mkweb [ -n | --name <filename> ] [ -o | --output <path/to/directory> ]"
