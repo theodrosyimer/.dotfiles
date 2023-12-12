@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+env | rg -i --no-line-number --no-column "$1"
