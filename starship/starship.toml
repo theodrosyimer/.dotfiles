@@ -70,6 +70,8 @@ pyenv_version_name = true
 
 [cmd_duration]
 format = '[$duration]($style)'
+style = 'bold yellow'
+min_time = 1000
 
 
 [time]
