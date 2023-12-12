@@ -9,8 +9,6 @@ export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 export PATH="/usr/local/opt/icu4c/sbin:$PATH"
 export PATH="/usr/local/opt/icu4c/bin:$PATH"
 
-export PATH="/usr/local/mysql/bin:$PATH"
-
 # $PATH is at beginning to not accidently override any existing system-wide commands with mine
 export PATH="$PATH:/usr/local/go/bin"
 export GOPATH="$HOME/go"
@@ -35,6 +33,8 @@ export PATH="$PATH:$HOME/.kit/bin"
 export PATH="$PATH:$HOME/.kenv/bin"
 export PATH="$PATH:$HOME/.knode/bin"
 
+export MANPAGER='nvim --cmd ":lua vim.g.noplugins=1" +Man!'
+export MANWIDTH=999
 
 export CODE="$HOME/Code"
 export CODE_REFS="$CODE/refs"
@@ -67,7 +67,7 @@ export AUDIO_LIBRARIES="/Volumes/Librairies Samples"
 export VIDEOS="$AUDIO_LIBRARIES/Videos"
 
 # bun completions
-[ -s "/Users/mac/.bun/_bun" ] && source "/Users/mac/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
