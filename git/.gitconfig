@@ -1,5 +1,9 @@
+# use separate file for username / email / github token / etc
+[include]
+  path = ~/.dotfiles/git/.gitconfig.local
+
 [core]
-  editor = code
+  editor = code --wait
   excludesfile = ~/.gitignore_global
   autocrlf = input
 
@@ -7,6 +11,38 @@
   l = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
   h = log --graph --decorate --abbrev-commit --date=relative --oneline --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)'
   ec = config --global -e
+
+[init]
+  defaultBranch = main
+
+[branch "main"]
+  remote = origin
+  merge = refs/heads/main
+
+[color]
+  ui = auto
+
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+
+# [push]
+#   default = simple
+
+# [merge]
+#   log = true
 
 # [credential]
 # helper = osxkeychain
@@ -20,17 +56,18 @@
 [commit]
   template = /Users/mac/.stCommitMsg
 
-[init]
-  defaultBranch = main
+[diff]
+  tool = vscode
 
-[difftool "sourcetree"]
-  cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-  path = 
+[difftool "vscode"]
+  cmd = code --wait --diff \"$LOCAL\" \"$REMOTE\"
+
+[merge]
+  tool = vscode
+
+[mergetool "vscode"]
+  cmd = code --wait \"$MERGED\"
 
 [mergetool "sourcetree"]
   cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\"
   trustExitCode = true
-
-# use separate file for username / email / github token / etc
-[include]
-  path = ~/.dotfiles/git/.gitconfig.local
