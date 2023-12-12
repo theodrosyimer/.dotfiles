@@ -2,15 +2,16 @@ function fm() {
   dir_list="${@}"
 
   # bind actions
-  open_finder="ctrl-o:execute-silent(open -b "com.apple.finder" {})+close"
+  open_finder="ctrl-o:execute(open -b "com.apple.finder" {})+close"
   enter_dir="ctrl-f:reload(find {} -type f -iname \"*.mp4\")"
 
   selected=$(echo "$dir_list" | \
     fzf \
     --bind "$enter_dir" \
-    --bind "ctrl-c:execute-silent("$EDITOR" {})+close" \
+    --bind "ctrl-e:execute("$EDITOR" {})+close" \
     --bind "ctrl-i:execute(cp -Ri {} .)+accept" \
     --bind "ctrl-r:reload(echo \"$dir_list\")" \
+    --bind "ctrl-c:reload(ls)" \
     --bind "ctrl-r:+change-preview(exa --group-directories-first --tree --level=3 {} | head -50)" \
     --bind "ctrl-r:+toggle-preview" \
     --bind "ctrl-d:change-prompt()" \
