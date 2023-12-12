@@ -1,2 +1,0 @@
-# Save all videos under Movies directory in your home directory
-# -o /Volumes/Librairies\ Samples/Videos/%(title)s.%(ext)s
