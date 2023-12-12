@@ -15,7 +15,7 @@ function _dev() {
 
 dir_list="$(find $DOTFILES $CODE $CODE_PERSONAL $CODE_COURSES $CODE_WORK $CODE_REFS $CODE_TEMPLATES $CODE_TEMPLATES/dev $CODE_TEMPLATES/dev/ts $CODE_TEMPLATES/dev/js $JS_SANDBOX $CODE_COURSES $CODE_WORK  $HOME/Design $HOME -mindepth 1 -maxdepth 1 -type d)"
 
-fm "${dir_list}"
+fm "${dir_list}" && return $?
 }
 
 zle -N _dev
