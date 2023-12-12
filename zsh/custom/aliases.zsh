@@ -125,3 +125,4 @@ alias du="du -hd 1"
 
 alias cfv="code $DOTFILES/nvim/init.vim"
 alias env="env | sort -s"
+alias bunw="bun --watch"
