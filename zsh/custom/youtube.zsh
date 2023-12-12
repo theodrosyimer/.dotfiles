@@ -1,17 +1,17 @@
-# Format:
+# FORMAT:
 #
-# see: https://github.com/yt-dlp/yt-dlp#format-selection
-# see: https://github.com/yt-dlp/yt-dlp#filtering-formats
-# see: https://github.com/yt-dlp/yt-dlp#sorting-formats
-# see: https://github.com/yt-dlp/yt-dlp#format-selection-examples
+# see: https://github.com/yt-dlp/yt-dlp#FORMAT-selection
+# see: https://github.com/yt-dlp/yt-dlp#filtering-FORMATs
+# see: https://github.com/yt-dlp/yt-dlp#sorting-FORMATs
+# see: https://github.com/yt-dlp/yt-dlp#FORMAT-selection-examples
 #
-# local format='(mp4)[height<=720]+bestaudio/best'
-# local format='(mp4)[height<=1080]/best'
-# local format='(mp4)[height<?1440]/best'
+# local FORMAT='(mp4)[height<=720]+bestaudio/best'
+# local FORMAT='(mp4)[height<=1080]/best'
+# local FORMAT='(mp4)[height<?1440]/best'
 #
 # Download the best mp4 video available, or the best video if no mp4 available
 # shorthand for 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]':
-# local format='bv[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv+ba/b'
+# local FORMAT='bv[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv+ba/b'
 
 # Output templates:
 #
@@ -20,7 +20,7 @@
 # Output templates for playlist:
 #
 # see: https://github.com/yt-dlp/yt-dlp#output-template-examples
-# local output_template='%(playlist)s/%(playlist_index)02d - %(title)s.%(ext)s'
+# local OUTPUT_TEMPLATE='%(playlist)s/%(playlist_index)02d - %(title)s.%(ext)s'
 #
 # using `--download-archive` option
 # i can download only new videos from a playlist
@@ -28,51 +28,57 @@
 
 # TODO: when yt-dl is not installed, add a prompt to ask if the user wants to download (and dependencies?)
 function ytd() {
-  local error_message=(
+  local ERROR_MESSAGE=(
     "To install it manually ->$_cyan https://github.com/yt-dlp/yt-dlp/wiki/Installation#using-the-release-binary$_reset"
     )
 
-  is_installed yt-dlp $error_message || return 1
+  is_installed yt-dlp $ERROR_MESSAGE || return 1
 
-  local output_path=("${PWD}")
+  local DIRS_PATH="$(find $VIDEOS/coding $VIDEOS/coding/animation $VIDEOS/coding/css $VIDEOS/coding/drizzle $VIDEOS/coding/figma $VIDEOS/coding/git $VIDEOS/coding/javascript $VIDEOS/coding/python $VIDEOS/coding/sql "$VIDEOS/coding/Shell scripting with Bash and Zsh" -mindepth 1 -maxdepth 1 -type d)"
 
-  local format='bv[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv+ba/b'
-  local flag_playlist
-  local usage=(
+  local OUTPUT_PATH=("$(echo "${DIRS_PATH}" | fzf)")
+
+echo $OUTPUT_PATH
+  # local OUTPUT_PATH=("${PWD}")
+
+  local FORMAT='bv[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv+ba/b'
+  local FLAG_PLAYLIST FLAG_HELP
+  local USAGE=(
   "ytd [ -h | --help ]"
-  "ytd [ -p | --playlist ] [ -o | --output <path/to/file> ]"
+  "ytd [ <youtube-video-url> ]"
+  "ytd [ <youtube-video-url> ] [ -p | --playlist ] [ -o | --output <path/to/file> ]"
   )
 
   zmodload zsh/zutil
   zparseopts -D -F -K -E -- \
-    {h,-help}=flag_help \
-    {p,-playlist}=flag_playlist \
-    {o,-output}:=output_path || return 1
+    {h,-help}=FLAG_HELP \
+    {p,-playlist}=FLAG_PLAYLIST \
+    {o,-output}:=OUTPUT_PATH || return 1
 
-  [[ -n "$flag_help" ]] && { print -l $usage && return; }
+  [[ -n "$FLAG_HELP" ]] && { print -l $USAGE && return; }
 
-  local source_url=("${1:-$(chrome_get_front_window_url)}")
-  local regex='https://www.yout'
+  local YT_URL=("${1:-$(chrome_get_front_window_url)}")
+  local REGEX='https://www.yout'
 
-  [[ "$source_url" =~ "$regex" ]] || { \
+  [[ "$YT_URL" =~ "$REGEX" ]] || { \
     echo "$_red\nNo youtube video found on chrome's front tab.$_reset" && \
     return 1; }
 
-  if [ -n "$flag_playlist" ]; then
-    local title=$(chrome_get_front_window_title)
-    [[ ! -d "$output_path[-1]/$title" ]] && mkdir -p "$output_path[-1]/$title"
+  if [ -n "$FLAG_PLAYLIST" ]; then
+    local YT_VIDEO_TITLE=$(chrome_get_front_window_title)
 
-    local output_template='%(playlist_index)02d - %(title)s.%(ext)s'
+    [[ ! -d "$OUTPUT_PATH[-1]/$YT_VIDEO_TITLE" ]] && mkdir -p "$OUTPUT_PATH[-1]/$YT_VIDEO_TITLE"
 
-    yt-dlp -f "$format" -o "$output_path[-1]/$title/$output_template" "$source_url[-1]" --progress --download-archive "$output_path[-1]/$title/archive.txt" --restrict-filenames
-    return 0
+    local OUTPUT_TEMPLATE='%(playlist_index)02d - %(title)s.%(ext)s'
+
+    yt-dlp -f "$FORMAT" -o "$OUTPUT_PATH[-1]/$YT_VIDEO_TITLE/$OUTPUT_TEMPLATE" "$YT_URL[-1]" --progress --download-archive "$OUTPUT_PATH[-1]/$YT_VIDEO_TITLE/archive.txt" --restrict-filenames
+    return $?
   else
-    [[ ! -d "$output_path[-1]" ]] && mkdir -p "$output_path[-1]"
+    [[ ! -d "$OUTPUT_PATH[-1]" ]] && mkdir -p "$OUTPUT_PATH[-1]"
 
-    local output_template='%(title)s.%(ext)s'
+    local OUTPUT_TEMPLATE='%(title)s.%(ext)s'
 
-    yt-dlp -f "$format" -o "$output_path[-1]/$output_template" "$source_url[-1]" --progress --restrict-filenames --no-playlist
-    return 0
+    yt-dlp -f "$FORMAT" -o "$OUTPUT_PATH[-1]/$OUTPUT_TEMPLATE" "$YT_URL[-1]" --progress --restrict-filenames --no-playlist
+    return $?
   fi
-
 }
