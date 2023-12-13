@@ -1,7 +1,7 @@
 function _dev() {
-local dir_list="$(find ${(s: :)CODE_DIRS} -mindepth 1 -maxdepth 1 -type d)"
+  local dir_list="$(find "${CODE_DIRS[@]}" -mindepth 1 -maxdepth 1 -type d)"
 
-fm "${dir_list[@]}"
+  fm "${dir_list[@]}"
 }
 
 zle -N _dev
