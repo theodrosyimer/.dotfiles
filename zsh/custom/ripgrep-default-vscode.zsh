@@ -7,5 +7,5 @@ function rgd() {
   local search="$1"
   local location="$2"
 
-  'rg' --smart-case --hidden --no-heading --column "$search" "$location" | awk -F ':' -f "$ZSH_CUSTOM/functions/colorize.awk"
+  'rg' --smart-case --hidden --no-heading --column "$search" "$location" | awk -F ':' -f "$ZSH_CUSTOM/colorize.awk"
 }
