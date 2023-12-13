@@ -1,5 +1,5 @@
 function fm() {
-  dir_list="${@}"
+  dir_list="${@:-"$PWD"}"
 
   # bind actions
   open_finder="ctrl-o:execute(open -b "com.apple.finder" {})+close"
