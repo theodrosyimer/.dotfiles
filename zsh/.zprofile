@@ -66,6 +66,8 @@ export LPX_COMPOS="$LPX/Compos"
 export AUDIO_LIBRARIES="/Volumes/Librairies Samples"
 export VIDEOS="$AUDIO_LIBRARIES/Videos"
 
+export CODE_DIRS="$CODE $CODE_PERSONAL $CODE_WORK $JS_SANDBOX $CODE_REFS $CODE_TEMPLATES $CODE_TEMPLATES/dev $CODE_TEMPLATES/dev/ts $CODE_TEMPLATES/dev/js $CODE_COURSES $DOTFILES $HOME/Design $HOME"
+
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
