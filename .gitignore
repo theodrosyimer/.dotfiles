@@ -12,5 +12,5 @@ personal/*
 ansible/*
 nvim/undo/*
 
-.DS_Store
+**/\.DS_Store
 .lsp
