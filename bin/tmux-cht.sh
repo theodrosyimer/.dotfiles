@@ -1,15 +1,15 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 # source: https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-cht.sh
 
-selected=$(cat ~/.tmux-cht-languages ~/.tmux-cht-command | fzf)
+selected="$(cat $DOTFILES/tmux/.tmux-cht-languages $DOTFILES/tmux/.tmux-cht-command | fzf)"
 if [[ -z $selected ]]; then
     exit 0
 fi
 
 read -pr "Enter Query: " query
 
-if grep -qs "$selected" ~/.tmux-cht-languages; then
+if grep -qs "$selected" $DOTFILES/.tmux-cht-languages; then
     query=$(echo "$query" | tr ' ' '+')
     tmux neww bash -c "echo \"curl cht.sh/$selected/$query/\" & curl cht.sh/$selected/$query & while [ : ]; do sleep 1; done"
 else
