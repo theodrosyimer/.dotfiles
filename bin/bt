@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
- [[ "$(blueutil --is-connected 6c-b1-33-80-c0-89)" == '1' ]] && blueutil --disconnect 6c-b1-33-80-c0-89 && echo "Studio Wireless disconnected!" && exit 0
+ [[ "$(blueutil --is-connected 6c-b1-33-80-c0-89)" == '1' ]] && blueutil --disconnect 6c-b1-33-80-c0-89 && echo "ty-airpods disconnected!" && exit 0
 
- [[ "$(blueutil --is-connected 6c-b1-33-80-c0-89)" == '0' ]] && blueutil --connect 6c-b1-33-80-c0-89 && echo "Studio Wireless connected!" && exit 0
+ [[ "$(blueutil --is-connected 6c-b1-33-80-c0-89)" == '0' ]] && blueutil --connect 6c-b1-33-80-c0-89 && echo "ty-airpods connected!" && exit 0
 
