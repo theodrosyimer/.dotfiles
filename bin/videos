@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-dir_list="$(find "$$VIDEOS" "$$VIDEOS/_new" "$$VIDEOS/Coding" "$$VIDEOS/Coding/Javascript" "$$VIDEOS/Coding/CSS" -mindepth 1 -maxdepth 2 -type d)"
+dir_list="$(find $VIDEOS $VIDEOS/_new $VIDEOS/Coding $VIDEOS/Coding/Javascript $VIDEOS/Coding/CSS -mindepth 1 -maxdepth 2)"
 
 # bind actions
 open_finder="ctrl-o:execute-silent(open -b "com.apple.finder" {})+close"
