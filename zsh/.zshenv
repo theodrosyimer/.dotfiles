@@ -48,7 +48,7 @@ export FZF_DEFAULT_COMMAND='rg --files \
 --no-ignore \
 --hidden \
 --follow \
---glob "!.git/" --glob "!node_modules/" --glob "!.DS_Store" \
+--glob "!.git/objects/" --glob "!.git/logs/" --glob "!node_modules/" --glob "!.DS_Store" \
 --sort path'
 
 export FZF_DEFAULT_OPTS="--prompt=\"🔭 \" \
@@ -61,6 +61,8 @@ export FZF_DEFAULT_OPTS="--prompt=\"🔭 \" \
 --color="$FZF_COLORS"
 --margin 5% \
 --bind \"?:toggle-preview\" \
+--bind \"ctrl-e:execute("$EDITOR" {})+toggle-preview+accept\" \
+--bind \"ctrl-o:execute(open -b \"com.apple.finder\" {})+toggle-preview+accept\" \
 --preview '[[ -f {} ]] && bat --color=always --style=numbers {}'"
 
 export FZF_CTRL_R_OPTS="--preview-window hidden"
@@ -69,7 +71,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers {}'"
 
-export FZF_ALT_C_COMMAND='fd --type d . --color=never --hidden -E node_modules'
+export FZF_ALT_C_COMMAND='fd --type d . --color=never --hidden -E ".git/objects/" -E ".git/logs/" -E node_modules'
 export FZF_ALT_C_OPTS="--preview 'exa \
 --group-directories-first \
 --tree --level=3 {} | head -50'"
