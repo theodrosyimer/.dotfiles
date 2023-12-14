@@ -27,13 +27,13 @@ if [[ $# -eq 0 ]]; then
 fi
 
 endpoint=$1
-requests_count=1
+requests_count=100
 data='{}'
 
 function send_post_request() {
     status=$(curl -s -o /dev/null -w "%{http_code}" -X POST -H "Content-Type: application/json" -d "$data" $endpoint)
 
-    if [[ $status -eq 200 ]]; then
+    if [[ $status -eq '200' ]]; then
         echo "SUCCESS"
     else
         echo "ERROR"
