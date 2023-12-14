@@ -2,17 +2,17 @@
 
 function tmux-sessionizer() {
   if [[ $# -eq 1 ]]; then
-      selected=$1
+      local selected=$1
   else
-      selected="$(find "${CODE_DIRS[@]}" -mindepth 1 -maxdepth 1 -type d | fzf)"
+      local selected="$(find "${CODE_DIRS[@]}" -mindepth 1 -maxdepth 1 -type d | fzf)"
   fi
 
   if [[ -z $selected ]]; then
       exit 0
   fi
 
-  selected_name=$(basename "$selected" | tr . _)
-  tmux_running=$(pgrep tmux)
+  local selected_name=$(basename "$selected" | tr . _)
+  local tmux_running=$(pgrep tmux)
 
   if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
       tmux new-session -s "$selected_name" -c "$selected"

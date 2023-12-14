@@ -3,7 +3,7 @@ function git_add_all_commit() {
   git add -A && git commit -m "$1"
 }
 
-# Add all, commit with a comment and push
+# add all, commit with a comment and push
 function git_add_all_commit_push() {
   git add -A && git commit -m "$1" && git push
 }
