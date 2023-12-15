@@ -14,15 +14,15 @@ function mktempz(){
   if [[ -n $@ ]]; then
     input="$@"
   else
-    input=$(pbpaste)
+    input="$(pbpaste)"
   fi
 
   # here is the important part
   () {
-    echo $input > $1.$ext
+    echo "$input" > "$1.$ext"
     # i use iThoughts X as an example
-    open -a "Visual Studio Code" $1.$ext
-  } =(print $input)
+    open -a "Visual Studio Code" "$1.$ext"
+  } =(print "$input")
 
 }
 
