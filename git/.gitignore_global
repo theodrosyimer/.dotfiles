@@ -1,3 +1,18 @@
+# Secret files
+.npmrc
+.env*
+**/config/.env
+**/config/.env*.local
+
+# dotenvault
+!.env.project
+!.env.vault
+
+# Files and directories i usually use
+**/resources
+**/playground.js
+**/*.pdf
+
 # General
 .DS_Store
 .AppleDouble
@@ -25,21 +40,21 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-# Compiled Python files
-*.pyc
-
 # Most frequent
-node_modules
-./build
-./dist
-./lib
-.npmrc
-.env
-.env.?*
-config/.env
-config/.env.?*
+/build
+/dist
+/lib
+
+# Editor directories and files
 .vscode
 *.code-workspace
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.vercel
 
 # Logs
 logs
@@ -81,8 +96,8 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
-jspm_packages/
+node_modules
+jspm_packages
 
 # TypeScript v1 declaration files
 typings/
@@ -125,3 +140,7 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# Misc
+.lsp
+.clj-kondo

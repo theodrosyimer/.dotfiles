@@ -5,3 +5,5 @@ marky.rb
 mkref
 server.sh
 vscusb
+.lsp
+.cli-kondo
