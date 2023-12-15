@@ -2,7 +2,6 @@ export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
 # $PATH is at the end to override any existing system-wide commands with mine
 export PATH="$HOME/.fnm:$PATH"
-# export PATH="/usr/local/bin/python3:$PATH"
 # export PATH="/usr/local/bin/rbenv:$PATH"
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
 export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
