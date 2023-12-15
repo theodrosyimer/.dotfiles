@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+url=https://github.com/github/gitignore/blob/main/\*
+
+curl -s $url | grep -io 'fileTree.*fileTree' | sed  -e 's/fileTree":{"":{"items"://' -e 's/,"totalCount":136}},"fileTree$//' | jq 2>/dev/null 'map(select(.contentType == "file")) | .[].name'
