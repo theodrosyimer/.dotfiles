@@ -124,7 +124,7 @@ function mkweb() {
   local output_path=("${default_path:-"$(pwd)"}")
   local js_template_path="$CODE_TEMPLATES/dev/js/vanilla-html-css/"
   local ts_template_path="$CODE_TEMPLATES/dev/ts/vanilla-ts/"
-  local css_template_path="$CODE_TEMPLATES/dev/css/style.css"
+  local css_template_path="$CODE_TEMPLATES/dev-config/css/style.css"
 
   local project_name="${1:-"my-project"}"
   local usage=(
