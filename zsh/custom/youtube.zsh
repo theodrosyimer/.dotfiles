@@ -34,9 +34,11 @@ function ytd() {
 
   is_installed yt-dlp $ERROR_MESSAGE || return 1
 
-  local DIRS_PATH="$(find $VIDEOS/coding $VIDEOS/coding/animation $VIDEOS/coding/css $VIDEOS/coding/drizzle $VIDEOS/coding/figma $VIDEOS/coding/git $VIDEOS/coding/javascript $VIDEOS/coding/python $VIDEOS/coding/sql "$VIDEOS/coding/Shell scripting with Bash and Zsh" -mindepth 1 -maxdepth 1 -type d)"
+  local DIRS_PATH="$(find $VIDEOS/coding $VIDEOS/coding/animation $VIDEOS/coding/css $VIDEOS/coding/drizzle $VIDEOS/coding/figma $VIDEOS/coding/git $VIDEOS/coding/javascript $VIDEOS/coding/python $VIDEOS/coding/sql "$VIDEOS/coding/Shell scripting with Bash and Zsh" -mindepth 1 -maxdepth 2 -type d)"
 
-  local OUTPUT_PATH=("$(echo "${DIRS_PATH}" | fzf)")
+  local OUTPUT_PATH=("$(echo "${DIRS_PATH}" | fzf --preview-window hidden)")
+
+  [[ -z "$OUTPUT_PATH" ]] && return 1
 
 echo $OUTPUT_PATH
   # local OUTPUT_PATH=("${PWD}")
