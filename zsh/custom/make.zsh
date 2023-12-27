@@ -23,7 +23,7 @@ function mkn() {
 
   zettID="$(zetid)"
 
-  echo "# $filename\n\n" >"$output_path/$zettID $filename.$extension" && code -g "$output_path" "$output_path/$zettID $filename.$extension":2
+  echo "# $filename\n\n" >"$output_path/$zettID $filename.$extension" && $editor -g "$output_path/$zettID $filename.$extension":2
 }
 
 # TODO: create new file (reference) for a specified language
