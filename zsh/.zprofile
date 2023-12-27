@@ -45,7 +45,7 @@ export CODE_WORK="$CODE_PROJECTS/work"
 export JS_SANDBOX="$CODE_REFS/js-sandbox"
 export DOCSETS="$CODE_PERSONAL/mydocsets"
 export TABLES="$CODE_PERSONAL/mytables"
-export TAG_LIST="$HOME/.my_tags"
+export TAGS="$HOME/.my_tags"
 
 export ICLOUD="$HOME/Library/Mobile Documents"
 export MM="$ICLOUD/iCloud~com~toketaware~ios~ithoughts/Documents"
