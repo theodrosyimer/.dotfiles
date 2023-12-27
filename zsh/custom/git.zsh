@@ -96,6 +96,14 @@ function git_clone_with_all_branches() {
   git checkout dev || git checkout main
 }
 
+# source: [Git checkout all remote branches](https://gist.github.com/ElfSundae/92a5868f418ec3187dfff90fe6b20387)
+function git_checkout_all_branches {
+  local remote=origin
+
+  for brname in `git branch -r | grep $remote | grep -v /main | grep -v /HEAD | awk '{gsub(/^[^\/]+\//,"",$1); print $1}'`;
+          do git branch --track $brname $remote/$brname || true;
+  done
+}
 function git_track_current_branch_from_remote() {
   branch_name="$(git_get_current_branch_name)"
   git checkout -b "$branch_name" "origin/$branch_name"
@@ -279,6 +287,7 @@ alias gacp='git_add_all_commit_push'
 alias gc='git_clone_from_front_tab_chrome'
 alias gcc='git_clone_clean_from_front_tab_chrome'
 alias gccb='git_clone_clean_from_cb'
+alias gcb='git_clone_with_all_branches'
 
 alias gurl=git_get_remote_url_from_cwd
 alias glf="git log --oneline | fzf --multi --preview 'git show {+1}'"
