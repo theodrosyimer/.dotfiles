@@ -126,3 +126,6 @@ alias du="du -hd 1"
 alias cfv="code $DOTFILES/nvim/init.vim"
 alias env="env | sort -s"
 alias bunw="bun --watch"
+
+# npm-check-updates
+alias ncu="ncu --configFileName .ncurc.json --configFilePath $DOTFILES/ncu"
