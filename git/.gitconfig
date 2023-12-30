@@ -10,9 +10,9 @@
 [init]
   defaultBranch = main
 
-[branch "main"]
-  remote = origin
-  merge = refs/heads/main
+# [branch "main"]
+#   remote = origin
+#   merge = refs/heads/main
 
 [alias]
   l = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
