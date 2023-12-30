@@ -34,14 +34,7 @@ function ytd() {
 
   is_installed yt-dlp $ERROR_MESSAGE || return 1
 
-  local DIRS_PATH="$(find $VIDEOS/coding $VIDEOS/coding/animation $VIDEOS/coding/css $VIDEOS/coding/drizzle $VIDEOS/coding/figma $VIDEOS/coding/git $VIDEOS/coding/javascript $VIDEOS/coding/python $VIDEOS/coding/sql "$VIDEOS/coding/Shell scripting with Bash and Zsh" -mindepth 1 -maxdepth 2 -type d)"
-
-  local OUTPUT_PATH=("$(echo "${DIRS_PATH}" | fzf --preview-window hidden)")
-
-  [[ -z "$OUTPUT_PATH" ]] && return 1
-
-echo $OUTPUT_PATH
-  # local OUTPUT_PATH=("${PWD}")
+  local OUTPUT_PATH=()
 
   local FORMAT='bv[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv+ba/b'
   local FLAG_PLAYLIST FLAG_HELP
@@ -68,6 +61,18 @@ echo $OUTPUT_PATH
 
   if [ -n "$FLAG_PLAYLIST" ]; then
     local YT_VIDEO_TITLE=$(chrome_get_front_window_title)
+
+
+    if [[ "$#OUTPUT_PATH" -eq 0 ]]; then
+      local DIRS_PATH="$(find $VIDEOS/coding $VIDEOS/coding/animation $VIDEOS/coding/css $VIDEOS/coding/drizzle $VIDEOS/coding/figma $VIDEOS/coding/git $VIDEOS/coding/javascript $VIDEOS/coding/python $VIDEOS/coding/sql "$VIDEOS/coding/Shell scripting with Bash and Zsh" -mindepth 1 -maxdepth 2 -type d | sort -u)"
+
+      OUTPUT_PATH=("$(echo "${DIRS_PATH}" | fzf --preview-window hidden)")
+
+      [[ "$#OUTPUT_PATH" -eq "0" ]] && OUTPUT_PATH+="${PWD}"
+
+      echo $OUTPUT_PATH
+    fi
+
 
     [[ ! -d "$OUTPUT_PATH[-1]/$YT_VIDEO_TITLE" ]] && mkdir -p "$OUTPUT_PATH[-1]/$YT_VIDEO_TITLE"
 
