@@ -26,7 +26,7 @@ function fm() {
     --preview-window hidden \
     )"
 
-  [[ -z "$selected" ]] && return 0
+  # [[ -z "$selected" ]] && return 0
 
   if [[ -d "$selected" ]]; then
     echo "$selected"
@@ -37,4 +37,6 @@ function fm() {
     echo "$selected"
     open "$selected" && return 0
   fi
+
+  return 0
 }
