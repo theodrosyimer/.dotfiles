@@ -129,3 +129,8 @@ alias bunw="bun --watch"
 
 # npm-check-updates
 alias ncu="ncu --configFileName .ncurc.json --configFilePath $DOTFILES/ncu"
+alias nw="node --no-warnings --watch"
+
+alias psg="get_process"
+alias dk="docker"
+alias dkc="docker container"
