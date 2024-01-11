@@ -163,15 +163,15 @@ function mkweb() {
       # copy my css reset to new project directory
       cp -f "$css_template_path" "$output_path[-1]/$project_name_formatted/src" &&
       cd "$output_path[-1]/$project_name_formatted" &&
-      npm pkg set 'name'="$project_name_formatted" &&
+      npm pkg set name="$project_name_formatted" type='module' version='0.0.0' &&
       echo -e "\nDone!"
 
       echo -e "\nRunning:\n"
-      echo -e "  pnpm install:latest"
+      echo -e "  ncu -u --install always"
 
-      pnpm install:latest &&
+      ncu -u --install always --cwd "$output_path[-1]/$project_name_formatted" &&
         echo -e " pnpm dev\n" &&
-        code -gn . src/index.html:18:7 src/* vite.config.js &&
+        code -gn . ./index.html:18:7 src/* vite.config.js &&
         pnpm dev
 
   fi
