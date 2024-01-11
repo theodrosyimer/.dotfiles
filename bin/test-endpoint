@@ -41,9 +41,13 @@ function send_post_request() {
 }
 
 # loop to send multiple POST requests in parallel (asynchronously) to the endpoint
-for ((i=0; i<$requests_count; i++)); do
+for request in ${1..$requests_count}; do
     send_post_request &
 done
+
+# for ((i=0; i<$requests_count; i++)); do
+#     send_post_request &
+# done
 
 # wait for all requests to finish
 wait
