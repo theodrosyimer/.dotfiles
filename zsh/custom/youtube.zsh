@@ -62,7 +62,6 @@ function ytd() {
   if [ -n "$FLAG_PLAYLIST" ]; then
     local YT_VIDEO_TITLE=$(chrome_get_front_window_title)
 
-
     if [[ "$#OUTPUT_PATH" -eq 0 ]]; then
       local DIRS_PATH="$(find $VIDEOS/coding $VIDEOS/coding/animation $VIDEOS/coding/css $VIDEOS/coding/drizzle $VIDEOS/coding/figma $VIDEOS/coding/git $VIDEOS/coding/javascript $VIDEOS/coding/python $VIDEOS/coding/sql "$VIDEOS/coding/Shell scripting with Bash and Zsh" -mindepth 1 -maxdepth 2 -type d | sort -u)"
 
@@ -73,7 +72,6 @@ function ytd() {
       echo $OUTPUT_PATH
     fi
 
-
     [[ ! -d "$OUTPUT_PATH[-1]/$YT_VIDEO_TITLE" ]] && mkdir -p "$OUTPUT_PATH[-1]/$YT_VIDEO_TITLE"
 
     local OUTPUT_TEMPLATE='%(playlist_index)02d - %(title)s.%(ext)s'
@@ -81,6 +79,17 @@ function ytd() {
     yt-dlp -f "$FORMAT" -o "$OUTPUT_PATH[-1]/$YT_VIDEO_TITLE/$OUTPUT_TEMPLATE" "$YT_URL[-1]" --progress --download-archive "$OUTPUT_PATH[-1]/$YT_VIDEO_TITLE/archive.txt" --restrict-filenames
     return $?
   else
+
+    if [[ "$#OUTPUT_PATH" -eq 0 ]]; then
+      local DIRS_PATH="$(find $VIDEOS/coding $VIDEOS/coding/animation $VIDEOS/coding/css $VIDEOS/coding/drizzle $VIDEOS/coding/figma $VIDEOS/coding/git $VIDEOS/coding/javascript $VIDEOS/coding/python $VIDEOS/coding/sql "$VIDEOS/coding/Shell scripting with Bash and Zsh" -mindepth 1 -maxdepth 2 -type d | sort -u)"
+
+      OUTPUT_PATH=("$(echo "${DIRS_PATH}" | fzf --preview-window hidden)")
+
+      [[ "$#OUTPUT_PATH" -eq "0" ]] # && OUTPUT_PATH+="${PWD}"
+
+      echo $OUTPUT_PATH
+    fi
+
     [[ ! -d "$OUTPUT_PATH[-1]" ]] && mkdir -p "$OUTPUT_PATH[-1]"
 
     local OUTPUT_TEMPLATE='%(title)s.%(ext)s'
