@@ -22,15 +22,14 @@ function local_ip() {
   esac
 
   if [[ -n $ip_from_ethernet ]]; then
-    echo -e "\nfrom ETHERNET connection: "
-    echo -e "http://$ip_from_ethernet\n"
+    printf "%b\n" "\nLocal IP (ETHERNET): $_cyan$ip_from_ethernet$_reset\n"
     trim "$ip_from_ethernet" | pbcopy
-    echo "copied to your clipboard!"
+    echo "$_grey""Copied to clipboard!$_reset"
   else
-    echo -e "\nfrom WIFI connection: "
-    echo -e "http://$ip_from_wifi\n"
+    printf "%b\n" "\nLocal IP (WIFI): "
+    printf "%b\n" "$ip_from_wifi\n"
     trim "$ip_from_wifi" | pbcopy
-    echo "copied to your clipboard!"
+    echo "Copied to clipboard!"
   fi
 }
 
