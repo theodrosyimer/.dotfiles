@@ -2,6 +2,7 @@
 _purple="${(%):-$FG[099]}"
 _orange="${(%):-$FG[202]}"
 _yellow="${(%):-$FG[003]}"
+_grey="${(%):-$FG[008]}"
 
 # INFO: default colors for most shells
 _green="${(%):-%F{green}"
@@ -23,4 +24,5 @@ _reset="${(%):-%f}"
 # printf '%s\n' "$_red$text$_reset"
 # printf '%s\n' "$_magenta$text$_reset"
 # printf '%s\n' "$_black$text$_reset"
+# printf '%s\n' "$_white$text$_reset"
 # printf '%s\n' "$_white$text$_reset"
