@@ -1,29 +1,25 @@
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
-# $PATH is at the end to override any existing system-wide commands with mine
+### $PATH is at the end to override any existing system-wide commands with mine
 export PATH="$HOME/.fnm:$PATH"
+export PATH="/usr/local/opt/ssh-copy-id/bin:$PATH"
 # export PATH="/usr/local/bin/rbenv:$PATH"
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
+
 export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 export PATH="/usr/local/opt/icu4c/sbin:$PATH"
 export PATH="/usr/local/opt/icu4c/bin:$PATH"
 
-# $PATH is at beginning to not accidently override any existing system-wide commands with mine
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+### $PATH is at beginning to not accidently override any existing system-wide commands with mine
 export PATH="$PATH:/usr/local/go/bin"
 export GOPATH="$HOME/go"
 export PATH="$PATH:$GOPATH/bin"
 export PATH="$PATH:$HOME/Code/tools/flutter/bin"
 
-
-# Paths i use for my automation
-export DOTFILES="$HOME/.dotfiles"
-export ZDOTDIR="$DOTFILES/zsh"
-export BIN="$DOTFILES/bin"
-
-# Starship
-export STARSHIP_CONFIG="$DOTFILES/starship/starship.toml"
-
-# Add my scripts to `$PATH`
+### Add my dirs to `$PATH`
 export PATH="$PATH:$BIN"
 export PATH="$PATH:$HOME/.js"
 
@@ -31,6 +27,14 @@ export PATH="$PATH:$HOME/.js"
 export PATH="$PATH:$HOME/.kit/bin"
 export PATH="$PATH:$HOME/.kenv/bin"
 export PATH="$PATH:$HOME/.knode/bin"
+
+### Paths i use for my automation
+export DOTFILES="$HOME/.dotfiles"
+export ZDOTDIR="$DOTFILES/zsh"
+export BIN="$DOTFILES/bin"
+
+# Starship
+export STARSHIP_CONFIG="$DOTFILES/starship/starship.toml"
 
 export MANPAGER='nvim --cmd ":lua vim.g.noplugins=1" +Man!'
 export MANWIDTH=999
@@ -69,10 +73,6 @@ export CODE_DIRS=("$CODE" "$CODE_PERSONAL" "$CODE_WORK" "$JS_SANDBOX" "$CODE_REF
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
 
 . "$HOME/.cargo/env"
 
