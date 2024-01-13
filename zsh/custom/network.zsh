@@ -22,7 +22,7 @@ function local_ip() {
   esac
 
   if [[ -n $ip_from_ethernet ]]; then
-    printf "%b\n" "\nLocal IP (ETHERNET): $_cyan$ip_from_ethernet$_reset\n"
+    printf "%b\n" "\nLocal IP (ETHERNET):\n$_yellow$ip_from_ethernet$_reset\n"
     trim "$ip_from_ethernet" | pbcopy
     echo "$_grey""Copied to clipboard!$_reset"
   else
