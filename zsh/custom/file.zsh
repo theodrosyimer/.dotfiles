@@ -1,5 +1,6 @@
 function getExtension() {
   echo "${1##*.}"
+  echo "${1:e}"
 }
 
 # list all files and directories in current directory
@@ -18,15 +19,35 @@ function list() {
   print -l $paths;
 }
 
-function listp(){
-  local paths=()
-  for f in ${@:-*}
-    if [[ -a $f ]]; then
-      parallel --shuf -j+0 paths+={1} ::: "$f";
-    fi
+function list2() {
+  local paths=""
+  local input=""
 
-  print -l $paths;
+  if [[ -n $1 ]]
+  then
+    input="${(q)1}"/*
+  fi
+  echo $input
+
+  for f in ${input:-*}; do
+    if [[ -a $f ]]; then
+      paths+="$(pwd)/$f\n";
+      # continue
+    fi
+  done
+
+  printf "%b" $paths;
 }
+
+# function listp(){
+#   local paths=()
+#   for f in ${@:-*}
+#     if [[ -a $f ]]; then
+#       parallel --shuf -j+0 paths+={1} ::: "$f";
+#     fi
+
+#   print -l $paths;
+# }
 
 function get_basename_no_ext() {
   local path="${1:-$PWD}"
