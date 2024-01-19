@@ -19,11 +19,11 @@ function mkn() {
   local output_path="${2:-"${NOTES:-"$(pwd)")}"}"
 
   [[ -f "$output_path/$filename.zsh" ]] && { \
-    echo -e "\nFile already exists at $output_path/$filename.zsh" && $editor "$output_path/$filename.zsh" && return 1; }
+    printf "%b" "\nFile already exists at $output_path/$filename.zsh" && $editor "$output_path/$filename.zsh" && return 1; }
 
   zettID="$(zetid)"
 
-  echo "# $filename\n\n" >"$output_path/$zettID $filename.$extension" && $editor -g "$output_path/$zettID $filename.$extension":2
+  printf "%s" "# $filename\n\n" >"$output_path/$zettID $filename.$extension" && $editor -g "$output_path/$zettID $filename.$extension":2
 }
 
 # TODO: create new file (reference) for a specified language
@@ -48,11 +48,27 @@ function mkrustp() {
   local editor_args=-gn
 
   [[ -d "$project_name" ]] && { \
-    echo -e "\nFile already exists at $project_name\n" && $editor "$project_name" && return 1; }
+    printf "%b" "\nFile already exists at $project_name\n" && $editor "$project_name" && return 1; }
 
   cargo new "$project_name" &&
     cd "$project_name" &&
     "$editor" "$editor_args" . src/main.rs
+}
+
+# TODO: add flag to switch between stdin and clipboard (mks and mksc)
+function mksr() {
+  local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
+  local output_path="${2:-"${CODE_REFS/sh:-"$(pwd)"}"}"
+  local editor=code
+  local editor_args=-g
+  local user_shell=
+
+  [[ -f "$output_path/$filename" ]] && { \
+    printf "%b" "\nFile already exists at $output_path/$filename" && $editor "$output_path/$filename" && return 1; }
+
+    printf "%b" "#!/usr/bin/env ${SHELL:t}\n\n" >$output_path/$filename &&
+    chmod u+x $output_path/$filename &&
+    $editor $editor_args "$output_path/$filename:3"
 }
 
 # TODO: add flag to switch between stdin and clipboard (mks and mksc)
@@ -63,9 +79,9 @@ function mks() {
   local editor_args=-g
 
   [[ -f "$output_path/$filename" ]] && { \
-    echo -e "\nFile already exists at $output_path/$filename" && $editor "$output_path/$filename" && return 1; }
+    printf "%b" "\nFile already exists at $output_path/$filename" && $editor "$output_path/$filename" && return 1; }
 
-    echo -e "#!/usr/bin/env ${SHELL:t}\n\n" >$output_path/$filename &&
+    printf "%b" "#!/usr/bin/env ${SHELL:t}\n\n" >$output_path/$filename &&
     chmod u+x $output_path/$filename &&
     $editor $editor_args "$output_path/$filename:3"
 }
@@ -78,7 +94,7 @@ function mksc() {
   local content=$(pbpaste)
 
   [[ -f "$output_path/$filename" ]] && { \
-    echo -e "\nFile already exists at $output_path/$filename" && $editor "$output_path/$filename" && return 1; }
+    printf "%b" "\nFile already exists at $output_path/$filename" && $editor "$output_path/$filename" && return 1; }
 
     printf "%b\n" "#!/usr/bin/env ${SHELL:t}\n\n$content" >"$output_path/$filename" &&
     chmod u+x "$output_path/$filename" &&
@@ -96,7 +112,7 @@ function mkzf() {
   local content="function $funcname() {\n\n}"
 
   [[ -f "$output_path/$filename.zsh" ]] && { \
-    echo -e "\nFile already exists at $output_path/$filename.zsh" && $editor "$output_path/$filename.zsh" && return 1; }
+    printf "%b" "\nFile already exists at $output_path/$filename.zsh" && $editor "$output_path/$filename.zsh" && return 1; }
 
   printf "%b\n" "$content" >"$output_path/$filename.zsh" &&
   $editor $editor_args "$output_path/$filename.zsh":2:3
@@ -113,7 +129,7 @@ function mkzfc() {
   local content=$(pbpaste)
 
   [[ -f "$output_path/$filename.zsh" ]] && { \
-    echo -e "\nFile already exists at $output_path/$filename.zsh" && $editor "$output_path/$filename.zsh" && return 1; }
+    printf "%b" "\nFile already exists at $output_path/$filename.zsh" && $editor "$output_path/$filename.zsh" && return 1; }
 
   printf "%b\n" "function $funcname() {\n\t$content\n}" >"$output_path/$filename.zsh" &&
   $editor $editor_args "$output_path/$filename.zsh":1:10
@@ -148,14 +164,14 @@ function mkweb() {
 
   # if output path does exist, inform user and exit
   if [[ -d "$output_path[-1]/$project_name_formatted" ]]; then
-    echo -e "\nDirectory \"$project_name_formatted\" already exists at $output_path[-1]/$project_name_formatted" &&
+    printf "%b" "\nDirectory \"$project_name_formatted\" already exists at $output_path[-1]/$project_name_formatted" &&
       $editor "$output_path[-1]/$project_name_formatted" &&
       return 1
   fi
 
   # if output path does not exist, create it
   if [[ ! -d "$output_path[-1]/$project_name_formatted" ]]; then
-    echo -e "\nCreating $project_name_formatted project at $output_path[-1]/"
+    printf "%b" "\nCreating $project_name_formatted project at $output_path[-1]/"
 
     mkdir -p "$output_path[-1]/$project_name_formatted" &&
       # copy template files to new project directory
@@ -164,13 +180,13 @@ function mkweb() {
       cp -f "$css_template_path" "$output_path[-1]/$project_name_formatted/src" &&
       cd "$output_path[-1]/$project_name_formatted" &&
       npm pkg set name="$project_name_formatted" type='module' version='0.0.0' &&
-      echo -e "\nDone!"
+      printf "%b" "\nDone!"
 
-      echo -e "\nRunning:\n"
-      echo -e "  ncu -u --install always"
+      printf "%b" "\nRunning:\n"
+      printf "%b" "  ncu -u --install always"
 
       ncu -u --install always --cwd "$output_path[-1]/$project_name_formatted" &&
-        echo -e " pnpm dev\n" &&
+        printf "%b" " pnpm dev\n" &&
         code -gn . ./index.html:18:7 src/* vite.config.js &&
         pnpm dev
 
