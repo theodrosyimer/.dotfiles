@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+cd /Users &&
+  sudo ncu -u --install always &&
+  printf "%b\n" "\nESlint update done!"
