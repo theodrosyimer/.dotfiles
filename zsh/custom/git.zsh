@@ -76,7 +76,8 @@ function git_clone_clean_from_cb() {
     # local dir_path="${2:-"${CODE_PERSONAL:-"$(pwd)"}"}"
   local dir_path="${2:-"$(pwd)"}"
 
-  tiged "$url" "$dir_path" && code -gn "$dir_path" && return 0
+  tiged "$url" "$dir_path"
+  code -gn "$dir_path" && return 0
 }
 
 function git_clone_with_all_branches() {
@@ -93,7 +94,7 @@ function git_clone_with_all_branches() {
   git clone --mirror "git@github.com:$repo" "$dir_path/$project_name/.git"
   cd "$dir_path/$project_name"
   git config --bool core.bare false
-  git checkout dev || git checkout main
+  git checkout dev || git checkout main || git checkout master
 }
 
 # source: [Git checkout all remote branches](https://gist.github.com/ElfSundae/92a5868f418ec3187dfff90fe6b20387)
