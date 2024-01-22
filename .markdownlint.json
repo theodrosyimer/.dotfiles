@@ -7,7 +7,7 @@
     "indent": 2
   },
   "MD013": false,
-  "MD033": false,
+  "no-inline-html": false,
   "MD036": false,
   "no-hard-tabs": false
 }
