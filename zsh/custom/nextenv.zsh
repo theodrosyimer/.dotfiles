@@ -61,7 +61,7 @@ function add_env() {
         echo "Target Environment: $target"
 
         # skip comments and empty inputs
-        if [[ "$input" =~ ^#.* ]] || [[ "$input" =~ ^$ ]] && continue
+        if [[ "$input" =~ '^#.*$' ]] || [[ "$input" =~ ^$ ]] && continue
 
         local name="$(echo "$input" | cut -d'=' -f1)"
         local value="$(echo "$input" | cut -d'=' -f2)"
