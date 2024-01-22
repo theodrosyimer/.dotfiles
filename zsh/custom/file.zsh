@@ -1,3 +1,5 @@
+alias dirsls="get_dirs_list_cwd"
+
 function getExtension() {
   echo "${1##*.}"
   echo "${1:e}"
@@ -9,7 +11,7 @@ function getExtension() {
 # see: [ParsingLs - Greg's Wiki](https://mywiki.wooledge.org/ParsingLs)
 function list() {
   local paths=()
-  for f in ${@:-*}; do
+  for f in *; do
     if [[ -a $f ]]; then
       paths+="$(pwd)/$f";
       # continue
@@ -19,25 +21,50 @@ function list() {
   print -l $paths;
 }
 
-function list2() {
+function get_dirs_list_cwd() {
   local paths=""
-  local input=""
+  local input="${1:-"$PWD"}"
+  local origin_cwd="$PWD"
 
-  if [[ -n $1 ]]
-  then
-    input="${(q)1}"/*
+  if [[ -n $input ]]; then
+    echo $input
+    cd "$input"
   fi
-  echo $input
 
-  for f in ${input:-*}; do
+  for f in *; do
     if [[ -a $f ]]; then
       paths+="$(pwd)/$f\n";
       # continue
     fi
   done
 
+  if [[ -n $input ]]; then
+    echo $input
+    cd $origin_cwd
+  fi
+
   printf "%b" $paths;
 }
+
+# function get_dirs_list_cwd() {
+#   local paths=""
+#   local input=""
+
+#   if [[ -n $1 ]]
+#   then
+#     input=$1/*
+#   fi
+#   echo $input
+
+#   for f in $input; do
+#     if [[ -a $f ]]; then
+#       paths+="$(pwd)/$f\n";
+#       # continue
+#     fi
+#   done
+
+#   printf "%b" $paths;
+# }
 
 # function listp(){
 #   local paths=()
@@ -57,4 +84,12 @@ function get_basename_no_ext() {
 function get_parent_dirname() {
   local path="${1:-$PWD}"
   echo "${path:h}"
+}
+
+function isRegularFileExist() {
+  [[ -f "${1}" ]] && return 0 || return 1
+}
+
+function isFileEmpty() {
+  [[ -s "${1}" ]] && return 1 || return 0
 }
