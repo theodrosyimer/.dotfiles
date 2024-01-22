@@ -84,3 +84,8 @@ eval "$(starship init zsh)"
 
 # fpath=( "${DOTFILES}/zsh/custom" "${fpath[@]}" )
 # autoload -Uz $fpath[1]/*(.:t)
+
+# bun completions
+[ -s "/Users/mac/.bun/_bun" ] && source "/Users/mac/.bun/_bun"
+
+source ~/.iterm2_shell_integration.zsh
