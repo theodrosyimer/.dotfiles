@@ -1,12 +1,8 @@
-function isNotEmpty() {
-	if [[ "$#1" -eq '0' ]] || [[ -z "$1" ]]; then
-	 	return 1
-	else
-		return 0
-	fi
+function isInputNotEmpty() {
+	if isInputEmpty && 1 || 0
 }
 
-function isEmpty() {
+function isInputEmpty() {
 	if [[ "$#1" -eq '0' ]] || [[ -z "$1" ]]; then
 	 	return 0
 	else
