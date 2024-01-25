@@ -76,3 +76,5 @@ export FZF_ALT_C_COMMAND='fd --type d . --color=never --hidden -E ".git/objects/
 export FZF_ALT_C_OPTS="--preview 'exa \
 --group-directories-first \
 --tree --level=3 {} | head -50'"
+
+export DEBUG_ZSH_LOAD_TIME=""
