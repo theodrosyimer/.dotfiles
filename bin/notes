@@ -4,7 +4,7 @@
 open_finder="ctrl-o:execute-silent(open -b "com.apple.finder" {})+close"
 
 selected="$(find "$NOTES" -mindepth 1 -maxdepth 1 -type f ! -name "Home.canvas" | \
-  sort -r | \
+  sort -r --parallel | \
   fzf \
   --bind "enter:execute("$EDITOR" {})" \
   --bind "$open_finder" \
