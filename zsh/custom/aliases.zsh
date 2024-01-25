@@ -115,7 +115,7 @@ alias sa='bat /Users/mac/.dotfiles/zsh/custom/aliases.zsh | fzf --layout=reverse
 # alias sa='bat /Users/mac/.dotfiles/zsh/custom/aliases.zsh | fzf --layout=reverse --border sharp --margin 5% --bind "?:toggle-preview" --preview "rg -A 1 --smart-case --hidden --no-heading --column {} /Users/mac/.dotfiles/zsh/custom/aliases.zsh | cut -d : -f1 | rg "\d?\d?\d?\d?\d\d$" |bat --color=always --style=numbers --line-range {} /Users/mac/.dotfiles/zsh/custom/aliases.zsh"  --preview-window nohidden'
 
 # List all tags
-alias tls="tag -tgf \* | rg '^    ' | cut -c5- | sort -u"
+alias tls="tag -tgf \* | rg '^    ' | cut -c5- | sort -u --parallel 4"
 
 # Delete all .DS_Store files recursively
 alias rmds="fd -H '^\.DS_Store$' -X /bin/rm"
