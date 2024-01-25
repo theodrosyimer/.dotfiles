@@ -40,6 +40,7 @@
 #     fi
 # }
 
+# works with the script in .dotfiles/bin/envadd, go check it
 function add_env() {
     local input="$1"
     local target=$2
