@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+curl 'https://jaspervdj.be/lorem-markdownum/markdown.txt?fenced-code-blocks=on&num-blocks=6' -o "${1:-"lorem.md"}"
