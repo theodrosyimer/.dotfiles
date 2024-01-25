@@ -14,11 +14,9 @@ ZSH_THEME="kayid"
 
 export ZSH_CUSTOM=$HOME/.dotfiles/zsh/custom
 
-
 plugins=(
   brew
   git
-  # golang
   macos
   zsh-completions
   zsh-autosuggestions
@@ -75,12 +73,9 @@ esac
 # pnpm
 export PNPM_HOME="/Users/mac/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
-# pnpm end
 
 # starship prompt
 eval "$(starship init zsh)"
-
-# zprof
 
 # fpath=( "${DOTFILES}/zsh/custom" "${fpath[@]}" )
 # autoload -Uz $fpath[1]/*(.:t)
@@ -89,3 +84,10 @@ eval "$(starship init zsh)"
 [ -s "/Users/mac/.bun/_bun" ] && source "/Users/mac/.bun/_bun"
 
 source ~/.iterm2_shell_integration.zsh
+
+timezsh() {
+  shell=${1-$SHELL}
+  for i in $(seq 1 10); do /usr/bin/time $shell -i -c exit; done
+}
+
+# zprof
