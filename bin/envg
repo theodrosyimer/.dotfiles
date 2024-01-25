@@ -1,3 +1,0 @@
-#!/usr/bin/env zsh
-
-env | sort -n | rg -i --no-line-number --no-column "$1"
