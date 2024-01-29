@@ -5,6 +5,7 @@ export PATH="$HOME/.fnm:$PATH"
 export PATH="/usr/local/opt/ssh-copy-id/bin:$PATH"
 # export PATH="/usr/local/bin/rbenv:$PATH"
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
+export PATH="/usr/local/opt/curl/bin:$PATH"
 
 export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 export PATH="/usr/local/opt/icu4c/sbin:$PATH"
@@ -36,6 +37,7 @@ export BIN="$DOTFILES/bin"
 # Starship
 export STARSHIP_CONFIG="$DOTFILES/starship/starship.toml"
 
+# Man pages
 export MANPAGER='nvim --cmd ":lua vim.g.noplugins=1" +Man!'
 export MANWIDTH=999
 

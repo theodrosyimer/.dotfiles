@@ -102,6 +102,7 @@ function mksc() {
 }
 
 # TODO: add flag to switch between stdin and clipboard (mkzf and mkzfc)
+# TODO: make it take multiple arguments
 function mkzf() {
   local default_path="$ZSH_CUSTOM"
   local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
@@ -157,7 +158,7 @@ function mkweb() {
     {n,-next}=flag_next \
     {o,-output}:=output_path || return 1
 
-  [[ ! -z "$flag_help" ]] && { print -l $usage && return; }
+  [[ ! -z "$flag_help" ]] && { print -l $usage && return 0; }
 
   # slugify input
   local project_name_formatted="$(echo ${project_name:l} | sed -e 's/ /-/g')"
