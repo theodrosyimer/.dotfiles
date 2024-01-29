@@ -14,11 +14,11 @@ function fm() {
     --bind "ctrl-c:reload(ls)" \
     --bind "ctrl-r:+change-preview(exa --group-directories-first --tree --level=3 {} | head -50)" \
     --bind "ctrl-r:+toggle-preview" \
-    --bind "ctrl-d:change-prompt()" \
+    --bind "ctrl-d:change-prompt(Dirs >)" \
     --bind "ctrl-d:+reload(find {} -type d -mindepth 1 -maxdepth 1)" \
     --bind "ctrl-d:+change-preview(exa --group-directories-first --tree --level=3 {} | head -50)" \
     --bind "ctrl-d:+toggle-preview" \
-    --bind "ctrl-f:change-prompt()" \
+    --bind "ctrl-f:change-prompt(Files >)" \
     --bind "ctrl-f:+reload(find {} -type f -mindepth 1 -maxdepth 1)" \
     --bind "ctrl-f:+change-preview(bat --color=always --style=numbers {})" \
     --bind "ctrl-f:+toggle-preview" \
