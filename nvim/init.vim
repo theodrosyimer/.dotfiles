@@ -35,9 +35,11 @@ nnoremap <space> <nop>
 let mapleader = "\<space>"
 
 " Leader Key example
-nnoremap <leader>bn :bn<cr> ;buffer next
+nnoremap <leader>bn :bn<CR> ;buffer next
 nnoremap <leader>tn gt ;new tab
 
+" Apply on current file
+nnoremap <leader>x :!chmod u+x %<CR>
 
 " Centering automatically
 " source: https://stackoverflow.com/a/16136133/9103915
