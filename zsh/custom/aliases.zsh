@@ -14,8 +14,8 @@ alias od="open-directory"
 # Text-Editor
 alias vim=nvim
 alias v=vim
-alias c='code'
-alias cc='code .'
+alias c='open -b com.microsoft.VSCode'
+alias cc='open -b com.microsoft.VSCode .'
 
 # Rust replacement for `cat`
 alias cat='bat'
