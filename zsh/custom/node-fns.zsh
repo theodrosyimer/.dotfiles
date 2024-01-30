@@ -1,6 +1,7 @@
 alias nasync='test_async_execution_order'
 alias nctx='print_global_context'
 alias nenv='print_node_env'
+alias nenvg='grep_node_env'
 
 function test_async_execution_order() {
 
@@ -8,11 +9,11 @@ function test_async_execution_order() {
   local js_to_execute
   local output_path=("${PWD}\/my-file.txt") # sets a default path
   local usage=(
+  "nasync [ -e | --esm ] - Default option"
+  "nasync [ -cjs | --commonjs ]"
+  "nasync [ -cb | --callback ]"
+  "nasync [ -c | --compare ]"
   "nasync [ -h | --help ]"
-  "nasync [ -e | --esm ] [ -o | --output <path/to/file> ]"
-  "nasync [ -cjs | --commonjs ] [ -o | --output <path/to/file> ]"
-  "nasync [ -cb | --callback ] [ -o | --output <path/to/file> ]"
-  "nasync [ -c | --compare ] [ -o | --output <path/to/file> ]"
   )
 
   zmodload zsh/zutil
@@ -21,8 +22,7 @@ function test_async_execution_order() {
     {e,-esm}=flag_esm \
     {cjs,-commonjs}=flag_commonjs \
     {cb,-callback}=flag_callback \
-    {c,-compare}=flag_compare \
-    {o,-output}:=output_path || return 1
+    {c,-compare}=flag_compare || return 1
 
   [[ -n "$flag_help" ]] && { print -l $usage && return; }
 
@@ -47,7 +47,7 @@ function test_async_execution_order() {
     fi
   fi
 
-  printf "%b" "\tExecution starting from $([[ -z $flag_callback ]] && echo 'GLOBAL context' || echo "the EVENT LOOP's queueMicroTask") in a $([[ -z $flag_commonjs ]]  && echo 'ESM' || echo 'CommonJS') file."
+  printf "%b" "\tExecution order starting from $([[ -z $flag_callback ]] && echo 'GLOBAL context' || echo "the EVENT LOOP's queueMicroTask") in a $([[ -z $flag_commonjs ]]  && echo 'ESM' || echo 'CommonJS') file."
 
   local result="$(node $js_to_execute)"
   echo "$result" | fzf \
@@ -64,6 +64,10 @@ function print_global_context() {
 
 function print_node_env() {
   node --no-warnings -e 'console.log(JSON.stringify(process.env))' | jq -r '.' | sort | uniq
+}
+
+function grep_node_env() {
+  print_node_env | grep -i $1
 }
 
 
