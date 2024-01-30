@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+top -l 1 | grep -E "^\<$1\>" | awk '{print "NAME="$2 " MEM="$9 "\tRPRVT="$10}'
