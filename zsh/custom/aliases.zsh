@@ -15,7 +15,7 @@ alias od="open-directory"
 alias vim=nvim
 alias v=vim
 alias c='open -b com.microsoft.VSCode'
-alias cc='open -b com.microsoft.VSCode .'
+# alias cc='open -b com.microsoft.VSCode .'
 
 # Rust replacement for `cat`
 alias cat='bat'
@@ -52,7 +52,7 @@ alias grep='ggrep --color=auto'
 
 # WORKING WITH FILES
 # copy the working directory path
-alias cpwd='pwd|tr -d "\n"|pbcopy'
+alias cpwd='pwd | tr -d "\n" | pbcopy'
 
 # Hidden files in Finder
 alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'
