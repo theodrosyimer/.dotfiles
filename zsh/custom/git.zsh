@@ -286,7 +286,7 @@ alias gac='git_add_all_commit'
 alias gacp='git_add_all_commit_push'
 
 alias gc='git_clone_from_front_tab_chrome'
-alias gcc='git_clone_clean_from_front_tab_chrome'
+alias gccl='git_clone_clean_from_front_tab_chrome'
 alias gccb='git_clone_clean_from_cb'
 alias gcb='git_clone_with_all_branches'
 
