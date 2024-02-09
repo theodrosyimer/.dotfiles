@@ -1,6 +1,10 @@
-
+.DS_Store
+.lsp
+.clj-kondo
+**/.clj-kondo
 **/.vscode
 **/.lsp
+**/.DS_Store
 karabiner/automatic_backups
 karabiner/assets
 
@@ -10,7 +14,5 @@ yabai
 Brewfile
 personal/*
 ansible/*
-nvim/undo/*
+nvim/undo
 
-**/.DS_Store
-./.lsp
