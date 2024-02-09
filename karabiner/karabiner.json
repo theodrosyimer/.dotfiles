@@ -2730,9 +2730,6 @@
           "to" : [ {
             "key_code" : "period",
             "modifiers" : [ "left_command", "left_shift" ]
-          }, {
-            "key_code" : "s",
-            "modifiers" : [ "left_command" ]
           } ],
           "conditions" : [ {
             "name" : "spacebar-mode",
@@ -2753,9 +2750,6 @@
           }, {
             "key_code" : "period",
             "modifiers" : [ "left_command", "left_shift" ]
-          }, {
-            "key_code" : "s",
-            "modifiers" : [ "left_command" ]
           } ],
           "from" : {
             "simultaneous" : [ {

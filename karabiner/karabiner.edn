@@ -236,7 +236,7 @@
                  [:b [:km "41)Create Fenced Code Line or Block from Selection"]]
 
                   ;comment/uncomment then save file
-                 [:c [:!CSperiod :!Cs]]
+                 [:c [:!CSperiod]]
                   ;
                  ]}
 
