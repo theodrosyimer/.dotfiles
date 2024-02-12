@@ -6,7 +6,6 @@ function wla() {
   local videos_paths="$(find "$path" -type f -iname "*.mp4" -maxdepth $maxdepth)"
   # local videos_paths="$(fd -e mp4 --base-directory "$path" -d1)"
 
-
   echo "DIR_PATH:\n$path\n"
   echo "PLAYLIST_NAME:\n$playlist_name\n"
   echo "VIDEOS:\n$videos_paths"
