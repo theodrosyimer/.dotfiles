@@ -43,11 +43,11 @@ nnoremap <leader>x :!chmod u+x %<CR>
 
 " Centering automatically
 " source: https://stackoverflow.com/a/16136133/9103915
-" augroup VCenterCursor
-"   au!
-"   au BufEnter,WinEnter,WinNew,VimResized *,*.*
-"         \ let &scrolloff=winheight(win_getid())/2
-" augroup END
+augroup VCenterCursor
+  au!
+  au BufEnter,WinEnter,WinNew,VimResized *,*.*
+        \ let &scrolloff=winheight(win_getid())/2
+augroup END
 
 " Disable search highlight
 " nnoremap <nowait><silent> <C-C> :noh<CR>
