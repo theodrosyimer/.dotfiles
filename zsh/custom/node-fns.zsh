@@ -1,6 +1,7 @@
 # Dependencies:
 # zsh
 # fzf (for some options of the script but not -c (--compare) option )
+# ./colorize.zsh (in that directory)
 
 alias nasync='test_async_execution_order'
 alias nctx='print_global_context'
