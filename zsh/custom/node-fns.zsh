@@ -8,13 +8,12 @@ alias nenv='print_node_env'
 alias nenvg='grep_node_env'
 
 function test_async_execution_order() {
-  # Need to clone the repo https://github.com/nearform/promises-workshop
+  # To get most of this script:
+  # you need to clone the repo https://github.com/nearform/promises-workshop
   # to get the executed promises :
-  #
   # git clone https://github.com/nearform/promises-workshop
   #
   # or grab just the relevant files:
-  #
   # promises-workshop/exercises/section1/order/first.mjs
   # promises-workshop/exercises/section1/order/second.mjs
   # promises-workshop/exercises/section1/order/first.js
