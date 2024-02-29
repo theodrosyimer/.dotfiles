@@ -1,13 +1,27 @@
+# Dependencies:
+# zsh
+# fzf (for some options of the script but not -c (--compare) option )
+
 alias nasync='test_async_execution_order'
 alias nctx='print_global_context'
 alias nenv='print_node_env'
 alias nenvg='grep_node_env'
 
 function test_async_execution_order() {
+  # Need to clone the repo https://github.com/nearform/promises-workshop
+  # to get the executed promises :
+  # git clone https://github.com/nearform/promises-workshop
+
+  # Then update this path to the parent directory of the repo
+  local MY_PATH="$JS_SANDBOX"
+
+  local ESM_FILE_PATH="$MY_PATH/promises-workshop/exercises/section1/order/first.mjs"
+  local ESM_CALLBACK_FILE_PATH="$MY_PATH/promises-workshop/exercises/section1/order/second.mjs"
+  local CJS_FILE_PATH="$MY_PATH/promises-workshop/exercises/section1/order/first.js"
+  local CJS_CALLBACK_FILE_PATH="$MY_PATH/promises-workshop/exercises/section1/order/second.js"
 
   local flag_help flag_esm flag_commonjs flag_callback flag_compare
   local js_to_execute
-  local output_path=("${PWD}\/my-file.txt") # sets a default path
   local usage=(
   "nasync [ -e | --esm ] - Default option"
   "nasync [ -cjs | --commonjs ]"
@@ -30,20 +44,20 @@ function test_async_execution_order() {
 
   # default to esm if no flag is passed
   if [[ -z "$flag_esm" && -z "$flag_commonjs" ]]; then
-      js_to_execute='/Users/mac/Code/refs/js-sandbox/promises-workshop/exercises/section1/order/first.mjs'
+      js_to_execute="$ESM_FILE_PATH"
       # default to esm if just `$flag_callback` flag is passed
       if [[ -n "$flag_callback" ]]; then
-        js_to_execute='/Users/mac/Code/refs/js-sandbox/promises-workshop/exercises/section1/order/second.mjs'
+        js_to_execute="$ESM_CALLBACK_FILE_PATH"
       fi
   elif [[ -n "$flag_commonjs" ]]; then
-    js_to_execute='/Users/mac/Code/refs/js-sandbox/promises-workshop/exercises/section1/order/first.js'
+    js_to_execute="$CJS_FILE_PATH"
     if [[ -n "$flag_callback" ]]; then
-      js_to_execute='/Users/mac/Code/refs/js-sandbox/promises-workshop/exercises/section1/order/second.js'
+      js_to_execute="$CJS_CALLBACK_FILE_PATH"
     fi
   elif [[ -n "$flag_esm" ]]; then
-    js_to_execute='/Users/mac/Code/refs/js-sandbox/promises-workshop/exercises/section1/order/first.mjs'
+    js_to_execute="$ESM_FILE_PATH"
     if [[ -n "$flag_callback" ]]; then
-      js_to_execute='/Users/mac/Code/refs/js-sandbox/promises-workshop/exercises/section1/order/second.mjs'
+      js_to_execute="$ESM_CALLBACK_FILE_PATH"
     fi
   fi
 
