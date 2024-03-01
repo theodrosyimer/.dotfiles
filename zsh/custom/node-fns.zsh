@@ -8,7 +8,6 @@ alias nenvg='grep_node_env'
 # Dependencies:
 # `fzf` (for some options of the script but not -c (--compare) option )
 # ./colorize.zsh (in that directory)
-# `jq`
 function test_async_execution_order() {
   # To get most of this script:
   # you need to clone the repo https://github.com/nearform/promises-workshop
