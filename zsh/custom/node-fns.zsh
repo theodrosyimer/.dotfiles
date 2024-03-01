@@ -1,13 +1,14 @@
-# Dependencies:
-# zsh
-# fzf (for some options of the script but not -c (--compare) option )
-# ./colorize.zsh (in that directory)
+# These functions only works with `zsh`!
 
 alias nasync='test_async_execution_order'
 alias nctx='print_global_context'
 alias nenv='print_node_env'
 alias nenvg='grep_node_env'
 
+# Dependencies:
+# `fzf` (for some options of the script but not -c (--compare) option )
+# ./colorize.zsh (in that directory)
+# `jq`
 function test_async_execution_order() {
   # To get most of this script:
   # you need to clone the repo https://github.com/nearform/promises-workshop
@@ -81,14 +82,20 @@ function test_async_execution_order() {
   # echo "$result" | fzf --multi --preview 'echo {} | xargs -I{} node /Users/mac/Code/refs/js-sandbox/promises-workshop/exercises/section1/order/first.js {}'
 }
 
+# Dependency:
+# `jq`
 function print_global_context() {
   node --no-warnings -e 'console.log(JSON.stringify(Object.keys(global)))' | jq -r '.[]' | sort | uniq
 }
 
+# Dependency:
+# `jq`
 function print_node_env() {
   node --no-warnings -e 'console.log(JSON.stringify(process.env))' | jq -r '.' | sort | uniq
 }
 
+# Dependency:
+# `print_node_env` function above
 function grep_node_env() {
   print_node_env | grep -i $1
 }
