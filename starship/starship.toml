@@ -20,11 +20,14 @@ $character"""
 add_newline = false
 palette = 'onedarkcustom'
 
+command_timeout = 1000
+
 # Define custom colors
 [palettes.onedarkcustom]
 blue = '21'
 # Define new color
 mustard = '#af8700'
+rust_color = '#ef5c38'
 
 [fill]
 symbol = " "
@@ -60,16 +63,21 @@ format = '[$symbol]($style)'
 [nodejs]
 symbol = " "
 style = "green"
-format = '[$symbol($version )]($style)'
+format = '[$symbol($version)]($style)'
 
 [python]
 symbol = " "
 style = 'yellow bold'
-format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+format = '[${symbol}${pyenv_prefix}(${version})(\($virtualenv\) )]($style)'
 pyenv_version_name = true
 
+[rust]
+# symbol = " "
+style = "rust_color"
+format = '[$symbol($version)]($style)'
+
 [cmd_duration]
-format = '[$duration]($style)'
+format = ' [$duration]($style)'
 style = 'bold yellow'
 min_time = 1000
 
