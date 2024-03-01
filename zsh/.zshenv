@@ -73,8 +73,21 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers {}'"
 
 export FZF_ALT_C_COMMAND='fd --type d . --color=never --hidden -E ".git/objects/" -E ".git/logs/" -E node_modules'
+
 export FZF_ALT_C_OPTS="--preview 'exa \
 --group-directories-first \
 --tree --level=3 {} | head -50'"
 
+# debugging zsh
 export DEBUG_ZSH_LOAD_TIME=""
+
+# zoxide
+# _ZO_DATA_DIR=""
+
+# _ZO_ECHO=1
+
+_ZO_EXCLUDE_DIRS=""
+
+_ZO_FZF_OPTS="$FZF_DEFAULT_OPTS"
+
+_ZO_RESOLVE_SYMLINKS=1
