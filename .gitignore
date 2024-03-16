@@ -15,4 +15,4 @@ Brewfile
 personal/*
 ansible/*
 nvim/undo
-
+nvim.bak
