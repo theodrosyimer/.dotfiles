@@ -9,7 +9,7 @@ alias nenvg='grep_node_env'
 # `fzf` (for some options of the script but not -c (--compare) option )
 # ./colorize.zsh (in that directory)
 function test_async_execution_order() {
-  # To get most of this script:
+  # To get the most of this script:
   # you need to clone the repo https://github.com/nearform/promises-workshop
   # to get the executed promises :
   # git clone https://github.com/nearform/promises-workshop
@@ -99,7 +99,8 @@ function grep_node_env() {
   print_node_env | grep -i $1
 }
 
-
+# Dependency:
+# ./colorize
 function print_compare() {
   printf "%s\n" "
                "$_purple"ESM$_reset                                       "$_purple"COMMONJS$_reset
