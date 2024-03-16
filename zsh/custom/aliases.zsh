@@ -134,3 +134,6 @@ alias nw="node --no-warnings --watch"
 alias psg="get_process"
 alias dk="docker"
 alias dkc="docker container"
+
+# ETNA
+alias etna="ssh etna_piscine -p 22"
