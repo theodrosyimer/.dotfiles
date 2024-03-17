@@ -9,13 +9,13 @@ function ssh_create_ssh_key() {
   [[ -z "$ssh_comment" ]] && { echo "You need to enter a comment" && return 1; }
 
   ssh-keygen -t ed25519 -a 100 -C "$ssh_comment" &&
-    printf "%s\n" "SSH key created successfully"
+    printf "\n%s\n" "SSH key created successfully!"
 
-  eval "$(ssh-agent -s)" && printf "%s\n" "SSH agent started successfully"
+  eval "$(ssh-agent -s)" > /dev/null && printf "\n%s\n" "SSH agent started successfully!"
 
   read "ssh_key_path?Enter the path of previously created ssh key: "
 
-  ssh-add -K $ssh_key_path && printf "%s\n" "SSH key added successfully"
+  ssh-add -K $ssh_key_path && printf "\n%s\n" "SSH key added successfully!"
 }
 
 function ssh_append_authorized_keys_to_remote() {
