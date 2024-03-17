@@ -5,7 +5,6 @@ function ssh_create_ssh_key() {
   local ssh_comment
 
   read "ssh_comment?Enter your ssh comment: "
-  read "ssh_comment?Enter your ssh comment: "
 
   [[ -z "$ssh_comment" ]] && { echo "You need to enter a comment" && return 1; }
 
