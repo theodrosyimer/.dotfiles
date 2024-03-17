@@ -1,8 +1,11 @@
 alias mkssh=ssh_create_ssh_key
 alias sshak=ssh_append_authorized_keys_to_remote
 
+# TODO: make it work for linux and windows
+# * Dependency: get_macos_version -> ./system.zsh
 function ssh_create_ssh_key() {
   local ssh_comment
+  local macos_version="$(get_macos_version)"
 
   read "ssh_comment?Enter your ssh comment: "
 
@@ -15,9 +18,13 @@ function ssh_create_ssh_key() {
 
   read "ssh_key_path?Enter the path of previously created ssh key: "
 
+  [[ "$macos_version" =~ 12 ]] && ssh-add --apple-use-keychain $ssh_key_path && printf "\n%s\n" "SSH key added successfully!" && return 0
+
   ssh-add -K $ssh_key_path && printf "\n%s\n" "SSH key added successfully!"
 }
 
+# * Dependency: fzf
+# ? Maybe use `select` instead of fzf?
 function ssh_append_authorized_keys_to_remote() {
   local default_path=("$HOME/.ssh"/*)
   local filename ssh_destination
