@@ -98,14 +98,15 @@ function git_clone_with_all_branches() {
 }
 
 # source: [Git checkout all remote branches](https://gist.github.com/ElfSundae/92a5868f418ec3187dfff90fe6b20387)
-function git_checkout_all_branches {
+function git_create_all_branches_from_remote_to_local {
   local remote=origin
 
   for brname in `git branch -r | grep $remote | grep -v /main | grep -v /HEAD | awk '{gsub(/^[^\/]+\//,"",$1); print $1}'`;
           do git branch --track $brname $remote/$brname || true;
   done
 }
-function git_track_current_branch_from_remote() {
+
+function git_track_current_branch_to_remote() {
   branch_name="$(git_get_current_branch_name)"
   git checkout -b "$branch_name" "origin/$branch_name"
 }
