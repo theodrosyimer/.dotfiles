@@ -43,7 +43,7 @@ Temporary Items
 # Most frequent
 /build
 /dist
-/lib
+# /lib
 
 # Editor directories and files
 .vscode
