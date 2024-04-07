@@ -2,6 +2,8 @@
 [include]
   path = ~/.dotfiles/git/.gitconfig.local
 
+[includeIf "gitdir:~/Code/projects/work/etna"]
+  path = ~/Code/projects/work/etna/.gitconfig
 [core]
   editor = code --wait
   excludesfile = ~/.gitignore_global
