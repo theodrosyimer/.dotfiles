@@ -137,3 +137,6 @@ alias dkc="docker container"
 
 # ETNA
 alias etna="ssh etna_piscine -p 22"
+
+# python3
+alias py="python3"
