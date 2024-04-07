@@ -266,6 +266,33 @@ function git_open_current_branch_remote_at_gh() {
   open $url/tree/$current_branch
 }
 
+function get_file_content_from_repo() {
+  local OWNER="$1"
+  local REPO="$2"
+
+  # curl -L \
+  # -H "Accept: application/vnd.github+json" \
+  # -H "X-GitHub-Api-Version: 2022-11-28" \
+  # https://api.github.com/repos/OWNER/REPO/contents/PATH
+
+  # print "https://api.github.com/repos/OWNER/REPO/contents"
+}
+
+function get_gitignore_content() {
+	local URLS=https://github.com/github/gitignore/blob/main/\*
+  local URL="https://github.com/github/gitignore/blob/main"
+
+  local FILE_NAME="$(curl -s $URLS | grep -io 'fileTree.*fileTree' | sed  -e 's/fileTree":{"":{"items"://' -e 's/,"totalCount":136}},"fileTree$//' | jq 2>/dev/null 'map(select(.contentType == "file")) | .[].name' | fzf)"
+
+  printf '%s\n' "${FILE_NAME:Q}"
+
+
+  # printf "https://raw.githubusercontent.com/${URL:t4:s/blob\///}/${FILE_NAME:Q}"
+
+  curl "https://raw.githubusercontent.com/${URL:t4:s/blob\///}/${FILE_NAME:Q}" -o '.gitignore'
+}
+
+alias mkignore=get_gitignore
 alias ginit=git_init
 alias gop='git_open_project_at_gh'
 # alias gom='git_open_main_or_master_remote_at_gh'
