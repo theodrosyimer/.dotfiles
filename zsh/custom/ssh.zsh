@@ -2,10 +2,8 @@ alias mkssh=ssh_create_ssh_key
 alias sshak=ssh_append_authorized_keys_to_remote
 
 # ! Only works for macos and linux (should work for windows using wsl2 or gitbash)
-# * Dependency: get_macos_version -> ./system.zsh
 function ssh_create_ssh_key() {
   local ssh_comment
-  local macos_version="$(get_macos_version)"
 
   read "ssh_comment?Enter your ssh comment: "
 
@@ -19,6 +17,8 @@ function ssh_create_ssh_key() {
   read "ssh_key_path?Enter the path of previously created ssh key: "
 
   if [[ "$OSTYPE" == "darwin"* ]]; then
+    local macos_version="${$(sw_vers -productVersion)%%.*}"
+
     [[ "$macos_version" -ge 12 ]] && ssh-add --apple-use-keychain $ssh_key_path && printf "\n%s\n" "SSH key added successfully!" && return 0
 
     ssh-add -K $ssh_key_path && printf "\n%s\n" "SSH key added successfully!" && return 0
