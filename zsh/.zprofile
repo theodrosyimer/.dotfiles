@@ -7,6 +7,17 @@ export PATH="/usr/local/opt/ssh-copy-id/bin:$PATH"
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
 export PATH="/usr/local/opt/curl/bin:$PATH"
 
+# MySQL server 8.0.27
+export PATH="/usr/local/mysql/bin:$PATH"
+export MYSQL_HOME=/usr/local/mysql-8.0.27-macos11-x86_64/include
+export MYSQLCLIENT_CFLAGS="-I/usr/local/mysql-8.0.27-macos11-x86_64/include"
+export MYSQLCLIENT_LDFLAGS="-L/usr/local/mysql-8.0.27-macos11-x86_64/lib -lmysqlclient"
+
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
 export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 export PATH="/usr/local/opt/icu4c/sbin:$PATH"
 export PATH="/usr/local/opt/icu4c/bin:$PATH"
