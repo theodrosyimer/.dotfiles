@@ -1,3 +1,5 @@
+alias mkignore=get_gitignore_content
+
 function mkd() {
 	mkdir -p $1 && cd $1
 }
@@ -134,6 +136,24 @@ function mkzfc() {
 
   printf "%b\n" "function $funcname() {\n\t$content\n}" >"$output_path/$filename.zsh" &&
   $editor $editor_args "$output_path/$filename.zsh":1:10
+}
+function get_gitignore_content() {
+	local URLS=https://github.com/github/gitignore/blob/main/\*
+  local URL="https://github.com/github/gitignore/blob/main"
+
+  local FILE_NAME="$(curl -s $URLS | grep -io 'fileTree.*fileTree' | sed  -e 's/fileTree":{"":{"items"://' -e 's/,"totalCount":136}},"fileTree$//' | jq 2>/dev/null 'map(select(.contentType == "file")) | .[].name' | fzf)"
+
+  printf '%s\n' "https://raw.githubusercontent.com/${URL:t4:s/blob\///}/${FILE_NAME:Q}"
+
+  if [[ -z "$FILE_NAME" ]]; then
+    printf '%s\n' "No .gitignore was downloaded" && return 0
+  fi
+
+  # printf '%s\n' "${FILE_NAME:Q}"
+
+  # printf "https://raw.githubusercontent.com/${URL:t4:s/blob\///}/${FILE_NAME:Q}"
+
+  curl "https://raw.githubusercontent.com/${URL:t4:s/blob\///}/${FILE_NAME:Q}" -o '.gitignore'
 }
 
 function mkweb() {
