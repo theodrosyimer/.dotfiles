@@ -278,21 +278,6 @@ function get_file_content_from_repo() {
   # print "https://api.github.com/repos/OWNER/REPO/contents"
 }
 
-function get_gitignore_content() {
-	local URLS=https://github.com/github/gitignore/blob/main/\*
-  local URL="https://github.com/github/gitignore/blob/main"
-
-  local FILE_NAME="$(curl -s $URLS | grep -io 'fileTree.*fileTree' | sed  -e 's/fileTree":{"":{"items"://' -e 's/,"totalCount":136}},"fileTree$//' | jq 2>/dev/null 'map(select(.contentType == "file")) | .[].name' | fzf)"
-
-  printf '%s\n' "${FILE_NAME:Q}"
-
-
-  # printf "https://raw.githubusercontent.com/${URL:t4:s/blob\///}/${FILE_NAME:Q}"
-
-  curl "https://raw.githubusercontent.com/${URL:t4:s/blob\///}/${FILE_NAME:Q}" -o '.gitignore'
-}
-
-alias mkignore=get_gitignore
 alias ginit=git_init
 alias gop='git_open_project_at_gh'
 # alias gom='git_open_main_or_master_remote_at_gh'
