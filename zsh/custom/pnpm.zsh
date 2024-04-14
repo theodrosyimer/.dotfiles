@@ -7,4 +7,8 @@ function init_package_json() {
   bug="https://github.com/theodrosyimer/$repo_name/issues" \
   repository.type="git" \
   repository.url="git+https://github.com/theodrosyimer/$repo_name.git"
+
+  # cp $CODE_TEMPLATES/dev-config/docs/README.md .
+
+  printf "# $repo_name" > README.md
 }
