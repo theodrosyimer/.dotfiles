@@ -70,8 +70,8 @@ alias fixdock='defaults write com.apple.dock static-only -bool false; killall Do
 alias npmlg='npm ls -g --depth 0' # Get NPM modules' list used globally
 
 # Python3
-alias python=python3
-alias pip=pip3
+# alias python=python3
+# alias pip=pip3
 
 # Custom scripts
 alias mmdc='~/bin/mmd2cheatset.rb'
