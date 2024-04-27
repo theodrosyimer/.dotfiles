@@ -38,3 +38,10 @@ function isRegularFileExist() {
 function isFileEmpty() {
   [[ -s "${1}" ]] && return 1 || return 0
 }
+
+function prepend_text() {
+  cat <<-EOF > ${PWD}/$2
+$(printf '%s' "$1")
+$(cat $2)
+EOF
+}
