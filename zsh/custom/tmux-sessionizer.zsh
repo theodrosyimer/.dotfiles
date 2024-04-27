@@ -1,6 +1,6 @@
 # source: https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer
 
-function tmux-sessionizer() {
+function tmux-sessionizer-fn() {
   if [[ $# -eq 1 ]]; then
       local selected=$1
   else
@@ -8,7 +8,7 @@ function tmux-sessionizer() {
   fi
 
   if [[ -z $selected ]]; then
-      exit 0
+      return 0
   fi
 
   local selected_name=$(basename "$selected" | tr . _)
@@ -16,7 +16,7 @@ function tmux-sessionizer() {
 
   if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
       tmux new-session -s "$selected_name" -c "$selected"
-      exit 0
+      return 0
   fi
 
   if ! tmux has-session -t="$selected_name" 2> /dev/null; then
