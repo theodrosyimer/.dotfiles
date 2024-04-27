@@ -2,12 +2,17 @@
 [include]
   path = ~/.dotfiles/git/.gitconfig.local
 
-[includeIf "gitdir:~/Code/projects/work/etna"]
+[includeIf "gitdir:~/Code/projects/work/etna/"]
   path = ~/Code/projects/work/etna/.gitconfig
+
 [core]
   editor = code --wait
   excludesfile = ~/.gitignore_global
   autocrlf = input
+
+# REuse REcorded REsolution
+[rerere]
+  enabled = true
 
 [init]
   defaultBranch = main
@@ -39,6 +44,12 @@
   added = yellow
   changed = green
   untracked = cyan
+
+[column]
+	ui = auto
+
+[branch]
+  sort = -committerdate
 
 # [push]
 #   default = simple
@@ -78,3 +89,8 @@
 # [mergetool "sourcetree"]
 # 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 # 	trustExitCode = true
+
+# automatic maintenance
+[maintenance]
+	auto = false
+  strategy = incremental

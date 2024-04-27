@@ -12,6 +12,8 @@
 **/resources
 **/playground.js
 **/*.pdf
+!*cv*.pdf
+
 
 # General
 .DS_Store
