@@ -1,16 +1,16 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 # source: https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer
 
-if [[ $# -eq 1 ]]; then
-    selected=$1
-else
-    selected="$(find "${CODE_DIRS[@]}" -mindepth 1 -maxdepth 1 -type d | fzf)"
-fi
+# if [[ $# -eq 1 ]]; then
+#     selected=$1
+# else
+#     selected="$(find "${CODE_DIRS[@]}" -mindepth 1 -maxdepth 1 -type d | fzf)"
+# fi
 
-if [[ -z $selected ]]; then
-    exit 0
-fi
+# if [[ -z $selected ]]; then
+#     exit 0
+# fi
 
 # selected_name=$(basename "$selected" | tr . _)
 # tmux_running=$(pgrep tmux)
@@ -25,3 +25,7 @@ fi
 # fi
 
 # tmux switch-client -t "$selected_name"
+
+source /Users/mac/.dotfiles/zsh/custom/tmux-sessionizer.zsh
+
+tmux-sessionizer-fn
