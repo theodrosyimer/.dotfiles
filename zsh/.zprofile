@@ -13,6 +13,14 @@ export MYSQL_HOME=/usr/local/mysql-8.0.27-macos11-x86_64/include
 export MYSQLCLIENT_CFLAGS="-I/usr/local/mysql-8.0.27-macos11-x86_64/include"
 export MYSQLCLIENT_LDFLAGS="-L/usr/local/mysql-8.0.27-macos11-x86_64/lib -lmysqlclient"
 
+# Postgresql 15
+export PATH="/usr/local/opt/postgresql@15/bin:$PATH"
+# for compilers
+export LDFLAGS="-L/usr/local/opt/postgresql@15/lib"
+export CPPFLAGS="-I/usr/local/opt/postgresql@15/include"
+# for pkg-config
+export PKG_CONFIG_PATH="/usr/local/opt/postgresql@15/lib/pkgconfig"
+
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
