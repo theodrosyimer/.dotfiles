@@ -90,8 +90,8 @@ timezsh() {
   for i in $(seq 1 10); do /usr/bin/time $shell -i -c exit; done
 }
 
-# zprof
-
 eval "$(zoxide init zsh)"
 
 PATH=~/.console-ninja/.bin:$PATH
+
+# zprof
