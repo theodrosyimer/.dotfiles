@@ -74,9 +74,19 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "350597b7d8ae6830",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.4.16"
+              }
+            }
           }
         ],
-        "currentTab": 5
+        "currentTab": 6
       }
     ],
     "direction": "vertical"
@@ -246,7 +256,7 @@
       "obsidian-kindle-plugin:Sync your Kindle highlights": false
     }
   },
-  "active": "3ada1afe5c7548f2",
+  "active": "350597b7d8ae6830",
   "lastOpenFiles": [
     "201803252313 How to choose a scanner or printer.md",
     "201803252302 Things to consider when choosing a scanner.md",
