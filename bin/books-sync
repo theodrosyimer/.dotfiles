@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+rsync -hvrPt "/Users/mac/Library/Mobile Documents/com~apple~CloudDocs/References/Calibre/" ~/Library/Mobile\ Documents/iCloud\~com\~apple\~iBooks/Documents
