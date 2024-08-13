@@ -35,9 +35,13 @@ function optimg() {
 	# fi
 }
 
+function to_avif() {
+  convert "$1" -quality 50 -define avif:speed=10 "$2.avif"
+}
+
 function img_convert_to() {
 	# local extensions=("${1:-"jpg"}")
-	local extensions=(jpg jpeg png webp)
+	local extensions=(jpg jpeg png webp avif)
 	local output_path="${1:-"$(pwd)/images-converted"}"
 	local images=(${(@f)$(fd -e jpg -e png -e jpeg -e webp -d 1)})
 
