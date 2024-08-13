@@ -95,3 +95,6 @@ eval "$(zoxide init zsh)"
 PATH=~/.console-ninja/.bin:$PATH
 
 # zprof
+
+
+
