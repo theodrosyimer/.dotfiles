@@ -7,6 +7,12 @@ export PATH="/usr/local/opt/ssh-copy-id/bin:$PATH"
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
 export PATH="/usr/local/opt/curl/bin:$PATH"
 
+##
+# Your previous /Users/mac/.zprofile file was backed up as /Users/mac/.zprofile.macports-saved_2024-07-08_at_11:51:06
+##
+# MacPorts PATH
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+
 # MySQL server 8.0.27
 export PATH="/usr/local/mysql/bin:$PATH"
 export MYSQL_HOME=/usr/local/mysql-8.0.27-macos11-x86_64/include
@@ -106,4 +112,5 @@ eval "$(fnm env)"
 FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
 source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+
 
