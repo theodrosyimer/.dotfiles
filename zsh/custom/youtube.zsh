@@ -81,7 +81,7 @@ function ytd() {
   else
 
     if [[ "$#OUTPUT_PATH" -eq 0 ]]; then
-      local DIRS_PATH="$(find $VIDEOS/coding $VIDEOS/coding/animation $VIDEOS/coding/css $VIDEOS/coding/drizzle $VIDEOS/coding/figma $VIDEOS/coding/git $VIDEOS/coding/javascript $VIDEOS/coding/python $VIDEOS/coding/sql "$VIDEOS/coding/Shell scripting with Bash and Zsh" -mindepth 1 -maxdepth 2 -type d | sort -u --parallel 4)"
+      local DIRS_PATH="$(find $VIDEOS $VIDEOS/coding $VIDEOS/coding/animation $VIDEOS/coding/css $VIDEOS/coding/drizzle $VIDEOS/coding/figma $VIDEOS/coding/git $VIDEOS/coding/javascript $VIDEOS/coding/python $VIDEOS/coding/sql "$VIDEOS/coding/Shell scripting with Bash and Zsh" -mindepth 1 -maxdepth 2 -type d | sort -u --parallel 4)"
 
       OUTPUT_PATH=("$(echo "${DIRS_PATH}" | fzf --preview-window hidden)")
 
