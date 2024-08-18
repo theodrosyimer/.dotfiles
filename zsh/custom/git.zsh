@@ -118,46 +118,42 @@ function git_get_current_branch_name() {
 function git_create_branch_and_push_origin() {
   local branch_name="$(printf "%s" ${1:l} | sed s/" "/-/g)"
 
-  git checkout -b "$branch_name" &&
-    git push -u origin "$branch_name"
+  git checkout -b "${branch_name:q}" &&
+    git push -u origin "${branch_name:q}"
 }
 
 # ! dependency: text.zsh -> available in the repository
 function git_create_branches_and_push_origin() {
-
   local branches=(${(@)@})
 
-  (( "#$branches[@]" = 1 )) && git_create_branch_and_push_origin "$branches[1]"
-
-  for branch in "${branches[@]}"
-    do
-      local branch_name_formatted="$(trim $branch)"
-      # echo "$branch_name_formatted"
-
+  if [[ "${#branches[@]}" -eq "1" ]]; then
+   git_create_branch_and_push_origin "${branches[1]}"
+  else
+    for branch in "${branches[@]}"; do
+      local branch_name_formatted="$(trim ${branch})"
       git_create_branch_and_push_origin "$branch_name_formatted" # &&
       # git checkout dev
     done
+  fi
+
+  return $?
 }
 
 function git_delete_branch_local_and_origin() {
   local branch_name="$(echo ${1:l} | sed s/" "/-/g)"
 
-  git branch --delete "$branch_name" &&
-    git push origin --delete "$branch_name"
+  git branch --delete "${branch_name:q}" &&
+    git push origin --delete "${branch_name:q}"
 }
 
 # ! dependency: text.zsh -> available in the repository
 function git_delete_branches_local_and_origin() {
-
   local branches=(${(@)@})
 
-  for branch in "${branches[@]}"
-    do
-      local branch_name_formatted="$(trim $branch)"
-      # echo "$branch_name_formatted"
-
-      git_delete_branch_local_and_origin "$branch_name_formatted"
-    done
+  for branch in "${branches[@]}"; do
+    local branch_name_formatted="$(trim ${branch})"
+    git_delete_branch_local_and_origin "${branch_name_formatted}"
+  done
 }
 
 # ! dependency: github.zsh -> available in the repository
