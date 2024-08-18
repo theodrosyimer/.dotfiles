@@ -96,5 +96,6 @@ PATH=~/.console-ninja/.bin:$PATH
 
 # zprof
 
-
+# Load Angular CLI autocompletion.
+source <(ng completion script)
 
