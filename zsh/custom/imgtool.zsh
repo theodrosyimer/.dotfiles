@@ -22,7 +22,7 @@ function optimg() {
 
 	[[ ! -d $output ]] && mkdir -p $output
 
-	mogrify -path $output -filter Triangle -define filter:support=2 -thumbnail $2 -unsharp 0.25x0.08+8.3+0.045 -dither None -posterize 136 -quality 82 -define jpeg:fancy-upsampling=off -define png:compression-filter=5 -define png:compression-level=9 -define png:compression-strategy=1 -define png:exclude-chunk=all -interlace none -colorspace sRGB $1
+	mogrify -path $output -filter Triangle -define filter:support=2 -thumbnail "$output_width" -unsharp 0.25x0.08+8.3+0.045 -dither None -posterize 136 -quality 82 -define jpeg:fancy-upsampling=off -define png:compression-filter=5 -define png:compression-level=9 -define png:compression-strategy=1 -define png:exclude-chunk=all -define avif:speed=5 -interlace none -colorspace sRGB $1
 
 	# [[ ! -d "$output_path[-1]" ]] && mkdir -p "$output_path[-1]"
 
@@ -36,20 +36,36 @@ function optimg() {
 }
 
 function to_avif() {
-  convert "$1" -quality 50 -define avif:speed=10 "$2.avif"
+  AVIF_SPEED=5
+  convert -quality 50 -define avif:speed=$AVIF_SPEED "$1" "${1:-"${2}":h}.avif"
 }
 
 function img_convert_to() {
 	# local extensions=("${1:-"jpg"}")
 	local extensions=(jpg jpeg png webp avif)
 	local output_path="${1:-"$(pwd)/images-converted"}"
-	local images=(${(@f)$(fd -e jpg -e png -e jpeg -e webp -d 1)})
+  local imagesPath="$(fd -e jpg -e png -e avif -e jpeg -e webp -d 1)"
+	local images=(${(@f)${imagesPath}})
+
+  # echo "$imagesPath"
+  echo "$images"
+
+  if [[ ! -d "originals" ]]; then
+    mkdir -p originals &&
+    for image in $images; do
+      cp $image ./originals
+    done
+  fi
+
+  [[ $? -eq "0" ]] && printf "\n%s\n" "Original images copied to originals directory" || printf "\n%s\n" "Original images not copied to originals directory. Program terminated." || return 1
 
 	for extension in "${extensions[@]}"; do
 		[[ ! -d "$output_path/$extension" ]] && mkdir -p "$output_path/$extension"
 	done
 
-	time parallel --shuf --eta -j+0 convert -resize {3} -quality {2} {1} $output_path/{4}/{1.}_{3}_q{2}.{4} ::: ${images[@]} ::: 80 90 100 ::: 50% 25% 10% ::: ${extensions[@]}
+	time parallel --shuf --eta -j+0 convert -resize {3} -quality {2} {1} $output_path/{4}/{1.}_w{3}_q{2}.{4} ::: ${images[@]} ::: 80 90 100 ::: 50% 25% 10% ::: ${extensions[@]}
+
+	# time parallel --shuf --eta -j+0 mogrify -write $output_path/{4}/{1.}_{3}_q{2}.{4} -quality {2} -filter Triangle -define filter:support=2 -thumbnail {3} -unsharp 0.25x0.08+8.3+0.045 -dither None -posterize 136 -quality 82 -define jpeg:fancy-upsampling=off -define png:compression-filter=5 -define png:compression-level=9 -define png:compression-strategy=1 -define png:exclude-chunk=all -define avif:speed=5 -interlace none -colorspace sRGB {1} ::: ${images[@]} ::: 80 90 100 ::: 50% 25% 10% ::: ${extensions[@]}
 }
 
 function from_webp() {
