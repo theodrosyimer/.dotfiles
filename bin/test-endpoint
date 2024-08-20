@@ -26,7 +26,7 @@ if [[ $# -eq 0 ]]; then
     return 1
 fi
 
-endpoint=$1
+endpoint=${1:-"http://localhost:3000/api/v1"}
 requests_count=100
 data='{}'
 
@@ -40,14 +40,18 @@ function send_post_request() {
     fi
 }
 
-# loop to send multiple POST requests in parallel (asynchronously) to the endpoint
-for request in ${1..$requests_count}; do
-    send_post_request &
+while true
+do
+  # loop to send multiple POST requests in parallel (asynchronously) to the endpoint
+  for request in {1..$requests_count};
+    do
+      send_post_request &
+    done
+
+  # for ((i=0; i<$requests_count; i++)); do
+  #     send_post_request &
+  # done
+
+  # wait for all requests to finish
+    wait
 done
-
-# for ((i=0; i<$requests_count; i++)); do
-#     send_post_request &
-# done
-
-# wait for all requests to finish
-wait
