@@ -140,3 +140,4 @@ alias etna="ssh etna_piscine -p 22"
 
 # python3
 alias py="python3"
+alias ntse="node --no-warnings --experimental-strip-types"
