@@ -118,7 +118,7 @@ alias sa='bat /Users/mac/.dotfiles/zsh/custom/aliases.zsh | fzf --layout=reverse
 alias tls="tag -tgf \* | rg '^    ' | cut -c5- | sort -u --parallel 4"
 
 # Delete all .DS_Store files recursively
-alias rmds="fd -H '^\.DS_Store$' -X /bin/rm"
+alias rmds="fd -H --no-ignore '.DS_Store' -X /bin/rm"
 
 # du default options: Get directory's contents size
 alias du="du -hd 1"
