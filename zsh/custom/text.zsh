@@ -130,3 +130,10 @@ function decode_uri_component() {
 
   printf "%s" $(echo "$text" | xxd -r -ps)
 }
+
+function prepend_text() {
+  cat <<-EOF > ${PWD}/$2
+$(printf '%s' "$1")
+$(cat $2 2>/dev/null)
+EOF
+}
