@@ -5,8 +5,13 @@ ENV_FILES=(.env*)
 [[ ${#ENV_FILES[@]} -eq "0" ]] && echo "No .env file was found" && return 1
 
 ENV_FILE=.env
-ENV_FILE_CONTENT="$(grep '^[^#].*$' "$ENV_FILE")"
-ENV_CHOICE="$(echo "$ENV_FILE_CONTENT" | sort -n | fzf)"
+ENV_UNCOMMENTED_FILE_CONTENT="$(grep '^[^#].*$' "$ENV_FILE")"
+
+echo ${ENV_UNCOMMENTED_FILE_CONTENT}
+
+ENV_CHOICE="$(echo "$ENV_UNCOMMENTED_FILE_CONTENT" | sort -n | fzf)"
+
+[[ -z $ENV_CHOICE ]] && exit 0
 
 PATTERN='*="'
 REPLACE_STR="" # not needed but better to be explicit...
