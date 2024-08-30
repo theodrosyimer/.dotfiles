@@ -51,6 +51,9 @@
 [branch]
   sort = -committerdate
 
+[pull]
+	rebase = true
+
 # [push]
 #   default = simple
 
