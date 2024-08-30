@@ -4,7 +4,7 @@ setopt pushd_ignore_dups
 setopt pushdminus
 
 alias -g ..='cd ../'
-alias -g ...=cd '../..'
+alias -g ...='cd ../..'
 alias -g ....='cd ../../..'
 alias -g .....='cd ../../../..'
 alias -g ......='cd ../../../../..'
