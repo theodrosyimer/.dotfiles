@@ -32,7 +32,7 @@ function envf() {
 function envg() {
   # env is already an alias for:
   #   `env | sort -s`
-  env | rg -i --no-line-number --no-column "$1"
+  env | rg -i --no-line-number --no-column "$@"
 }
 
 function envx() {
