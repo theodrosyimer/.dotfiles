@@ -101,7 +101,7 @@ alias cfnh='chflags nohidden'
 alias usage='du -h -d1'
 
 # Check a given port is opened (syntax `:PORT``)
-alias runp='lsof -i '
+alias pls='lsof -nPi | rg -i'
 
 ## FZF
 # Search for zsh plugins with fzf
