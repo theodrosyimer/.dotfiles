@@ -88,7 +88,7 @@ function from_webp() {
 
 function to_webp() {
 	if [[ -d "$1" ]]; then
-			# local list="$1/*"
+			# local images="($1/*.{jpg,jpeg,png})"
 			local images=(${(@f)$(fd -e jpg -e png -e jpeg --base-directory "$1" -d 1)})
 	fi
 
