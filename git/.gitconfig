@@ -7,8 +7,14 @@
 
 [core]
   editor = code --wait
+  # pager = less -RFX
+  pager = delta
   excludesfile = ~/.gitignore_global
   autocrlf = input
+
+[delta]
+  syntax-theme = dracula
+  line-numbers = true
 
 # REuse REcorded REsolution
 [rerere]
@@ -17,14 +23,58 @@
 [init]
   defaultBranch = main
 
-# [branch "main"]
-#   remote = origin
-#   merge = refs/heads/main
+[branch]
+  sort = -committerdate
+
+[pull]
+	rebase = true
+
+[push]
+  default = current
+  autoSetupRemote = true
+
+# automatic maintenance
+[maintenance]
+	auto = false
+  strategy = incremental
+
+# [credential]
+# helper = osxkeychain
 
 [alias]
   l = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
   h = log --graph --decorate --abbrev-commit --date=relative --oneline --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)'
   ec = config --global -e
+  undo = reset --soft HEAD^
+  undom = reset --mixed HEAD^
+
+[column]
+	ui = auto
+
+[diff]
+  tool = vscode
+
+[difftool "vscode"]
+  cmd = code --wait --diff \"$LOCAL\" \"$REMOTE\"
+
+[merge]
+  tool = vscode
+  log = true
+
+[mergetool "vscode"]
+  cmd = code --wait \"$MERGED\"
+  trustExitCode = true
+
+# [difftool "sourcetree"]
+# 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+# 	path =
+
+# [mergetool "sourcetree"]
+# 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+# 	trustExitCode = true
+
+[commit]
+  template = /Users/mac/.stCommitMsg
 
 [color]
   ui = auto
@@ -45,55 +95,8 @@
   changed = green
   untracked = cyan
 
-[column]
-	ui = auto
-
-[branch]
-  sort = -committerdate
-
-[pull]
-	rebase = true
-
-# [push]
-#   default = simple
-
-# [merge]
-#   log = true
-
-# [credential]
-# helper = osxkeychain
-
 [filter "lfs"]
   required = true
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
-
-[commit]
-  template = /Users/mac/.stCommitMsg
-
-[diff]
-  tool = vscode
-
-[difftool "vscode"]
-  cmd = code --wait --diff \"$LOCAL\" \"$REMOTE\"
-
-[merge]
-  tool = vscode
-
-[mergetool "vscode"]
-  cmd = code --wait \"$MERGED\"
-  trustExitCode = true
-
-# [difftool "sourcetree"]
-# 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-# 	path =
-
-# [mergetool "sourcetree"]
-# 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-# 	trustExitCode = true
-
-# automatic maintenance
-[maintenance]
-	auto = false
-  strategy = incremental
