@@ -68,9 +68,9 @@ function mksr() {
   [[ -f "$output_path/$filename" ]] && { \
     printf "%b" "\nFile already exists at $output_path/$filename" && $editor "$output_path/$filename" && return 1; }
 
-    printf "%b" "#!/usr/bin/env ${SHELL:t}\n\n" >$output_path/$filename &&
-    chmod u+x $output_path/$filename &&
-    $editor $editor_args "$output_path/$filename:3"
+  printf "%b" "#!/usr/bin/env ${SHELL:t}\n\n" >$output_path/$filename &&
+  chmod u+x $output_path/$filename &&
+  $editor $editor_args "$output_path/$filename:3"
 }
 
 # TODO: add flag to switch between stdin and clipboard (mks and mksc)
