@@ -11,7 +11,7 @@ karabiner/assets
 npm
 skhd
 yabai
-Brewfile
+# Brewfile
 personal/*
 ansible/*
 nvim/undo

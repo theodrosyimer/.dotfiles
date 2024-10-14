@@ -1,0 +1,384 @@
+tap "1password/tap"
+tap "buo/cask-upgrade"
+tap "candid82/brew"
+tap "codecrafters-io/tap"
+tap "hashicorp/tap"
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/core"
+tap "homebrew/services"
+tap "jesseduffield/lazygit"
+tap "koekeishiya/formulae"
+tap "mongodb/brew"
+tap "ngrok/ngrok"
+tap "nikitabobko/tap"
+tap "planetscale/tap"
+tap "schniz/tap"
+tap "teamookla/speedtest"
+tap "withgraphite/tap"
+tap "yqrashawn/goku"
+tap "yt-dlp/taps"
+# Recompression utilities for .PNG, .MNG, .ZIP, and .GZ files
+brew "advancecomp"
+# Library for command-line editing
+brew "readline"
+# Automate deployment, configuration, and upgrading
+brew "ansible"
+# Image format providing lossless and lossy compression for web images
+brew "webp"
+# Bourne-Again SHell, a UNIX command interpreter
+brew "bash"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Get/set bluetooth power and discoverable state
+brew "blueutil"
+# X.Org: pthread-stubs.pc
+brew "libpthread-stubs"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@3"
+# Tool to obtain certs from Let's Encrypt and autoenable HTTPS
+brew "certbot"
+# Statistics utility to count lines of code
+brew "cloc"
+# GNU File, Shell, and Text utilities
+brew "coreutils"
+# Get a file from an HTTP, HTTPS or FTP server
+brew "curl"
+# Secure runtime for JavaScript and TypeScript
+brew "deno"
+# Load/unload environment variables based on $PWD
+brew "direnv"
+# Docker image squashing tool
+brew "docker-squash"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Fast and simple Node.js version manager
+brew "fnm"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# GitHub command-line tool
+brew "gh"
+# Distributed revision control system
+brew "git"
+# Git extension for versioning large files
+brew "git-lfs"
+# Validating, recursive, caching DNS resolver
+brew "unbound"
+# GNU Transport Layer Security (TLS) Library
+brew "gnutls"
+# Generate introspection data for GObject libraries
+brew "gobject-introspection"
+# GNU grep, egrep and fgrep
+brew "grep"
+# ISO/IEC 23008-12:2017 HEIF file format decoder and encoder
+brew "libheif"
+# GNU troff text-formatting system
+brew "groff"
+# Tool for glamorous shell scripts
+brew "gum"
+# OpenType text shaping engine
+brew "harfbuzz", link: false
+# Improved top (interactive process viewer)
+brew "htop"
+# Command-line benchmarking tool
+brew "hyperfine"
+# Tool Command Language
+brew "tcl-tk"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.8"
+# Tools and libraries to manipulate images in many formats
+brew "imagemagick"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Build tool for Clojure
+brew "leiningen", link: false
+# Text-based web browser
+brew "lynx"
+# Mac App Store command-line interface
+brew "mas"
+# Small build system for use with gyp or CMake
+brew "ninja"
+# Simple tool to make locally trusted development certificates
+brew "mkcert"
+# MongoDB Shell to connect, configure, query, and work with your MongoDB database
+brew "mongosh"
+# Free (GNU) replacement for the Pico text editor
+brew "nano"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# HTTP(S) server and reverse proxy, and IMAP/POP3 proxy server
+brew "nginx"
+# Port scanning utility for large networks
+brew "nmap"
+# Platform built on V8 to build network applications
+brew "node"
+# Platform built on V8 to build network applications
+brew "node@14"
+# Libraries for security-enabled client and server applications
+brew "nss"
+# Swiss-army knife of markup format conversion
+brew "pandoc"
+# Shell command parallelization utility
+brew "parallel"
+# Highly capable, feature-rich programming language
+brew "perl"
+# PNG image optimizing utility
+brew "pngquant"
+# Object-relational database system
+brew "postgresql@15"
+# Python version management
+brew "pyenv"
+# Ruby version manager
+brew "rbenv"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# Utility that provides fast incremental file transfer
+brew "rsync"
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck", link: false
+# Unit testing framework for Bourne-based shell scripts
+brew "shunit2"
+# Command-line interface for https://speedtest.net bandwidth tests
+brew "speedtest-cli"
+# Add a public key to a remote machine's authorized_keys file
+brew "ssh-copy-id"
+# Cross-shell prompt for astronauts
+brew "starship"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
+brew "stow"
+# Change macOS audio source from the command-line
+brew "switchaudio-osx"
+# Manipulate and query tags on macOS files
+brew "tag"
+# User interface to the TELNET protocol
+brew "telnet"
+# Terminal multiplexer
+brew "tmux"
+# CLI tool that moves files or folder to the trash
+brew "trash"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Internet file retriever
+brew "wget"
+# Download YouTube videos from the command-line
+brew "youtube-dl"
+# Tracks most-used directories to make cd smarter
+brew "z"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# UNIX shell (command interpreter)
+brew "zsh"
+# Additional completion definitions for zsh
+brew "zsh-completions"
+# Better and friendly vi(vim) mode plugin for ZSH
+brew "zsh-vi-mode"
+# CodeCrafters CLI
+brew "codecrafters-io/tap/codecrafters"
+# Terraform
+brew "hashicorp/tap/terraform"
+# A simple terminal UI for git commands, written in Go
+brew "jesseduffield/lazygit/lazygit"
+# Simple hotkey-daemon for macOS.
+brew "koekeishiya/formulae/skhd"
+# A tiling window manager for macOS based on binary space partitioning.
+brew "koekeishiya/formulae/yabai"
+# High-performance, schema-free, document-oriented database
+brew "mongodb/brew/mongodb-community"
+# The PlanetScale CLI
+brew "planetscale/tap/pscale"
+# Allows you to manage your stacked changes and submit them for review on GitHub
+brew "withgraphite/tap/graphite"
+# karabiner configurator
+brew "yqrashawn/goku/goku"
+# A youtube-dl fork with additional features and fixes
+brew "yt-dlp/taps/yt-dlp", link: false
+# Command-line helper for the 1Password password manager
+cask "1password-cli"
+# Inspect application bundles
+cask "apparency"
+# Utility to create and modify archives
+cask "betterzip"
+# Free and open-source image editor
+cask "gimp"
+# Keyboard customizer
+cask "karabiner-elements"
+# Open-source keystroke visualizer
+cask "keycastr"
+# Full TeX Live distribution with GUI applications
+cask "mactex"
+# Reverse proxy, secure introspectable tunnels to localhost
+cask "ngrok"
+cask "qladdict"
+# QuickLook plug-in that renders source code with syntax highlighting
+cask "qlcolorcode"
+# Display image info and preview unsupported formats in QuickLook
+cask "qlimagesize"
+# QuickLook generator for Markdown files
+cask "qlmarkdown"
+# QuickLook plugin for plaintext files without an extension
+cask "qlstephen"
+# Thumbnails, static previews, cover art and metadata for video files
+cask "qlvideo"
+# QuickLook plugin for JSON files
+cask "quicklook-json"
+# QuickLook generator for Adobe Swatch Exchange files
+cask "quicklookase"
+# MySQL/MariaDB database management
+cask "sequel-ace"
+# Application for inspecting installer packages
+cask "suspicious-package"
+cask "webpquicklook"
+# Open-source version of the X.Org X Window System
+cask "xquartz"
+mas "1Password 7", id: 1333542190
+mas "Adblock Plus", id: 1432731683
+mas "Agenda", id: 1287445660
+mas "Amphetamine", id: 937984704
+mas "Battery Health", id: 490192174
+mas "Be Focused", id: 973134470
+mas "bookmarker for pinboard", id: 1451400394
+mas "Disk Speed Test", id: 425264550
+mas "Drafts", id: 1435957248
+mas "FruitJuice", id: 671736912
+mas "Howler Timer", id: 428846772
+mas "Image2icon", id: 992115977
+mas "iThoughtsX", id: 720669838
+mas "Jayson", id: 1468691718
+mas "Kindle Classic", id: 405399194
+mas "Memory Clean 2", id: 1114591412
+mas "RegExRX", id: 498370702
+mas "Simplify", id: 1561588643
+mas "The Unarchiver", id: 425424353
+mas "Xcode", id: 497799835
+vscode "aaron-bond.better-comments"
+vscode "akamud.vscode-javascript-snippet-pack"
+vscode "akamud.vscode-theme-onedark"
+vscode "alefragnani.project-manager"
+vscode "algorizen.javascript-snippets"
+vscode "andyyaldoo.vscode-json"
+vscode "angular.ng-template"
+vscode "asvetliakov.vscode-neovim"
+vscode "beaglefoot.awk-ide-vscode"
+vscode "betterthantomorrow.calva"
+vscode "betterthantomorrow.calva-spritz"
+vscode "bierner.github-markdown-preview"
+vscode "bierner.markdown-checkbox"
+vscode "bierner.markdown-emoji"
+vscode "bierner.markdown-footnotes"
+vscode "bierner.markdown-mermaid"
+vscode "bierner.markdown-preview-github-styles"
+vscode "bpruitt-goddard.mermaid-markdown-syntax-highlighting"
+vscode "bradlc.vscode-tailwindcss"
+vscode "celianriboulet.webvalidator"
+vscode "chakrounanas.turbo-console-log"
+vscode "chrischinchilla.vscode-pandoc"
+vscode "christian-kohler.npm-intellisense"
+vscode "christian-kohler.path-intellisense"
+vscode "codesandbox-io.codesandbox-projects"
+vscode "codestackr.codestackr-theme"
+vscode "codezombiech.gitignore"
+vscode "davidanson.vscode-markdownlint"
+vscode "dbaeumer.vscode-eslint"
+vscode "deerawan.vscode-dash"
+vscode "digitalbrainstem.javascript-ejs-support"
+vscode "donjayamanne.githistory"
+vscode "dotiful.dotfiles-syntax-highlighting"
+vscode "dsznajder.es7-react-js-snippets"
+vscode "dunstontc.viml"
+vscode "eamodio.gitlens"
+vscode "editorconfig.editorconfig"
+vscode "emmanuelbeziat.vscode-great-icons"
+vscode "esbenp.prettier-vscode"
+vscode "exodiusstudios.comment-anchors"
+vscode "fabiospampinato.vscode-todo-plus"
+vscode "formulahendry.auto-complete-tag"
+vscode "gencer.html-slim-scss-css-class-completion"
+vscode "github.copilot"
+vscode "github.copilot-chat"
+vscode "github.remotehub"
+vscode "github.vscode-github-actions"
+vscode "glenn2223.live-sass"
+vscode "golang.go"
+vscode "graphite.gti-vscode"
+vscode "graphql.vscode-graphql"
+vscode "graphql.vscode-graphql-syntax"
+vscode "gruntfuggly.todo-tree"
+vscode "hookyqr.jsdoctagcomplete"
+vscode "huibizhang.codesnap-plus"
+vscode "humao.rest-client"
+vscode "ibm.output-colorizer"
+vscode "idleberg.applescript"
+vscode "ivangabriele.vscode-git-add-and-commit"
+vscode "jacobclarke.selection-word-character-count"
+vscode "jmsv.javascriptsnippetsstandard"
+vscode "johnlindquist.kit-extension"
+vscode "johnpapa.angular2"
+vscode "johnpapa.vscode-peacock"
+vscode "kenhowardpdx.vscode-gist"
+vscode "kisstkondoros.vscode-gutter-preview"
+vscode "mattpocock.ts-error-translator"
+vscode "mechatroner.rainbow-csv"
+vscode "meganrogge.template-string-converter"
+vscode "mgmcdermott.vscode-language-babel"
+vscode "mhutchie.git-graph"
+vscode "mikestead.dotenv"
+vscode "million.million-lint"
+vscode "mkxml.vscode-filesize"
+vscode "ms-python.debugpy"
+vscode "ms-python.isort"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
+vscode "ms-toolsai.jupyter"
+vscode "ms-toolsai.jupyter-keymap"
+vscode "ms-toolsai.jupyter-renderers"
+vscode "ms-toolsai.vscode-jupyter-cell-tags"
+vscode "ms-toolsai.vscode-jupyter-slideshow"
+vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode-remote.remote-ssh"
+vscode "ms-vscode-remote.remote-ssh-edit"
+vscode "ms-vscode.cmake-tools"
+vscode "ms-vscode.live-server"
+vscode "ms-vscode.remote-explorer"
+vscode "ms-vscode.remote-repositories"
+vscode "ms-vsliveshare.vsliveshare"
+vscode "ms-vsliveshare.vsliveshare-pack"
+vscode "narsenico.vscode-progressive-increment"
+vscode "naumovs.color-highlight"
+vscode "ocamllabs.ocaml-platform"
+vscode "phplasma.csv-to-table"
+vscode "pkief.material-icon-theme"
+vscode "pomdtr.excalidraw-editor"
+vscode "pucelle.vscode-css-navigation"
+vscode "quicktype.quicktype"
+vscode "redhat.vscode-yaml"
+vscode "ritwickdey.liveserver"
+vscode "rust-lang.rust-analyzer"
+vscode "simonsiefke.svg-preview"
+vscode "speedy37.ascii-plist"
+vscode "statelyai.stately-vscode"
+vscode "steoates.autoimport"
+vscode "stylelint.vscode-stylelint"
+vscode "sumneko.lua"
+vscode "tamasfe.even-better-toml"
+vscode "timonwong.shellcheck"
+vscode "tombonnike.vscode-status-bar-format-toggle"
+vscode "tomoki1207.pdf"
+vscode "truefire.lilypond"
+vscode "truman.autocomplate-shell"
+vscode "twxs.cmake"
+vscode "undefined_publisher.one-dark-pro-custom"
+vscode "usernamehw.errorlens"
+vscode "vkrsi.code-screenshot"
+vscode "vscode-icons-team.vscode-icons"
+vscode "vstirbu.vscode-mermaid-preview"
+vscode "vunguyentuan.vscode-css-variables"
+vscode "vunguyentuan.vscode-postcss"
+vscode "wallabyjs.console-ninja"
+vscode "wallabyjs.quokka-vscode"
+vscode "wix.vscode-import-cost"
+vscode "wmontalvo.vsc-jsonsnippets"
+vscode "yoavbls.pretty-ts-errors"
+vscode "ysemeniuk.emmet-live"
+vscode "yy0931.gitconfig-lsp"
+vscode "yzhang.markdown-all-in-one"
+vscode "zhuangtongfa.material-theme"
