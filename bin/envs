@@ -7,7 +7,7 @@ ENV_FILES=(.env*)
 ENV_FILE=.env
 ENV_UNCOMMENTED_FILE_CONTENT="$(grep '^[^#].*$' "$ENV_FILE")"
 
-echo ${ENV_UNCOMMENTED_FILE_CONTENT}
+echo "${ENV_UNCOMMENTED_FILE_CONTENT}"
 
 ENV_CHOICE="$(echo "$ENV_UNCOMMENTED_FILE_CONTENT" | sort -n | fzf)"
 
@@ -20,5 +20,5 @@ RESULT=${ENV_CHOICE/${PATTERN}/${REPLACE_STR}}
 printf "%s" "${RESULT:0:(${#RESULT} - 1)}"
 
 ### Using `sed`
-# shellcheck disable=SC2001
+## shellcheck disable=SC2001
 # printf "%s" "$ENV_CHOICE" | sed -e "s/^.*=\"\(.*\)\"$/\1/"
