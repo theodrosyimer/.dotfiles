@@ -1,10 +1,12 @@
 #!/usr/bin/env zsh
 
-# bind actions
+path=$NOTES
+
+# `--bind` actions
 open_finder="ctrl-o:execute-silent(open -b "com.apple.finder" {})+close"
 
-selected="$(find "$NOTES" -mindepth 1 -maxdepth 1 -type f ! -name "Home.canvas" | \
-  sort -r --parallel | \
+selected="$(find "$path" -mindepth 1 -maxdepth 1 -type f ! -name "Home.canvas" | \
+  sort -r --parallel 4 | \
   fzf \
   --bind "enter:execute("$EDITOR" {})" \
   --bind "$open_finder" \
