@@ -1,0 +1,50 @@
+#!/usr/bin/env zsh
+
+action=$1
+query=$2
+
+create() {
+  printf '%s' "$1"
+}
+
+get() {
+  printf '%s' "$1"
+}
+
+update() {
+  printf '%s' "$1"
+}
+
+delete() {
+  printf '%s' "$1"
+}
+
+case "${action}" in
+  connect)
+    mysql -h localhost -P 3306 --protocol=tcp -u root -p || { printf '%s
+' 'Connection failed'; exit 1; }
+  ;;
+  create)
+    printf '%s' 'CREATE'
+    create "$query"
+  ;;
+  select)
+    printf '%s' 'SELECT'
+    get "$query"
+  ;;
+  update)
+    printf '%s' 'UPDATE'
+    update "$query"
+  ;;
+  delete)
+    printf '%s' 'DELETE'
+    delete "$query"
+  ;;
+  *)
+    printf '%s
+' 'Unknown command.'
+    printf '%s
+' 'Available commands: connect, create, select, update, delete.'
+    exit 1
+  ;;
+esac
