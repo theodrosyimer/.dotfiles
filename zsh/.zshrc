@@ -21,6 +21,7 @@ plugins=(
   zsh-completions
   zsh-autosuggestions
   zsh-syntax-highlighting
+  fzf-tab
 )
 
 export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
@@ -45,11 +46,11 @@ bindkey '\e[B' history-beginning-search-forward
 # zle -N edit-command-line
 # bindkey -M vicmd '^v' edit-command-line
 
-if [[ "$TERM_PROGRAM" == 'vscode' ]]; then
-  alias 'rg'='rgd'
-else
-  alias 'rg'='rg --smart-case --hidden --no-heading --column'
-fi
+# if [[ "$TERM_PROGRAM" == 'vscode' ]]; then
+#   alias 'rg'='rgd'
+# else
+#   alias 'rg'='rg --smart-case --hidden --no-heading --color=always --column'
+# fi
 
 # WINDOW CONFIGURATION
 ################################################################################
@@ -77,7 +78,7 @@ export PATH="$PNPM_HOME:$PATH"
 # starship prompt
 eval "$(starship init zsh)"
 
-# fpath=( "${DOTFILES}/zsh/custom" "${fpath[@]}" )
+# fpath=("${DOTFILES}/zsh/custom" "${fpath[@]}")
 # autoload -Uz $fpath[1]/*(.:t)
 
 # bun completions
