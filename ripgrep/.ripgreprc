@@ -1,4 +1,5 @@
 --smart-case
 --hidden
 --no-heading
---column
+--no-column
+--no-line-number
