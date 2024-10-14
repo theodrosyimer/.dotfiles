@@ -107,7 +107,7 @@ alias ipls='lsof -nPi'
 
 ## FZF
 # Search for zsh plugins with fzf
-alias fzfz='fd ".+\.plugin\..+" $ZSH/plugins -x echo {/.} | sort | uniq | fzf --height 80% --border none --margin 10% --bind "?:toggle-preview" --preview "bat --color=always --style=numbers $ZSH/plugins/{}" --preview-window right,49% nohidden'
+alias fzfz='fd ".+\.plugin\..+" $ZSH/plugins -x echo {/.} | sort | uniq | fzf --height 80% --border none --margin 10% --bind "?:toggle-preview" --preview "bat --color=always --style=numbers $ZSH/plugins/{}" --preview-window right,49% --nohidden'
 
 # Search through my aliases with fzf
 alias sa='bat /Users/mac/.dotfiles/zsh/custom/aliases.zsh | fzf --layout=reverse --border sharp --margin 5% --bind "?:toggle-preview" --preview "rg -A 1 --smart-case --hidden --no-heading --column {} /Users/mac/.dotfiles/zsh/custom/aliases.zsh | bat --color=always --style=numbers /Users/mac/.dotfiles/zsh/custom/aliases.zsh"  --preview-window nohidden'
@@ -134,7 +134,7 @@ alias ncu="ncu --configFileName .ncurc.json --configFilePath $DOTFILES/ncu"
 alias nw="node --no-warnings --watch"
 
 alias psg="get_process"
-alias dk="docker"
+# alias dk="docker"
 alias dkc="docker container"
 
 # ETNA
@@ -142,4 +142,7 @@ alias etna="ssh etna_piscine -p 22"
 
 # python3
 alias py="python3"
+
 alias ntse="node --no-warnings --experimental-strip-types"
+alias lg="lazygit"
+alias rgv="rg --smart-case --hidden --no-heading --column --line-number"
