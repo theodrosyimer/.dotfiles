@@ -35,7 +35,7 @@ function ytd() {
   is_installed yt-dlp $ERROR_MESSAGE || return 1
 
   local OUTPUT_PATH=()
-
+  local YT_URL
   local FORMAT='bv[ext=mp4]+ba[ext=m4a]/b[ext=mp4] / bv+ba/b'
   local FLAG_PLAYLIST FLAG_HELP
   local USAGE=(
@@ -52,11 +52,15 @@ function ytd() {
 
   [[ -n "$FLAG_HELP" ]] && { print -l $USAGE && return; }
 
-  local YT_URL=("${1:-$(chrome_get_front_window_url)}")
+  [[ -z "$1" ]] && YT_URL="$(chrome_get_front_window_url)" || YT_URL="$1"
+
+  printf "%s\n" "Downloading: $_cyan$YT_URL$_reset"
+
+  # local YT_URL=("${1:-$(chrome_get_front_window_url)}")
   local REGEX='https://www.yout'
 
   [[ "$YT_URL" =~ "$REGEX" ]] || { \
-    echo "$_red\nNo youtube video found on chrome's front tab.$_reset" && \
+    printf "%s\n" "$_red\nNo youtube video found on chrome's front tab.$_reset" && \
     return 1; }
 
   if [ -n "$FLAG_PLAYLIST" ]; then
