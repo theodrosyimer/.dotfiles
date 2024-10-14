@@ -1757,7 +1757,7 @@
           },
           "to" : [ {
             "key_code" : "5",
-            "modifiers" : [ "left_option", "left_shift" ]
+            "modifiers" : [ "left_shift", "right_option" ]
           } ],
           "conditions" : [ {
             "name" : "spacebar-mode",
@@ -1777,7 +1777,7 @@
             }
           }, {
             "key_code" : "5",
-            "modifiers" : [ "left_option", "left_shift" ]
+            "modifiers" : [ "left_shift", "right_option" ]
           } ],
           "from" : {
             "simultaneous" : [ {
@@ -1804,7 +1804,7 @@
           },
           "to" : [ {
             "key_code" : "hyphen",
-            "modifiers" : [ "left_option", "left_shift" ]
+            "modifiers" : [ "left_shift", "right_option" ]
           } ],
           "conditions" : [ {
             "name" : "spacebar-mode",
@@ -1824,7 +1824,7 @@
             }
           }, {
             "key_code" : "hyphen",
-            "modifiers" : [ "left_option", "left_shift" ]
+            "modifiers" : [ "left_shift", "right_option" ]
           } ],
           "from" : {
             "simultaneous" : [ {
@@ -2031,7 +2031,7 @@
           },
           "to" : [ {
             "key_code" : "5",
-            "modifiers" : [ "left_option" ]
+            "modifiers" : [ "right_option" ]
           } ],
           "conditions" : [ {
             "name" : "spacebar-mode",
@@ -2051,7 +2051,7 @@
             }
           }, {
             "key_code" : "5",
-            "modifiers" : [ "left_option" ]
+            "modifiers" : [ "right_option" ]
           } ],
           "from" : {
             "simultaneous" : [ {
@@ -2078,7 +2078,7 @@
           },
           "to" : [ {
             "key_code" : "hyphen",
-            "modifiers" : [ "left_option" ]
+            "modifiers" : [ "right_option" ]
           } ],
           "conditions" : [ {
             "name" : "spacebar-mode",
@@ -2098,7 +2098,7 @@
             }
           }, {
             "key_code" : "hyphen",
-            "modifiers" : [ "left_option" ]
+            "modifiers" : [ "right_option" ]
           } ],
           "from" : {
             "simultaneous" : [ {
@@ -2730,6 +2730,9 @@
           "to" : [ {
             "key_code" : "period",
             "modifiers" : [ "left_command", "left_shift" ]
+          }, {
+            "key_code" : "s",
+            "modifiers" : [ "left_command" ]
           } ],
           "conditions" : [ {
             "name" : "spacebar-mode",
@@ -2750,6 +2753,9 @@
           }, {
             "key_code" : "period",
             "modifiers" : [ "left_command", "left_shift" ]
+          }, {
+            "key_code" : "s",
+            "modifiers" : [ "left_command" ]
           } ],
           "from" : {
             "simultaneous" : [ {
@@ -2784,32 +2790,6 @@
           "conditions" : [ {
             "type" : "frontmost_application_if",
             "bundle_identifiers" : [ "com.google.Chrome" ]
-          } ],
-          "type" : "basic"
-        } ]
-      }, {
-        "description" : "Code",
-        "manipulators" : [ {
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "d"
-            }, {
-              "key_code" : "f"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : false,
-              "key_down_order" : "insensitive",
-              "key_up_order" : "insensitive",
-              "key_up_when" : "any"
-            }
-          },
-          "to" : [ {
-            "key_code" : "d",
-            "modifiers" : [ "left_command" ]
-          } ],
-          "conditions" : [ {
-            "type" : "frontmost_application_if",
-            "bundle_identifiers" : [ "com.microsoft.VSCode" ]
           } ],
           "type" : "basic"
         } ]

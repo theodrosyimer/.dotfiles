@@ -208,8 +208,8 @@
         {:des "Symbols and Symbols strings"
          :rules [:spacebar-mode
 
-                 [:a :!OS5] ;[]
-                 [:s :!OShyphen] ;]
+                 [:a :!ES5] ;[]
+                 [:s :!EShyphen] ;]
 
                  [:d :5] ;()
                  [:f :hyphen] ;)
@@ -217,8 +217,8 @@
                  [:g :3] ;""
                  [:h :4] ;'
 
-                 [:j :!O5] ;{}
-                 [:k :!Ohyphen] ;}
+                 [:j :!E5] ;{}
+                 [:k :!Ehyphen] ;}
 
                  [:l :grave_accent_and_tilde] ;<
                  [:semicolon :!Sgrave_accent_and_tilde];>
@@ -236,7 +236,7 @@
                  [:b [:km "41)Create Fenced Code Line or Block from Selection"]]
 
                   ;comment/uncomment then save file
-                 [:c [:!CSperiod]]
+                 [:c [:!CSperiod :!Cs]]
                   ;
                  ]}
 
@@ -264,7 +264,7 @@
                   ;;  [:left_shift :left_shift nil {:alone :!CSp}]
                 ;;  [:a :t :code] ; launch Alfred
                 ;;  [:g [:!Sspacebar]]
-                 [[:d :f] :!Cd]
+                ;;  [[:d :f] :!Cd]
 
                   ;
                  ]}
