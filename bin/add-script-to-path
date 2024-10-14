@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+
+action=$1
+filepath="$(realpath $HOME/.zprofile)"
+echo "$filepath"
+
+case "${action}" in
+  clean)
+    line_numbers=("$(rg -in --no-filename --no-column "PATH=.*/scripts" "$filepath" | cut -d ':' -f 1)")
+    # echo "${line_numbers[1]}"
+    for line in $line_numbers; do
+      echo "$line"
+      sed -i '' "${line}d" "$filepath"
+    done
+  ;;
+  '')
+    printf '%s' PATH=\""$(pwd)/scripts:\$PATH\"" >> "$filepath"
+  ;;
+  *)
+    printf '%s' 'Unknown command.'
+    printf '%s' 'Available sub-commands: clean.'
+    exit 1
+  ;;
+esac
