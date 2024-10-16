@@ -3,7 +3,7 @@ export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 ### $PATH is at the end to override any existing system-wide commands with mine
 export PATH="$HOME/.fnm:$PATH"
 export PATH="/usr/local/opt/ssh-copy-id/bin:$PATH"
-# export PATH="/usr/local/bin/rbenv:$PATH"
+export PATH="/usr/local/bin/rbenv:$PATH"
 export PATH="/usr/local/opt/sqlite/bin:$PATH"
 export PATH="/usr/local/opt/curl/bin:$PATH"
 
@@ -20,12 +20,20 @@ export MYSQLCLIENT_CFLAGS="-I/usr/local/mysql-8.0.27-macos11-x86_64/include"
 export MYSQLCLIENT_LDFLAGS="-L/usr/local/mysql-8.0.27-macos11-x86_64/lib -lmysqlclient"
 
 # Postgresql 15
-export PATH="/usr/local/opt/postgresql@15/bin:$PATH"
-# for compilers
-export LDFLAGS="-L/usr/local/opt/postgresql@15/lib"
-export CPPFLAGS="-I/usr/local/opt/postgresql@15/include"
-# for pkg-config
-export PKG_CONFIG_PATH="/usr/local/opt/postgresql@15/lib/pkgconfig"
+# export PATH="/usr/local/opt/postgresql@15/bin:$PATH"
+# # for compilers
+# export LDFLAGS="-L/usr/local/opt/postgresql@15/lib"
+# export CPPFLAGS="-I/usr/local/opt/postgresql@15/include"
+# # for pkg-config
+# export PKG_CONFIG_PATH="/usr/local/opt/postgresql@15/lib/pkgconfig"
+
+# Java@17
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
+
+# Android
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
@@ -103,15 +111,12 @@ export CODE_DIRS=("$CODE" "$CODE_PERSONAL" "$CODE_PERSONAL"/{assofac-projects,ch
 
 . "$HOME/.cargo/env"
 
-eval "$(rbenv init -)"
-
-# eval "$(fnm env)"
-eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
-
 # brew auto-completion
 FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
 source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+
+source ~/.rbenv/completions/rbenv.zsh
 
 # # Load Angular CLI autocompletion.
 # source <(ng completion script)

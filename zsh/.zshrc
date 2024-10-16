@@ -6,8 +6,6 @@ source ~/.zprofile
 
 . /usr/local/etc/profile.d/z.sh
 
-# source ~/.rbenv/completions/rbenv.zsh
-
 export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="kayid"
@@ -72,11 +70,8 @@ esac
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # pnpm
-export PNPM_HOME="/Users/mac/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 export PATH="$PNPM_HOME:$PATH"
-
-# starship prompt
-eval "$(starship init zsh)"
 
 # fpath=("${DOTFILES}/zsh/custom" "${fpath[@]}")
 # autoload -Uz $fpath[1]/*(.:t)
@@ -91,12 +86,17 @@ timezsh() {
   for i in $(seq 1 10); do /usr/bin/time $shell -i -c exit; done
 }
 
+eval "$(starship init zsh)"
+eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
+eval "$(rbenv init -)"
 eval "$(zoxide init zsh)"
-
-PATH=~/.console-ninja/.bin:$PATH
-
-# zprof
 
 # Load Angular CLI autocompletion.
 source <(ng completion script)
 
+# zprof
+
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
