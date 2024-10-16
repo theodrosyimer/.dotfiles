@@ -151,6 +151,11 @@ function get_gitignore() {
     printf '%s\n' "No .gitignore was downloaded" && return 0
   fi
 
+  if [[ -f ".gitignore" ]]; then
+    printf '%s\n' "File \".gitignore\" already exists" &&
+    printf '%s\n' "Either delete it or rename it" && return 0
+  fi
+
   curl "https://raw.githubusercontent.com/${URL:t4:s/blob\///}/${FILE_NAME:Q}" -o '.gitignore' -s && printf '%s\n' "Downloaded ${FILE_NAME:Q}"
 }
 
