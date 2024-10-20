@@ -13,12 +13,17 @@ function tags_write_to_file() {
 }
 
 function tags_show() {
-	less $TAGS
+  if [ ! -f $TAGS ]; then
+    tags_write_to_file
+  fi
+
+  less $TAGS
 }
 
 function tags_get_total_count() {
 	tags_show | wc -l
 }
+
 function tags_add_to_file() {
   local tags_selection="$(tags_show | fzf --multi)"
 }
