@@ -1,6 +1,11 @@
 #!/usr/bin/env zsh
 
 function config() {
+  if [ ! -f "$HOME/Library/KeyBindings" ]; then
+    mkdir -p $HOME/Library/KeyBindings
+    ln -s "$HOME/.dotfiles/keybindings/DefaultKeyBinding.dict" "$HOME/Library/KeyBindings/DefaultKeyBinding.dict"
+  fi
+
   code -gn "$HOME/.dotfiles/karabiner" "$HOME/.dotfiles/karabiner/karabiner.edn" "$HOME/Library/KeyBindings/DefaultKeyBinding.dict"
 }
 
