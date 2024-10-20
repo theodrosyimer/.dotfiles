@@ -13,7 +13,7 @@ alias od="open-directory"
 
 # Text-Editor
 alias vim=nvim
-alias v=vim
+alias v=nvim
 alias c='open -b com.microsoft.VSCode'
 # alias cc='open -b com.microsoft.VSCode .'
 
@@ -26,7 +26,7 @@ alias cat='bat'
 # alias cl="unset NEW_LINE_BEFORE_PROMPT && clear"
 
 # Rust replacement for `ls`
-alias ls='exa --sort=name --group --group-directories-first --header --git'
+alias ls='eza --sort=name --group --group-directories-first --header --git'
 # alias lsa='ls -la'
 alias l='ls -la'
 alias ll='ls -l'
@@ -69,9 +69,7 @@ alias fixdock='defaults write com.apple.dock static-only -bool false; killall Do
 # NPM
 alias npmlg='npm ls -g --depth 0' # Get NPM modules' list used globally
 
-# Python3
-# alias python=python3
-# alias pip=pip3
+
 
 # Custom scripts
 alias mmdc='~/bin/mmd2cheatset.rb'
@@ -140,7 +138,9 @@ alias dkc="docker container"
 # ETNA
 alias etna="ssh etna_piscine -p 22"
 
-# python3
+# Python3
+# alias python=python3
+# alias pip=pip3
 alias py="python3"
 
 alias ntse="node --no-warnings --experimental-strip-types"
