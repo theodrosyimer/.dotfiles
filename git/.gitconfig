@@ -74,7 +74,7 @@
 # 	trustExitCode = true
 
 [commit]
-  template = /Users/mac/.stCommitMsg
+  template = "$HOME/.stCommitMsg"
 
 [color]
   ui = auto
