@@ -26,6 +26,6 @@
 
 # tmux switch-client -t "$selected_name"
 
-source /Users/mac/.dotfiles/zsh/custom/tmux-sessionizer.zsh
+source "$HOME/.dotfiles/zsh/custom/tmux-sessionizer.zsh"
 
 tmux-sessionizer-fn

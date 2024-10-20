@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-my_ebooks=("/Users/mac/Library/Mobile Documents/com~apple~CloudDocs/References/Calibre"/**/**/*.{pdf,epub})
+my_ebooks=("$HOME/Library/Mobile Documents/com~apple~CloudDocs/References/Calibre"/**/**/*.{pdf,epub})
 
 rsync -hvrPt ${my_ebooks[@]} ~/Library/Mobile\ Documents/iCloud\~com\~apple\~iBooks/Documents
 
