@@ -1,3 +1,8 @@
+function shell_boot() {
+  shell=${1-$SHELL}
+  for i in {1..10}; do /usr/bin/time $shell -i -c exit; done
+}
+
 function zsh_boot() {
   for i in {1..10}; do /usr/bin/time zsh -i -c exit; done
 }
@@ -10,3 +15,4 @@ function zsh_debug_info() {
 function zsh_debug_info2() {
   zsh -i -c -x exit
 }
+
