@@ -146,3 +146,5 @@ alias py="python3"
 alias ntse="node --no-warnings --experimental-strip-types"
 alias lg="lazygit"
 alias rgv="rg --smart-case --hidden --no-heading --column --line-number"
+
+alias killbg="builtin kill -KILL"
