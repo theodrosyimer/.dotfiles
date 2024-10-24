@@ -6,15 +6,17 @@
   path = ~/Code/projects/work/etna/.gitconfig
 
 [core]
-  editor = code --wait
-  # pager = less -RFX
+  editor = nvim
   pager = delta
   excludesfile = ~/.gitignore_global
   autocrlf = input
 
 [delta]
-  syntax-theme = dracula
+  syntax-theme = Dracula
   line-numbers = true
+
+[interactive]
+    diffFilter = delta --color-only
 
 # REuse REcorded REsolution
 [rerere]
