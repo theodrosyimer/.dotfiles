@@ -3,6 +3,8 @@
 .env*
 **/config/.env
 **/config/.env*.local
+!.env.example
+!.env.dist
 
 # dotenvault
 !.env.project
