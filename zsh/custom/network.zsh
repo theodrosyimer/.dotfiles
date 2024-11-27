@@ -1,11 +1,13 @@
 function local_ip() {
   local ip_from_ethernet
   local ip_from_wifi
+  local ip
 
   # define the command to get the local ip
   case "$OSTYPE" in
     darwin*)  ip_from_ethernet="$(ipconfig getifaddr en0)"; \
-              ip_from_wifi="$(ipconfig getifaddr en1)" ;;
+              ip_from_wifi="$(ipconfig getifaddr en1)";;
+              # ip="$(ifconfig | awk '/inet /&&!/127.0.0.1/{print $2;exit}')" ;;
     cygwin*)  ip_from_ethernet="$(ipconfig.exe | grep -im1 'IPv4 Address' | cut -d ':' -f2)"; \
               ip_from_wifi= ;;
     linux*)   [[ "$(uname -r)" != *icrosoft* ]] && ip_from_ethernet="$(ifconfig en0 | grep inet | grep -v inet6 | cut -d" " -f2)"; \
