@@ -34,3 +34,11 @@ EOF
 #       if item_index is item_count then set the_delimiter to \"\"
 #       set output to output & ((item item_index of the_selection as alias)'s POSIX path) & the_delimiter
 #     end repeat")"
+
+function mvfd() {
+	local paths=("$(get_paths_from_finder_selection)")
+  local dirname=${paths[1]%%.*}
+
+  mkdir -p $dirname
+  mv $paths $dirname
+}
