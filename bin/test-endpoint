@@ -27,7 +27,7 @@ if [[ $# -eq 0 ]]; then
 fi
 
 endpoint=${1:-"http://localhost:3000/api/v1"}
-requests_count=100
+requests_count=${2:-100}
 data='{}'
 
 function send_post_request() {
@@ -47,10 +47,6 @@ do
     do
       send_post_request &
     done
-
-  # for ((i=0; i<$requests_count; i++)); do
-  #     send_post_request &
-  # done
 
   # wait for all requests to finish
     wait
