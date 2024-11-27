@@ -108,7 +108,7 @@ alias ipls='lsof -nPi'
 alias fzfz='fd ".+\.plugin\..+" $ZSH/plugins -x echo {/.} | sort | uniq | fzf --height 80% --border none --margin 10% --bind "?:toggle-preview" --preview "bat --color=always --style=numbers $ZSH/plugins/{}" --preview-window right,49% --nohidden'
 
 # Search through my aliases with fzf
-alias sa='bat /Users/mac/.dotfiles/zsh/custom/aliases.zsh | fzf --layout=reverse --border sharp --margin 5% --bind "?:toggle-preview" --preview "rg -A 1 --smart-case --hidden --no-heading --column {} /Users/mac/.dotfiles/zsh/custom/aliases.zsh | bat --color=always --style=numbers /Users/mac/.dotfiles/zsh/custom/aliases.zsh"  --preview-window nohidden'
+alias sa="bat $HOME/.dotfiles/zsh/custom/aliases.zsh | fzf --layout=reverse --border sharp --margin 5% --bind \"?:toggle-preview\" --preview \"rg -A 1 --smart-case --hidden --no-heading --column {} $HOME/.dotfiles/zsh/custom/aliases.zsh | bat --color=always --style=numbers $HOME/.dotfiles/zsh/custom/aliases.zsh\"  --preview-window nohidden"
 
 # # Search through my aliases with fzf
 # # can't feed the lines number to `bat`'s '`--line-range` option'
@@ -136,7 +136,7 @@ alias psg="get_process"
 alias dkc="docker container"
 
 # ETNA
-alias etna="ssh etna_piscine -p 22"
+# alias etna="ssh etna_piscine -p 22"
 
 # Python3
 # alias python=python3
@@ -147,4 +147,4 @@ alias ntse="node --no-warnings --experimental-strip-types"
 alias lg="lazygit"
 alias rgv="rg --smart-case --hidden --no-heading --column --line-number"
 
-alias killbg="builtin kill -KILL"
+alias kbg="builtin kill -KILL"
