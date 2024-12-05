@@ -1,10 +1,14 @@
 # source: https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer
 
 function tmux-sessionizer-fn() {
+  local selected
   if [[ $# -eq 1 ]]; then
-      local selected=$1
+      selected=$1
   else
-      local selected="$(find "${CODE_DIRS[@]}" -mindepth 1 -maxdepth 1 -type d | fzf)"
+      local dirs="$(find "${CODE_DIRS[@]}" -mindepth 1 -maxdepth 1 -type d)"
+
+      selected="$(fm "${dirs[@]}")"
+      echo $selected
   fi
 
   if [[ -z $selected ]]; then
@@ -23,5 +27,5 @@ function tmux-sessionizer-fn() {
       tmux new-session -ds "$selected_name" -c "$selected"
   fi
 
-  tmux switch-client -t "$selected_name"
+  tmux switch-client -t="$selected_name"
 }
