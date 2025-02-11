@@ -1,6 +1,6 @@
 # source: https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer
 
-function tmux-sessionizer-fn() {
+function tmux_sessionizer_fn() {
   local selected
   if [[ $# -eq 1 ]]; then
       selected=$1
@@ -29,3 +29,9 @@ function tmux-sessionizer-fn() {
 
   tmux switch-client -t="$selected_name"
 }
+
+zle -N tmux_sessionizer_fn
+bindkey -v
+bindkey '^O' tmux_sessionizer_fn
+
+alias tms=tmux_sessionizer_fn
