@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+
+versions=("${(f)$(fnm list-remote --lts)}")
+latest_lts_version=${(s: :)versions[-1]% *}
+
+printf '%s' ${latest_lts_version}

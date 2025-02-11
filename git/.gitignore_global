@@ -13,7 +13,7 @@
 # Files and directories i usually use
 **/resources
 **/playground.js
-**/*.pdf
+# **/*.pdf
 !*cv*.pdf
 
 
@@ -148,3 +148,5 @@ typings/
 # Misc
 .lsp
 .clj-kondo
+
+# .cursorrules

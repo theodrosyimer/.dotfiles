@@ -133,7 +133,6 @@ alias nw="node --no-warnings --watch"
 
 alias psg="get_process"
 # alias dk="docker"
-alias dkc="docker container"
 
 # ETNA
 # alias etna="ssh etna_piscine -p 22"
@@ -148,3 +147,4 @@ alias lg="lazygit"
 alias rgv="rg --smart-case --hidden --no-heading --column --line-number"
 
 alias kbg="builtin kill -KILL"
+alias loc="scc"

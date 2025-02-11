@@ -1,9 +1,27 @@
-# use separate file for username / email / github token / etc
-[include]
-  path = ~/.dotfiles/git/.gitconfig.local
+[user]
+  name = Theodros Yimer
+  username = theodrosyimer
+  email = "12742021+theodrosyimer@users.noreply.github.com"
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGDURDVbhjnuW7Wkk/d/Xn5vTmCZ6j51GcwmSzZ8YVSG
 
-[includeIf "gitdir:~/Code/projects/work/etna/"]
-  path = ~/Code/projects/work/etna/.gitconfig
+
+# # if needed use separate file for username / email / github token / etc
+# [include]
+#   path = ~/.dotfiles/git/.gitconfig.local
+
+# ETNA
+[includeIf "gitdir:~/dev/projects/work/etna/"]
+  path = ~/dev/projects/work/etna/.gitconfig
+
+# COQAGILE
+[includeIf "gitdir:~/dev/projects/work/coqagile/elody"]
+  path = ~/dev/projects/work/coqagile/elody/.gitconfig
+
+[gpg]
+	format = ssh
+
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
 
 [core]
   editor = nvim
@@ -11,22 +29,9 @@
   excludesfile = ~/.gitignore_global
   autocrlf = input
 
-[delta]
-  syntax-theme = Dracula
-  line-numbers = true
-
-[interactive]
-    diffFilter = delta --color-only
-
-# REuse REcorded REsolution
-[rerere]
-  enabled = true
-
-[init]
-  defaultBranch = main
-
-[branch]
-  sort = -committerdate
+[commit]
+  template = "$HOME/.stCommitMsg"
+	gpgsign = true
 
 [pull]
 	rebase = true
@@ -34,6 +39,16 @@
 [push]
   default = current
   autoSetupRemote = true
+
+[init]
+  defaultBranch = main
+
+[branch]
+  sort = -committerdate
+
+# REuse REcorded REsolution
+[rerere]
+  enabled = true
 
 # automatic maintenance
 [maintenance]
@@ -53,6 +68,13 @@
 [column]
 	ui = auto
 
+[delta]
+  syntax-theme = Dracula
+  line-numbers = true
+
+[interactive]
+    diffFilter = delta --color-only
+
 [diff]
   tool = vscode
 
@@ -66,17 +88,6 @@
 [mergetool "vscode"]
   cmd = code --wait \"$MERGED\"
   trustExitCode = true
-
-# [difftool "sourcetree"]
-# 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-# 	path =
-
-# [mergetool "sourcetree"]
-# 	cmd = /Applications/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-# 	trustExitCode = true
-
-[commit]
-  template = "$HOME/.stCommitMsg"
 
 [color]
   ui = auto
