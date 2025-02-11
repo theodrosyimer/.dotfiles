@@ -3,4 +3,5 @@ function docker_mysql_get_password() {
 }
 
 alias dkmspwd='docker_mysql_get_password'
-alias dko='open --background -a docker'
+alias dko='open --background -a docker' # start docker desktop - faster
+alias dkd='docker desktop'
