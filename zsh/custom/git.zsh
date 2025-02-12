@@ -357,7 +357,7 @@ function git_init() {
   local repo_description="${flag_desc[-1]:-}"
   local commit_message="chore: project initialization"
 
-  [[ -n "$repo_description" ]] && commit_message="chore: initial commit - $repo_description"
+  [[ -n "$repo_description" ]] && commit_message="chore: initial commit\n\n$repo_description"
 
   # Validate visibility
   if [[ "$repo_visibility" != "private" && "$repo_visibility" != "public" ]]; then
