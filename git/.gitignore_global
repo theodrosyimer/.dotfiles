@@ -149,4 +149,4 @@ typings/
 .lsp
 .clj-kondo
 
-# .cursorrules
+.cursor
