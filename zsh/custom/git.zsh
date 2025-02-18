@@ -6,7 +6,6 @@ autoload -U colors && colors
 : ${_cyan=$fg[cyan]}
 : ${_reset=$reset_color}
 
-# Improved version of git_add_all_commit with error handling
 function git_add_all_commit() {
   local commit_message="${1:-Initial commit}"
 
@@ -26,14 +25,12 @@ function git_add_all_commit() {
   fi
 }
 
-# Add all, commit with a comment and push
 function git_add_all_commit_push() {
   if git_add_all_commit "$1"; then
     git push || return 1
   fi
 }
 
-# Improved git_clone_clean_from_front_tab_chrome with argument parsing
 function git_clone_clean_from_front_tab_chrome() {
   local flag_help flag_path flag_name flag_https
   local dir_path="${CODE_PERSONAL:-$PWD}"
@@ -81,7 +78,6 @@ function git_clone_clean_from_front_tab_chrome() {
   fi
 }
 
-# Improved git_clone_from_front_tab_chrome with argument parsing
 function git_clone_from_front_tab_chrome() {
   local flag_help flag_path flag_name flag_https
   local dir_path="${CODE_PERSONAL:-$PWD}"
@@ -129,7 +125,6 @@ function git_clone_from_front_tab_chrome() {
   fi
 }
 
-# Improved git_clone_clean_from_cb with argument parsing
 function git_clone_clean_from_cb() {
   local flag_help flag_path flag_https
   local usage=(
@@ -317,17 +312,14 @@ function git_create_readme_if_not_exists() {
     return 0
   fi
 
-  # Get repo name from current directory using zsh parameter expansion
   local repo_name="${PWD:t%%.*}"
 
   # Capitalize repo name using zsh parameter expansion
   local title="${(C)${repo_name}}"
 
-  # Replace hyphens and underscores with spaces before capitalizing
   title="${title//-/ }"
   title="${title//_/ }"
 
-  # Create README.md with capitalized title
   printf "# %s\n" "$title" > README.md
 
   printf "%b\n" "$_green""Created README.md with title: $title$_reset"
@@ -384,10 +376,8 @@ function git_init() {
   # Check for gh CLI
   is_installed gh "GitHub CLI (gh) is required for remote repository creation" || return 1
 
-  # Set up remote repository
   printf "\n%b\n" "$_green""Creating remote repository...$_reset"
 
-  # Create GitHub repository using gh CLI
   if ! gh repo create --source=. --"$repo_visibility" --description="$repo_description" --remote=origin; then
     printf "\n%b\n" "$_red""Failed to create GitHub repository$_reset"
     return 1
@@ -429,11 +419,9 @@ function git_get_remote_url_from_cwd_as_https() {
 
   # Convert SSH URL to HTTPS
   if [[ "$url" =~ ^git@ ]]; then
-    # Remove 'git@' prefix and ':' before repository path
     url=$(echo "$url" | sed 's/^git@\(.*\):/https:\/\/\1\//')
   fi
 
-  # Remove .git suffix if present
   printf "%s\n" "${url%.git}"
 }
 
