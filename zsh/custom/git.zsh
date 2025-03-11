@@ -70,7 +70,7 @@ function git_clone_clean_from_front_tab_chrome() {
   fi
 
   if tiged "$clone_url" "$clone_path"; then
-    code -gn "$clone_path"
+    $EDITOR "$clone_path"
     return 0
   else
     printf "%b\n" "$_red""Failed to clone repository$_reset"
@@ -117,7 +117,7 @@ function git_clone_from_front_tab_chrome() {
   fi
 
   if git clone "$clone_url" "$clone_path"; then
-    code -gn "$clone_path"
+    $EDITOR "$clone_path"
     return 0
   else
     printf "%b\n" "$_red""Failed to clone repository$_reset"
@@ -153,7 +153,7 @@ function git_clone_clean_from_cb() {
   fi
 
   if tiged "$url" "$dir_path"; then
-    code -gn "$dir_path"
+    $EDITOR "$dir_path"
     return 0
   else
     printf "%b\n" "$_red""Failed to clone repository$_reset"

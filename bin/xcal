@@ -5,4 +5,4 @@ source "$DOTFILES/zsh/custom/text.zsh"
 input_trimmed="$(slugify "$1")"
 filename="$input_trimmed.excalidraw.json"
 
-touch "$filename" && code "$filename"
+touch "$filename" && $EDITOR "$filename"
