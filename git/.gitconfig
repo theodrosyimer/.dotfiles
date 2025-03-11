@@ -11,11 +11,15 @@
 
 # ETNA
 [includeIf "gitdir:~/dev/projects/work/etna/"]
-  path = ~/dev/projects/work/etna/.gitconfig
+  path = ~/dev/projects/work/etna/.gitconfig-etna
+
+# Swampi
+[includeIf "gitdir:~/dev/projects/work/etna/bachelor/pli/swampi/"]
+  path = ~/dev/projects/work/etna/bachelor/pli/.gitconfig-swampi
 
 # COQAGILE
-[includeIf "gitdir:~/dev/projects/work/coqagile/elody"]
-  path = ~/dev/projects/work/coqagile/elody/.gitconfig
+[includeIf "gitdir:~/dev/projects/work/coqagile/**"]
+  path = ~/dev/projects/work/coqagile/.gitconfig-coqagile
 
 [gpg]
 	format = ssh
@@ -79,14 +83,14 @@
   tool = vscode
 
 [difftool "vscode"]
-  cmd = code --wait --diff \"$LOCAL\" \"$REMOTE\"
+  cmd = $EDITOR --wait --diff \"$LOCAL\" \"$REMOTE\"
 
 [merge]
   tool = vscode
   log = true
 
 [mergetool "vscode"]
-  cmd = code --wait \"$MERGED\"
+  cmd = $EDITOR --wait \"$MERGED\"
   trustExitCode = true
 
 [color]

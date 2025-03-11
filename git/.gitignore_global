@@ -150,3 +150,5 @@ typings/
 .clj-kondo
 
 .cursor
+.specstory
+.cursorrules
