@@ -148,3 +148,18 @@ alias rgv="rg --smart-case --hidden --no-heading --column --line-number"
 
 alias kbg="builtin kill -KILL"
 alias loc="scc"
+
+# Expo Development Aliases
+alias es="npx expo start"
+alias esc="npx expo start --clear"
+
+# Expo Build & Preview Aliases
+alias epi="npx expo prebuild -p ios --clean"
+alias epa="npx expo prebuild -p android --clean"
+
+alias eri="npx expo run:ios"
+alias era="npx expo run:android"
+
+# EAS Build Aliases
+alias eabdev="eas build:run --profile development"
+alias eabprod="eas build:run --profile production"
