@@ -544,6 +544,61 @@ function get_file_content_from_repo() {
     "$api_url"
 }
 
+function git_branch_rename() {
+  local flag_help flag_old flag_new
+  local usage=(
+    "git_branch_rename [-h|--help] [-o|--old <old_name>] [-n|--new <new_name>]"
+    "  -h, --help     Show this help message"
+    "  -o, --old      Old branch name"
+    "  -n, --new      New branch name"
+  )
+
+  zmodload zsh/zutil
+  zparseopts -D -F -K -E -- \
+    {h,-help}=flag_help \
+    {o,-old}:=flag_old \
+    {n,-new}:=flag_new || return 1
+
+  [[ -n "$flag_help" ]] && { print -l $usage; return 0 }
+
+  local old_branch="${flag_old[-1]}"
+  local new_branch="${flag_new[-1]}"
+
+  if [[ -z "$old_branch" || -z "$new_branch" ]]; then
+    printf "\n%b\n" "$_red""Old and new branch names are required$_reset"
+    return 1
+  fi
+
+  # Check if old branch exists
+  if ! git show-ref --verify --quiet refs/heads/$old_branch; then
+    printf "\n%b\n" "$_red""Branch '$old_branch' does not exist$_reset"
+    return 1
+  fi
+
+  # Rename local branch
+  if git branch -m $old_branch $new_branch; then
+    printf "\n%b\n" "$_green""Renamed local branch from '$old_branch' to '$new_branch'$_reset"
+  else
+    printf "\n%b\n" "$_red""Failed to rename local branch$_reset"
+    return 1
+  fi
+
+  # Delete old remote branch and push new one
+  if git push origin --delete $old_branch; then
+    printf "\n%b\n" "$_green""Deleted old remote branch '$old_branch'$_reset"
+  else
+    printf "\n%b\n" "$_yellow""No remote branch '$old_branch' to delete$_reset"
+  fi
+
+  if git push -u origin $new_branch; then
+    printf "\n%b\n" "$_green""Pushed new branch '$new_branch' to remote$_reset"
+    return 0
+  else
+    printf "\n%b\n" "$_red""Failed to push new branch to remote$_reset"
+    return 1
+  fi
+}
+
 # Aliases
 alias ginit=git_init
 alias gop='git_open_project_at_gh'
@@ -551,6 +606,7 @@ alias gob='git_open_current_branch_remote_at_gh'
 alias gbdev=git_create_dev_branch
 alias gbcreate='git_create_branches_and_push_origin'
 alias gbdelete='git_delete_branches_local_and_origin'
+alias gbrename='git_branch_rename'
 alias gdelete='rm -rf ./.git'
 alias greset='ghrd && gdelete'
 alias gac='git_add_all_commit'
