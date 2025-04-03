@@ -15,6 +15,7 @@ alias od="open-directory"
 alias vim=nvim
 alias v=nvim
 alias c='open -b com.microsoft.VSCode'
+alias cu='open -b com.todesktop.230313mzl4w4u92 .' # Cursor
 # alias cc='open -b com.microsoft.VSCode .'
 
 # Rust replacement for `cat`
@@ -154,8 +155,9 @@ alias es="npx expo start"
 alias esc="npx expo start --clear"
 
 # Expo Build & Preview Aliases
-alias epi="npx expo prebuild -p ios --clean"
-alias epa="npx expo prebuild -p android --clean"
+alias epc="npx expo prebuild --clean"
+alias epci="npx expo prebuild -p ios --clean"
+alias epca="npx expo prebuild -p android --clean"
 
 alias eri="npx expo run:ios"
 alias era="npx expo run:android"
