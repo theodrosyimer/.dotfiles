@@ -41,6 +41,7 @@
 
  :applications {:chrome ["com.google.Chrome"]
                 :code ["com.microsoft.VSCode"]
+                :cursor ["com.todesktop.230313mzl4w4u92"]
                 :lpx ["com.apple.logic10"]
                 :finder ["^com\\.apple\\.finder$"]
                ;
@@ -134,13 +135,13 @@
                  [:n [:alfred "plantMe" "com.ty.alfred.plantme"]]
                  [:d :!CTOSd] ; launch Moom
                  [:k :!CTOSs] ; launch Chrome
-                ;;  [:j [:open-b "com.microsoft.VSCode"]]
-                ;;  [:l :!CTOSn]
-                 [:j :!CTOSe]
+                 ;;  [:j [:open-b "com.microsoft.VSCode"]]
+                 ;;  [:l :!CTOSn]
+                  [:j :!CTOSe]
                  [:f :!TOspacebar]
                  [:t [:scriptkit "open-tab"]]
-                ;;  [:k [:open-b "com.stairways.keyboardmaestro.editor"]]
-                ;;  [:w :!CTOSo] ; launch 1Password (w=z)
+                 ;;  [:k [:open-b "com.stairways.keyboardmaestro.editor"]]
+                 ;;  [:w :!CTOSo] ; launch 1Password (w=z)
                  ;
                  ]}
 
