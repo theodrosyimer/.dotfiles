@@ -1,5 +1,0 @@
-#!/usr/bin/env zsh
-
-node_latest_version=$(fnm ls-remote --latest)
-
-printf '%s' ${node_latest_version}

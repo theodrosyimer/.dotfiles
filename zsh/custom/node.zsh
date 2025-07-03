@@ -1,4 +1,6 @@
 alias nodevu="node_version_updater"
+alias nodelts="node_lts_version"
+alias nodelv="node_latest_version"
 
 function node_version_updater() {
   local flag_help flag_lts flag_latest
@@ -105,3 +107,25 @@ function node_version_updater() {
   fi
 }
 
+function fnm_remove() {
+  if [[ $#@ -eq 0 ]]; then
+    printf '%s\n' 'You need to enter one or more node versions'
+    return 1
+  fi
+
+	for file in "$@[@]"; do
+    fnm uninstall $file
+  done
+}
+
+
+function node_latest_version() {
+  local node_latest_version=$(fnm ls-remote --latest)
+  printf '%s' ${node_latest_version}
+}
+
+function node_lts_version() {
+  local versions=("${(f)$(fnm list-remote --lts)}")
+  local latest_lts_version=${(s: :)versions[-1]% *}
+  printf '%s' ${latest_lts_version}
+}
