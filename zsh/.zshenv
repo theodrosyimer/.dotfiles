@@ -1,6 +1,6 @@
 source $HOME/.dotfiles/zsh/.extras.zsh
 
-export EDITOR='code'
+export EDITOR='cursor'
 # export VISUAL='code -n -w'
 export VISUAL='nvim'
 
@@ -28,6 +28,10 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8 # LANG=fr_FR.UTF-8
 export LANGUAGE=en_US.UTF-8
 export LESSCHARSET=utf-8
+
+# Man pages
+export MANPAGER='nvim --cmd ":lua vim.g.noplugins=1" +Man!'
+export MANWIDTH=999
 
 export RIPGREP_CONFIG_PATH="$HOME/.dotfiles/ripgrep/.ripgreprc"
 
@@ -91,4 +95,3 @@ _ZO_EXCLUDE_DIRS=""
 _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS"
 
 _ZO_RESOLVE_SYMLINKS=1
-. "$HOME/.cargo/env"
