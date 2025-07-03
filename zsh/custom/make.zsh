@@ -61,7 +61,7 @@ function mkrustp() {
 function mksr() {
   local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local output_path="${2:-"${CODE_REFS/sh:-"$(pwd)"}"}"
-  local editor=code
+  local editor=$EDITOR
   local editor_args=-g
   local user_shell=
 
@@ -77,7 +77,7 @@ function mksr() {
 function mks() {
   local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local output_path="${2:-"${BIN:-"$(pwd)"}"}"
-  local editor=code
+  local editor=$EDITOR
   local editor_args=-g
 
   [[ -f "$output_path/$filename" ]] && { \
@@ -91,7 +91,7 @@ function mks() {
 function mksc() {
   local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local output_path="${2:-"${BIN:-"$(pwd)"}"}"
-  local editor=code
+  local editor=$EDITOR
   local editor_args=-g
   local content=$(pbpaste)
 
@@ -109,7 +109,7 @@ function mkzf() {
   local default_path="$ZSH_CUSTOM"
   local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local output_path="${2:-"${default_path:-"$(pwd)"}"}"
-  local editor=code
+  local editor=$EDITOR
   local editor_args=-g
   local funcname="$(echo $filename | sed s/-/_/g)"
   local content="function $funcname() {\n\n}"
@@ -125,7 +125,7 @@ function mkzfc() {
   local default_path="$ZSH_CUSTOM"
   local filename="$(echo ${1:l} | sed -e 's/^ *//g' -e 's/ *$//g' -e 's/_/-/g' -e 's/ /-/g')"
   local output_path="${2:-"${default_path:-"$(pwd)"}"}"
-  local editor=code
+  local editor=$EDITOR
   local editor_args=-g
 
   local funcname="$(echo $filename | sed s/-/_/g)"
