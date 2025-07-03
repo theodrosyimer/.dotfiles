@@ -143,11 +143,10 @@ alias psg="get_process"
 # alias pip=pip3
 alias py="python3"
 
-alias ntse="node --no-warnings --experimental-strip-types"
 alias lg="lazygit"
 alias rgv="rg --smart-case --hidden --no-heading --column --line-number"
 
-alias kbg="builtin kill -KILL"
+alias killbg="builtin kill -KILL"
 alias loc="scc"
 
 # Expo Development Aliases
