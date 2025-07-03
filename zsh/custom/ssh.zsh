@@ -12,15 +12,15 @@ function ssh_create_ssh_key() {
   chmod 700 "$ssh_dir"
 
   # Prompt for SSH key comment
-  read -r "ssh_label?Enter a comment for your new SSH key (e.g., user@hostname): "
+  read -r "ssh_label?Enter a label for your new SSH key (e.g., user@hostname): "
   if [[ -z "$ssh_label" ]]; then
     printf "\n%s" "Error: SSH key comment cannot be empty." >&2
     return 1
   fi
 
   # Suggest a filename based on the comment
-  comment_sanitized=$(echo "$ssh_label" | tr -c '[:alnum:]_.' '_') # Sanitize comment for filename
-  default_filename="${ssh_dir}/id_ed25519_${comment_sanitized}"
+  label_sanitized=$(echo "$ssh_label" | tr -c '[:alnum:]_.' '_') # Sanitize label for filename
+  default_filename="${ssh_dir}/id_ed25519_${label_sanitized}"
   read -r "ssh_key_path?Enter the path and filename for the new key [${default_filename}]: "
   ssh_key_path="${ssh_dir}/${ssh_key_path:-$default_filename}"
   ssh_key_path_pub="${ssh_key_path}.pub"
@@ -29,7 +29,7 @@ function ssh_create_ssh_key() {
   if [[ -e "$ssh_key_path" || -e "$ssh_key_path_pub" ]]; then
     printf "\n%s" "Error: SSH key files already exist: '$ssh_key_path' or '$ssh_key_path_pub'." >&2
     read -r "overwrite?Overwrite existing files? (y/N): "
-    if [[ ! "$overwrite" =~ ^[Yy]$ ]]; then
+    if [[ "$overwrite" =~ ^[Nn]$ ]]; then
       printf "\n%s" "Aborting."
       return 1
     fi
@@ -74,6 +74,7 @@ function ssh_create_ssh_key() {
     local macos_version
     macos_version=$(sw_vers -productVersion | cut -d. -f1)
     if [[ "$macos_version" -ge 12 ]]; then
+      # macOS 12+
       if ssh-add --apple-use-keychain "$ssh_key_path"; then
         printf "\n%s" "SSH key added successfully to agent and macOS Keychain!"
       else
@@ -81,7 +82,7 @@ function ssh_create_ssh_key() {
         return 1
       fi
     else
-      # Older macOS versions
+      # Older macOS versions (11 and below)
       if ssh-add -K "$ssh_key_path"; then
          printf "\n%s" "SSH key added successfully to agent and legacy macOS Keychain!"
       else
