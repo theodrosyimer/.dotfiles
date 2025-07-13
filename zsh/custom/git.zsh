@@ -49,13 +49,13 @@ function git_clone_clean_from_front_tab_chrome() {
     {n,-name}:=flag_name \
     -https=flag_https || return 1
 
-  [[ -n "$flag_help" ]] && { print -l $usage; return 0 }
+  [[ -n "$flag_help" ]] && { print -l $usage; return 0; }
 
   # Check dependencies
   is_installed tiged "tiged is required. Run: npm i -g tiged" || return 1
 
   local url="$(chrome_get_front_window_url)"
-  [[ -z "$url" ]] && { printf "%b\n" "$_red""Failed to get URL from Chrome$_reset"; return 1 }
+  [[ -z "$url" ]] && { printf "%b\n" "$_red""Failed to get URL from Chrome$_reset"; return 1; }
 
   local repo=${url:t2}
   local project_name="${flag_name[-1]:-${repo:t}}"
@@ -96,13 +96,13 @@ function git_clone_from_front_tab_chrome() {
     {n,-name}:=flag_name \
     -https=flag_https || return 1
 
-  [[ -n "$flag_help" ]] && { print -l $usage; return 0 }
+  [[ -n "$flag_help" ]] && { print -l $usage; return 0; }
 
   # Check dependencies
   is_installed git "Git is required. Please install it first." || return 1
 
   local url="$(chrome_get_front_window_url)"
-  [[ -z "$url" ]] && { printf "%b\n" "$_red""Failed to get URL from Chrome$_reset"; return 1 }
+  [[ -z "$url" ]] && { printf "%b\n" "$_red""Failed to get URL from Chrome$_reset"; return 1; }
 
   local repo=${url:t2}
   local project_name="${flag_name[-1]:-${repo:t}}"
@@ -140,7 +140,7 @@ function git_clone_clean_from_cb() {
     {p,-path}:=flag_path \
     -https=flag_https || return 1
 
-  [[ -n "$flag_help" ]] && { print -l $usage; return 0 }
+  [[ -n "$flag_help" ]] && { print -l $usage; return 0; }
 
   is_installed tiged "tiged is required. Run: npm i -g tiged" || return 1
 
@@ -179,7 +179,7 @@ function git_clone_with_all_branches() {
     {n,-name}:=flag_name \
     -https=flag_https || return 1
 
-  [[ -n "$flag_help" ]] && { print -l $usage; return 0 }
+  [[ -n "$flag_help" ]] && { print -l $usage; return 0; }
 
   is_installed git "Git is required. Please install it first." || return 1
 
@@ -343,7 +343,7 @@ function git_init() {
     {d,-desc}:=flag_desc \
     {v,-visibility}:=flag_visibility || return 1
 
-  [[ -n "$flag_help" ]] && { print -l $usage; return 0 }
+  [[ -n "$flag_help" ]] && { print -l $usage; return 0; }
 
   local repo_visibility="${flag_visibility[-1]:-private}"
   local repo_description="${flag_desc[-1]:-}"
@@ -363,7 +363,7 @@ function git_init() {
   else
     # Initialize local repository
     printf "\n%b\n" "$_green""Initializing local repository...$_reset"
-    git init || { printf "\n%b\n" "$_red""Failed to initialize git repository$_reset"; return 1 }
+    git init || { printf "\n%b\n" "$_red""Failed to initialize git repository$_reset"; return 1; }
   fi
 
   git_create_readme_if_not_exists
@@ -408,13 +408,13 @@ function git_is_main_or_master() {
 
 function git_get_remote_url_from_cwd_as_ssh() {
   local url="$(git config --get remote.origin.url)"
-  [[ -z "$url" ]] && { printf "%b\n" "$_red""No remote URL found$_reset"; return 1 }
+  [[ -z "$url" ]] && { printf "%b\n" "$_red""No remote URL found$_reset"; return 1; }
   printf "%s\n" "$url"
 }
 
 function git_get_remote_url_from_cwd_as_https() {
   local url="$(git config --get remote.origin.url)"
-  [[ -z "$url" ]] && { printf "%b\n" "$_red""No remote URL found$_reset"; return 1 }
+  [[ -z "$url" ]] && { printf "%b\n" "$_red""No remote URL found$_reset"; return 1; }
 
   # Convert SSH URL to HTTPS
   if [[ "$url" =~ ^git@ ]]; then
@@ -427,8 +427,7 @@ function git_get_remote_url_from_cwd_as_https() {
 function git_get_remote_url_to_clipboard() {
   local url="$(git config --get remote.origin.url)"
   if [[ -z "$url" ]]; then
-    printf "%b\n" "$_red""No remote URL found$_reset"
-    return 1
+    printf "%b\n" "$_red""No remote URL found$_reset"; return 1;
   fi
   printf "%s" "$url" | pbcopy
   printf "%b\n" "$_green""URL copied to clipboard > $url$_reset"
@@ -447,7 +446,7 @@ function git_set_remote_url_from_cwd() {
     {h,-help}=flag_help \
     -https=flag_https || return 1
 
-  [[ -n "$flag_help" ]] && { print -l $usage; return 0 }
+  [[ -n "$flag_help" ]] && { print -l $usage; return 0; }
 
   local dir=$(basename $(pwd))
   local github_username="theodrosyimer"  # You might want to make this configurable
@@ -525,7 +524,7 @@ function get_file_content_from_repo() {
     {r,-repo}:=flag_repo \
     {p,-path}:=flag_path || return 1
 
-  [[ -n "$flag_help" ]] && { print -l $usage; return 0 }
+  [[ -n "$flag_help" ]] && { print -l $usage; return 0; }
 
   local owner="${flag_owner[-1]}"
   local repo="${flag_repo[-1]}"
@@ -558,7 +557,7 @@ function git_branch_rename() {
     {o,-old}:=flag_old \
     {n,-new}:=flag_new || return 1
 
-  [[ -n "$flag_help" ]] && { print -l $usage; return 0 }
+  [[ -n "$flag_help" ]] && { print -l $usage; return 0; }
 
   local old_branch="${flag_old[-1]}"
   local new_branch="${flag_new[-1]}"
