@@ -312,7 +312,7 @@ function git_create_readme_if_not_exists() {
     return 0
   fi
 
-  local repo_name="${PWD:t%%.*}"
+  local repo_name="${${PWD:t}%%.*}"
 
   # Capitalize repo name using zsh parameter expansion
   local title="${(C)${repo_name}}"
@@ -360,12 +360,11 @@ function git_init() {
   # Check if already in a git repository
   if git rev-parse --git-dir > /dev/null 2>&1; then
     printf "\n%b\n" "$_green""Repository already initialized!$_reset"
-    return 1
+  else
+    # Initialize local repository
+    printf "\n%b\n" "$_green""Initializing local repository...$_reset"
+    git init || { printf "\n%b\n" "$_red""Failed to initialize git repository$_reset"; return 1 }
   fi
-
-  # Initialize local repository
-  printf "\n%b\n" "$_green""Initializing local repository...$_reset"
-  git init || { printf "\n%b\n" "$_red""Failed to initialize git repository$_reset"; return 1 }
 
   git_create_readme_if_not_exists
 
