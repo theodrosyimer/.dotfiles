@@ -4,7 +4,6 @@
   email = "12742021+theodrosyimer@users.noreply.github.com"
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGDURDVbhjnuW7Wkk/d/Xn5vTmCZ6j51GcwmSzZ8YVSG
 
-
 # # if needed use separate file for username / email / github token / etc
 # [include]
 #   path = ~/.dotfiles/git/.gitconfig.local
@@ -33,6 +32,12 @@
   excludesfile = ~/.gitignore_global
   autocrlf = input
 
+[init]
+  defaultBranch = main
+
+[fetch]
+  prune = true  # Auto-remove deleted remote branches
+
 [commit]
   template = "$HOME/.stCommitMsg"
 	gpgsign = true
@@ -44,8 +49,8 @@
   default = current
   autoSetupRemote = true
 
-[init]
-  defaultBranch = main
+[rebase]
+  autoStash = true  # Auto-stash/unstash during rebase
 
 [branch]
   sort = -committerdate
@@ -56,7 +61,7 @@
 
 # automatic maintenance
 [maintenance]
-	auto = false
+	auto = false # Helps with performance and disk usage if needed
   strategy = incremental
 
 # [credential]
@@ -69,6 +74,9 @@
   undo = reset --soft HEAD^
   undom = reset --mixed HEAD^
 
+[log]
+  date = relative  # Makes `l` alias consistent with `h`
+
 [column]
 	ui = auto
 
@@ -80,16 +88,17 @@
     diffFilter = delta --color-only
 
 [diff]
-  tool = vscode
+  tool = cursor
+  colorMoved = default  # Highlight moved code blocks
 
-[difftool "vscode"]
+[difftool "cursor"]
   cmd = $EDITOR --wait --diff \"$LOCAL\" \"$REMOTE\"
 
 [merge]
-  tool = vscode
+  tool = cursor
   log = true
 
-[mergetool "vscode"]
+[mergetool "cursor"]
   cmd = $EDITOR --wait \"$MERGED\"
   trustExitCode = true
 
