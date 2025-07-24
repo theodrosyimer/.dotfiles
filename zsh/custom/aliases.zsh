@@ -130,9 +130,9 @@ alias bunw="bun --watch"
 
 # npm-check-updates
 alias ncu="ncu --configFileName .ncurc.json --configFilePath $DOTFILES/ncu"
-alias nw="node --no-warnings --watch"
+alias nw="node --watch"
+alias nr="npm run"
 
-alias psg="get_process"
 # alias dk="docker"
 
 # ETNA
@@ -149,10 +149,10 @@ alias rgv="rg --smart-case --hidden --no-heading --column --line-number"
 alias killbg="builtin kill -KILL"
 alias loc="scc"
 
-# Expo Development Aliases
+######### Expo #########
+# Development Aliases
 alias es="npx expo start"
 alias esc="npx expo start --clear"
-
 # Expo Build & Preview Aliases
 alias epc="npx expo prebuild --clean"
 alias epci="npx expo prebuild -p ios --clean"
@@ -160,7 +160,10 @@ alias epca="npx expo prebuild -p android --clean"
 
 alias eri="npx expo run:ios"
 alias era="npx expo run:android"
-
 # EAS Build Aliases
-alias eabdev="eas build:run --profile development"
-alias eabprod="eas build:run --profile production"
+alias ebdev="eas build:run --profile development"
+alias ebprod="eas build:run --profile production"
+
+# Tree
+alias treecode="tree . -a --dirsfirst --gitignore -I '.git|.specstory|dist'"
+
