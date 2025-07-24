@@ -1,4 +1,4 @@
-alias mkignore=get_gitignore
+alias mkignore=make_gitignore
 
 function mkd() {
 	mkdir -p $1 && cd $1
@@ -141,7 +141,7 @@ function mkzfc() {
 # ! Install dependencies to make this work:
 #     fzf -> https://github.com/junegunn/fzf?tab=readme-ov-file#installation
 #     jq -> https://jqlang.github.io/jq/download/
-function get_gitignore() {
+function make_gitignore() {
 	local URLS=https://github.com/github/gitignore/blob/main/\*
   local URL="https://github.com/github/gitignore/blob/main"
 
