@@ -616,3 +616,4 @@ alias gcb='git_clone_with_all_branches'
 alias gurl=git_get_remote_url_from_cwd_as_ssh
 alias glf="git log --oneline | fzf --multi --preview 'git show {+1}'"
 alias groot="git rev-parse --git-dir"
+alias gstsb="git status -sb"
