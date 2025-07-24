@@ -1,6 +1,7 @@
 alias nodevu="node_version_updater"
 alias nodelts="node_lts_version"
-alias nodelv="node_latest_version"
+alias nodelast="node_latest_version"
+alias nvmrclts="nodelts_to_nvmrc"
 
 function node_version_updater() {
   local flag_help flag_lts flag_latest
@@ -17,7 +18,7 @@ function node_version_updater() {
     -lts=flag_lts \
     -latest=flag_latest || return 1
 
-  [[ -n "$flag_help" ]] && { print -l $usage; return 0 }
+  [[ -n "$flag_help" ]] && { print -l $usage; return 0; }
 
   # If no flags specified, default to LTS
   if [[ -z "$flag_lts" && -z "$flag_latest" ]]; then
@@ -107,6 +108,17 @@ function node_version_updater() {
   fi
 }
 
+function node_latest_version() {
+  local node_latest_version=$(fnm ls-remote --latest)
+  printf '%s' ${node_latest_version}
+}
+
+function node_lts_version() {
+  local versions=("${(f)$(fnm list-remote --lts)}")
+  local latest_lts_version=${(s: :)versions[-1]% *}
+  printf '%s' ${latest_lts_version}
+}
+
 function fnm_remove() {
   if [[ $#@ -eq 0 ]]; then
     printf '%s\n' 'You need to enter one or more node versions'
@@ -118,14 +130,8 @@ function fnm_remove() {
   done
 }
 
-
-function node_latest_version() {
-  local node_latest_version=$(fnm ls-remote --latest)
-  printf '%s' ${node_latest_version}
-}
-
-function node_lts_version() {
-  local versions=("${(f)$(fnm list-remote --lts)}")
-  local latest_lts_version=${(s: :)versions[-1]% *}
-  printf '%s' ${latest_lts_version}
+function nodelts_to_nvmrc() {
+  local node_lts_version=$(node_lts_version)
+  local node_lts_version_without_v=$(echo ${node_lts_version:1})
+  echo $node_lts_version_without_v > .nvmrc
 }
