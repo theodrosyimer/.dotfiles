@@ -15,8 +15,11 @@ alias od="open-directory"
 alias vim=nvim
 alias v=nvim
 alias c='open -b com.microsoft.VSCode'
-alias cu='open -b com.todesktop.230313mzl4w4u92 .' # Cursor
-# alias cc='open -b com.microsoft.VSCode .'
+alias c.='open -b com.microsoft.VSCode .'
+
+# Cursor
+alias cc='open -b com.todesktop.230313mzl4w4u92'
+alias cc.='open -b com.todesktop.230313mzl4w4u92 .'
 
 # Rust replacement for `cat`
 alias cat='bat'
