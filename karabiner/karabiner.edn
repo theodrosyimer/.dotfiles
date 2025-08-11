@@ -82,10 +82,17 @@
              ;
              }
  :main [;
+        ;; {:des "caps_lock to esc when pressed alone, to hyper as modifier"
+        ;;  :rules [;
+        ;;          ;
+        ;;          [:##caps_lock :!TCOleft_shift nil {:alone :escape}]
+        ;;          ;
+        ;;          ]}
+
         {:des "caps_lock to esc when pressed alone, to hyper as modifier"
          :rules [;
                  ;
-                 [:##caps_lock :!TCOleft_shift nil {:alone :escape}]
+                 [:##tab :!TCOleft_shift nil {:alone :tab}]
                  ;
                  ]}
 

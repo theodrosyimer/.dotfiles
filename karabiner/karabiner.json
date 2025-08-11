@@ -14,10 +14,10 @@
         "description" : "caps_lock to esc when pressed alone, to hyper as modifier",
         "manipulators" : [ {
           "to_if_alone" : [ {
-            "key_code" : "escape"
+            "key_code" : "tab"
           } ],
           "from" : {
-            "key_code" : "caps_lock",
+            "key_code" : "tab",
             "modifiers" : {
               "optional" : [ "any" ]
             }
