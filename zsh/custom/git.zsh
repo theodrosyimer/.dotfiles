@@ -597,6 +597,10 @@ function git_branch_rename() {
   fi
 }
 
+function git_disable_signing() {
+  git -C "${1:-.}" config commit.gpgsign false && echo "🔇 Commit signing disabled in ${1:-.}"
+}
+
 # Aliases
 alias ginit=git_init
 alias gop='git_open_project_at_gh'
@@ -617,3 +621,4 @@ alias gurl=git_get_remote_url_from_cwd_as_ssh
 alias glf="git log --oneline | fzf --multi --preview 'git show {+1}'"
 alias groot="git rev-parse --git-dir"
 alias gstsb="git status -sb"
+alias gdis="git_disable_signing"
