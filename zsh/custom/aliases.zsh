@@ -167,6 +167,10 @@ alias era="npx expo run:android"
 alias ebdev="eas build:run --profile development"
 alias ebprod="eas build:run --profile production"
 
+# Android emulator appearance
+alias aemdark="adb shell 'cmd uimode night yes'"
+alias aemlight="adb shell 'cmd uimode night no'"
+
 # Tree
 alias treecode="tree . -a --dirsfirst --gitignore -I '.git|.specstory|dist'"
 
