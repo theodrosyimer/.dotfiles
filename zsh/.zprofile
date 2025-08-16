@@ -92,7 +92,7 @@ export REFERENCES="$ICLOUD_USER/References"
 export VSCODE_USER="$HOME/Library/Application Support/Code/User"
 
 export DROPBOX="$HOME/Dropbox"
-export NOTES="$DROPBOX/Notes"
+export NOTES="$DROPBOX/notes"
 
 export MUSIC="/Volumes/Audio-Production"
 export ARTISTS="$MUSIC/Artistes"
