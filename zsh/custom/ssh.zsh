@@ -20,8 +20,9 @@ function ssh_create_ssh_key() {
 
   # Suggest a filename based on the comment
   label_sanitized=$(echo "$ssh_label" | tr -c '[:alnum:]_.' '_') # Sanitize label for filename
-  default_filename="${ssh_dir}/id_ed25519_${label_sanitized}"
+  default_filename="id_ed25519_${label_sanitized%?}"
   read -r "ssh_key_path?Enter the path and filename for the new key [${default_filename}]: "
+
   ssh_key_path="${ssh_dir}/${ssh_key_path:-$default_filename}"
   ssh_key_path_pub="${ssh_key_path}.pub"
 
