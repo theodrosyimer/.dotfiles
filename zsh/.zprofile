@@ -93,6 +93,7 @@ export VSCODE_USER="$HOME/Library/Application Support/Code/User"
 
 export DROPBOX="$HOME/Dropbox"
 export NOTES="$DROPBOX/notes"
+export NOTES_INBOX="$DROPBOX/notes/@inbox"
 
 export MUSIC="/Volumes/Audio-Production"
 export ARTISTS="$MUSIC/Artistes"
