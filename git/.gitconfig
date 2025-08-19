@@ -27,7 +27,7 @@
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
 
 [core]
-  editor = nvim
+  editor = cursor --wait
   pager = delta
   excludesfile = ~/.gitignore_global
   autocrlf = input
@@ -39,7 +39,8 @@
   prune = true  # Auto-remove deleted remote branches
 
 [commit]
-  template = "$HOME/.stCommitMsg"
+  status = false
+  template = ~/.dotfiles/git/templates/commit-message.txt
 	gpgsign = true
 
 [pull]
