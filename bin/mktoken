@@ -1,9 +1,12 @@
 #!/usr/bin/env zsh
 
+: ${CYAN=$'\033[36m'}
+: ${RESET=$'\033[0m'}
+
 size=${1:="32"}
 command="$(openssl rand -base64 $size)"
 
 printf "%s" "$command" | pbcopy
 
-echo "$_red""\nCopied to clipboard: "
+echo "$CYAN""\nCopied to clipboard: $RESET"
 printf "%s" "$command"
