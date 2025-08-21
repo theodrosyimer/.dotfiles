@@ -2,7 +2,7 @@ alias mkssh=ssh_create_ssh_key
 alias sshak=ssh_append_authorized_keys_to_remote
 
 # Creates an Ed25519 SSH key, starts the ssh-agent, and adds the key.
-# ! Only works for macOS and Linux (should work for Windows using WSL2 or Git Bash)
+# ! Works on macOS and Linux (should work for Windows using WSL2 or Git Bash)
 function ssh_create_ssh_key() {
   local ssh_label ssh_key_path ssh_key_path_pub comment_sanitized default_filename
   local ssh_dir="$HOME/.ssh"
@@ -68,7 +68,6 @@ function ssh_create_ssh_key() {
   fi
 
 
-  # Add the key to the agent, handling different OS specifics
   printf "\n%s" "Adding SSH key to the agent..."
   if [[ "$OSTYPE" == "darwin"* ]]; then
     # Use `cut` to be more robust than `%%.*`
@@ -108,10 +107,9 @@ function ssh_create_ssh_key() {
 
   # Print the public key content for easy copying
   if [[ -f "$ssh_key_path_pub" ]]; then
-      printf "%s" "--- Public Key ($ssh_key_path_pub): ---"
-      cat "$ssh_key_path_pub"
-      printf "%s
-" "---------------------------------------"
+    printf "\n%s\n" "Public key:"
+    cat "$ssh_key_path_pub"
+    printf "\n"
   fi
 
   return 0
