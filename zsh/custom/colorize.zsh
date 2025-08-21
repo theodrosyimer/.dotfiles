@@ -1,28 +1,8 @@
-# INFO: colors from `spectrum_ls`, for zsh
-_purple="${(%):-$FG[099]}"
-_orange="${(%):-$FG[202]}"
-_yellow="${(%):-$FG[003]}"
-_grey="${(%):-$FG[008]}"
-
-# INFO: default colors for most shells
-_green="${(%):-%F{green}"
-_cyan="${(%):-%F{cyan}"
-_blue="${(%):-%F{blue}"
-_red="${(%):-%F{red}"
-_magenta="${(%):-%F{magenta}"
-_black="${(%):-%F{black}"
-_white="${(%):-%F{white}"
-_reset="${(%):-%f}"
-
-# local text="This is a text"
-# printf '%s\n' "$_purple$text$_reset"
-# printf '%s\n' "$_orange$text$_reset"
-# printf '%s\n' "$_yellow$text$_reset"
-# printf '%s\n' "$_green$text$_reset"
-# printf '%s\n' "$_cyan$text$_reset"
-# printf '%s\n' "$_blue$text$_reset"
-# printf '%s\n' "$_red$text$_reset"
-# printf '%s\n' "$_magenta$text$_reset"
-# printf '%s\n' "$_black$text$_reset"
-# printf '%s\n' "$_white$text$_reset"
-# printf '%s\n' "$_white$text$_reset"
+: ${RED=$'\033[31m'}
+: ${GREEN=$'\033[32m'}
+: ${YELLOW=$'\033[33m'}
+: ${CYAN=$'\033[36m'}
+: ${BLUE=$'\033[34m'}
+: ${MAGENTA=$'\033[35m'}
+: ${WHITE=$'\033[37m'}
+: ${RESET=$'\033[0m'}
