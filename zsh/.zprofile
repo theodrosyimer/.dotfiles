@@ -102,7 +102,7 @@ export LPX_COMPOS="$LPX/Compos"
 export AUDIO_LIBRARIES="/Volumes/Librairies Samples"
 export VIDEOS="$AUDIO_LIBRARIES/Videos"
 
-export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PERSONAL" "$CODE_WORK"/** "$CODE_WORK"/*/* "$JS_SANDBOX"/* "$CODE_REFS" "$CODE_TEMPLATES" "$CODE_TEMPLATES/dev" "$CODE_TEMPLATES/dev/ts" "$CODE_TEMPLATES/dev/js" "$CODE_COURSES" "$DOTFILES" "$CODE/design" "$HOME")
+export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PROJECTS"/oss "$CODE_PROJECTS"/oss/@theodrosyimer "$CODE_PERSONAL" "$CODE_WORK"/** "$CODE_WORK"/*/* "$JS_SANDBOX"/* "$CODE_REFS" "$CODE_TEMPLATES" "$CODE_TEMPLATES/dev" "$CODE_TEMPLATES/dev/ts" "$CODE_TEMPLATES/dev/js" "$CODE_COURSES" "$DOTFILES" "$CODE/design" "$HOME")
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
