@@ -50,11 +50,11 @@ function git_add_all_commit_push() {
 
 function git_clone_clean_from_front_tab_chrome() {
   local flag_help flag_path flag_name flag_https
-  local dir_path="${CODE_PERSONAL:-$PWD}"
+  local default_output="${CODE_PERSONAL:-$PWD}"
   local usage=(
     "git_clone_clean_from_front_tab_chrome [-h|--help] [-p|--path <path>] [-n|--name <name>] [--https]"
     "  -h, --help     Show this help message"
-    "  -p, --path     Specify output directory (default: $dir_path)"
+    "  -p, --path     Specify output directory (default: $default_output)"
     "  -n, --name     Specify project name"
     "     --https     Use HTTPS instead of SSH (default: SSH)"
   )
@@ -76,7 +76,7 @@ function git_clone_clean_from_front_tab_chrome() {
 
   local repo=${url:t2}
   local project_name="${flag_name[-1]:-${repo:t}}"
-  local clone_path="${flag_path[-1]:-$dir_path}/$project_name"
+  local clone_path="${flag_path[-1]:-$default_output}/$project_name"
 
   local clone_url
   if [[ -n "$flag_https" ]]; then
@@ -97,11 +97,11 @@ function git_clone_clean_from_front_tab_chrome() {
 
 function git_clone_from_front_tab_chrome() {
   local flag_help flag_output flag_name flag_https
-  local dir_path="${CODE_PERSONAL:-$PWD}"
+  local default_output="${CODE_PERSONAL:-$PWD}"
   local usage=(
     "git_clone_from_front_tab_chrome [-h|--help] [-p|--path <path>] [-n|--name <name>] [--https]"
     "  -h, --help     Show this help message"
-    "  -o, --output   Specify output directory (default: $dir_path)"
+    "  -o, --output   Specify output directory (default: $default_output)"
     "  -n, --name     Specify project name"
     "     --https     Use HTTPS instead of SSH (default: SSH)"
   )
@@ -122,7 +122,12 @@ function git_clone_from_front_tab_chrome() {
 
   local repo=${url:t2}
   local project_name="${flag_name[-1]:-${repo:t}}"
-  local clone_path="${flag_output[-1]:-$dir_path}/$project_name"
+
+  if [[ -n "$flag_output[-1]" ]]; then
+    mkdir -p "$flag_output[-1]"
+  fi
+
+  local clone_path="${flag_output[-1]:-$default_output}/$project_name"
 
   local clone_url
   if [[ -n "$flag_https" ]]; then
@@ -161,15 +166,15 @@ function git_clone_clean_from_cb() {
   is_installed tiged "tiged is required. Run: npm i -g tiged" || return 1
 
   local url="$(pbpaste)"
-  local dir_path="${flag_path[-1]:-$PWD}"
+  local default_output="${flag_path[-1]:-$PWD}"
 
   # Convert HTTPS URL to SSH if needed and not explicitly requested HTTPS
   if [[ -z "$flag_https" && "$url" =~ ^https://github.com ]]; then
     url=$(echo "$url" | sed 's|https://github.com/|git@github.com:|')
   fi
 
-  if tiged "$url" "$dir_path"; then
-    $EDITOR "$dir_path"
+  if tiged "$url" "$default_output"; then
+    $EDITOR "$default_output"
     return 0
   else
     printf "%b\n" "$RED""Failed to clone repository$RESET"
@@ -179,11 +184,11 @@ function git_clone_clean_from_cb() {
 
 function git_clone_with_all_branches() {
   local flag_help flag_path flag_name flag_https
-  local dir_path="${CODE_PERSONAL:-$PWD}"
+  local default_output="${CODE_PERSONAL:-$PWD}"
   local usage=(
     "git_clone_with_all_branches [-h|--help] [-p|--path <path>] [-n|--name <name>] [--https]"
     "  -h, --help     Show this help message"
-    "  -p, --path     Specify output directory (default: $dir_path)"
+    "  -p, --path     Specify output directory (default: $default_output)"
     "  -n, --name     Specify project name"
     "     --https     Use HTTPS instead of SSH (default: SSH)"
   )
@@ -202,7 +207,7 @@ function git_clone_with_all_branches() {
   local url="$(chrome_get_front_window_url)"
   local repo=${url:t2}
   local project_name="${flag_name[-1]:-${repo:t}}"
-  local clone_path="${flag_path[-1]:-$dir_path}/$project_name"
+  local clone_path="${flag_path[-1]:-$default_output}/$project_name"
 
   local clone_url
   if [[ -n "$flag_https" ]]; then
