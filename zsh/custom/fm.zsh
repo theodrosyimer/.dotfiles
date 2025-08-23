@@ -4,8 +4,8 @@ function fm() {
   # bind actions
   local find_videos="ctrl-f:reload(find {} -type f -iname \"*.mp4\")"
   local exit="esc:execute-silent()+close"
-  local got_to_selected_dir="ctrl-space:execute(echo {})+accept"
-  local open_editor="enter:execute-silent("$EDITOR" {})+accept"
+  local got_to_selected_dir="enter:execute(echo {})+accept"
+  local open_editor="ctrl-e:execute-silent("$EDITOR" {})+accept"
   local copy_in_current_dir="ctrl-i:execute-silent(cp -Ri {} .)+close"
   local go_back_start="ctrl-r:reload(echo \"$dir_list\")"
   local go_back_start_change_prompt="ctrl-r:+change-prompt()"
