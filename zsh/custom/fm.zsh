@@ -3,8 +3,9 @@ function fm() {
 
   # bind actions
   local find_videos="ctrl-f:reload(find {} -type f -iname \"*.mp4\")"
-  local exit_esc="esc:execute-silent()+close"
-  local open_editor_enter="enter:execute-silent("$EDITOR" {})+accept"
+  local exit="esc:execute-silent()+close"
+  local got_to_selected_dir="ctrl-space:execute(echo {})+accept"
+  local open_editor="enter:execute-silent("$EDITOR" {})+accept"
   local copy_in_current_dir="ctrl-i:execute-silent(cp -Ri {} .)+close"
   local go_back_start="ctrl-r:reload(echo \"$dir_list\")"
   local go_back_start_change_prompt="ctrl-r:+change-prompt()"
@@ -23,8 +24,9 @@ function fm() {
   local selected="$(echo "$dir_list" | \
     fzf \
     --bind "$find_videos" \
-    --bind "$exit_esc" \
-    --bind "$open_editor_enter" \
+    --bind "$exit" \
+    --bind "$got_to_selected_dir" \
+    --bind "$open_editor" \
     --bind "$copy_in_current_dir" \
     --bind "$go_back_start" \
     --bind "$go_back_start_change_prompt" \
