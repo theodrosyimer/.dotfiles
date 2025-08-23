@@ -1,11 +1,22 @@
 alias mkssh=ssh_create_ssh_key
 alias sshak=ssh_append_authorized_keys_to_remote
 
+source "$ZSH_CUSTOM/colorize.zsh"
+
 # Creates an Ed25519 SSH key, starts the ssh-agent, and adds the key.
 # ! Works on macOS and Linux (should work for Windows using WSL2 or Git Bash)
 function ssh_create_ssh_key() {
   local ssh_label ssh_key_path ssh_key_path_pub comment_sanitized default_filename
   local ssh_dir="$HOME/.ssh"
+
+  # Safety prompt before modifying SSH directory
+  printf "\n%s\n\n" "$YELLOW""WARNING: This script will create/modify your SSH directory ($ssh_dir) to have the correct permissions (700) and generate a new SSH key.""$RESET"
+  read -r "continue_prompt?$CYAN""Do you want to continue? $WHITE""(y/N): ""$RESET"
+  printf "\n"
+  if [[ ! "$continue_prompt" =~ ^[Yy]$ ]]; then
+    printf "%s\n" "$RED""SSH key creation aborted.""$RESET"
+    return 1
+  fi
 
   # Ensure .ssh directory exists with correct permissions
   mkdir -p "$ssh_dir"
