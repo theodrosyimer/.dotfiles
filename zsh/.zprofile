@@ -1,8 +1,8 @@
 # Amazon Q pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zprofile.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zprofile.pre.zsh"
+
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
-### $PATH is at the end to override any existing system-wide commands with mine
 export PATH="$HOME/.fnm:$PATH"
 export FNM_COREPACK_ENABLED=true
 
@@ -44,7 +44,6 @@ export PYENV_ROOT="$HOME/.pyenv"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-### $PATH is at beginning to not accidently override any existing system-wide commands with mine
 export PATH="$PATH:/usr/local/go/bin"
 export GOPATH="$HOME/go"
 export PATH="$PATH:$GOPATH/bin"
@@ -103,7 +102,7 @@ export LPX_COMPOS="$LPX/Compos"
 export AUDIO_LIBRARIES="/Volumes/Librairies Samples"
 export VIDEOS="$AUDIO_LIBRARIES/Videos"
 
-export CODE_DIRS=("$CODE" "$CODE_PERSONAL" "$CODE_PERSONAL"/{assofac-projects,chatgpt-api,chrome-extensions,interviews,cli} "$CODE_WORK"/** "$CODE_WORK"/*/* "$CODE_WORK"/etna/** "$CODE_WORK/etna/bachelor"/** "$JS_SANDBOX"/* "$CODE_REFS" "$CODE_TEMPLATES" "$CODE_TEMPLATES/dev" "$CODE_TEMPLATES/dev/ts" "$CODE_TEMPLATES/dev/js" "$CODE_COURSES" "$DOTFILES" "$CODE/design" "$HOME")
+export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PERSONAL" "$CODE_WORK"/** "$CODE_WORK"/*/* "$JS_SANDBOX"/* "$CODE_REFS" "$CODE_TEMPLATES" "$CODE_TEMPLATES/dev" "$CODE_TEMPLATES/dev/ts" "$CODE_TEMPLATES/dev/js" "$CODE_COURSES" "$DOTFILES" "$CODE/design" "$HOME")
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
