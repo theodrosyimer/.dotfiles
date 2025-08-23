@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+
+input_dir=${1:-"src/shared/components/ui"}
+
+echo "{\"outDir\": \"$input_dir\"}" | jq > component.config.json
