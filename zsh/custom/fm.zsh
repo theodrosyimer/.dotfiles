@@ -1,41 +1,52 @@
 function fm() {
-  dir_list="${@:-"$PWD"}"
+  local dir_list="${@:-"$PWD"}"
 
   # bind actions
-  enter_dir="ctrl-f:reload(find {} -type f -iname \"*.mp4\")"
+  local find_videos="ctrl-f:reload(find {} -type f -iname \"*.mp4\")"
+  local exit_esc="esc:execute-silent()+close"
+  local open_editor_enter="enter:execute-silent("$EDITOR" {})+accept"
+  local copy_in_current_dir="ctrl-i:execute-silent(cp -Ri {} .)+close"
+  local go_back_start="ctrl-r:reload(echo \"$dir_list\")"
+  local go_back_start_change_prompt="ctrl-r:+change-prompt()"
+  local reload_ls="ctrl-c:reload(ls)"
+  local change_preview_toggle_preview="ctrl-p:+change-preview(exa --group-directories-first --tree --level=3 {} | head -50)"
+  local change_prompt_dirs="ctrl-d:change-prompt(Dirs > )"
+  local reload_dirs="ctrl-d:+reload(find {} -type d -mindepth 1 -maxdepth 1)"
+  local change_preview_toggle_preview_dirs="ctrl-d:+change-preview(exa --group-directories-first --tree --level=3 {} | head -50)"
+  local toggle_preview_dirs="ctrl-d:+toggle-preview"
+  local change_prompt_files="ctrl-f:change-prompt(Files > )"
+  local reload_files="ctrl-f:+reload(find {} -type f -mindepth 1 -maxdepth 1)"
+  local change_preview_toggle_preview_files="ctrl-f:+change-preview(bat --color=always --style=numbers {})"
+  local toggle_preview_files="ctrl-f:+toggle-preview"
+  local open_finder_ctrl_o="ctrl-o:execute(open -b "com.apple.finder" {})+close"
 
-  selected="$(echo "$dir_list" | \
+  local selected="$(echo "$dir_list" | \
     fzf \
-    --bind "$enter_dir" \
-    --bind "enter:execute-silent(echo {})+accept" \
-    --bind "ctrl-e:execute("$EDITOR" {})+close" \
-    --bind "ctrl-i:execute-silent(cp -Ri {} .)+close" \
-    --bind "ctrl-r:reload(echo \"$dir_list\")" \
-    --bind "ctrl-r:+change-prompt()" \
-    --bind "ctrl-c:reload(ls)" \
-    --bind "ctrl-p:+change-preview(exa --group-directories-first --tree --level=3 {} | head -50)" \
-    --bind "ctrl-p:+toggle-preview" \
-    --bind "ctrl-d:change-prompt(Dirs > )" \
-    --bind "ctrl-d:+reload(find {} -type d -mindepth 1 -maxdepth 1)" \
-    --bind "ctrl-d:+change-preview(exa --group-directories-first --tree --level=3 {} | head -50)" \
-    --bind "ctrl-d:+toggle-preview" \
-    --bind "ctrl-f:change-prompt(Files > )" \
-    --bind "ctrl-f:+reload(find {} -type f -mindepth 1 -maxdepth 1)" \
-    --bind "ctrl-f:+change-preview(bat --color=always --style=numbers {})" \
-    --bind "ctrl-f:+toggle-preview" \
-    --bind "ctrl-o:execute(open -b "com.apple.finder" {})+close" \
+    --bind "$find_videos" \
+    --bind "$exit_esc" \
+    --bind "$open_editor_enter" \
+    --bind "$copy_in_current_dir" \
+    --bind "$go_back_start" \
+    --bind "$go_back_start_change_prompt" \
+    --bind "$reload_ls" \
+    --bind "$change_preview_toggle_preview" \
+    --bind "$change_prompt_dirs" \
+    --bind "$reload_dirs" \
+    --bind "$change_preview_toggle_preview_dirs" \
+    --bind "$toggle_preview_dirs" \
+    --bind "$change_prompt_files" \
+    --bind "$reload_files" \
+    --bind "$change_preview_toggle_preview_files" \
+    --bind "$toggle_preview_files" \
+    --bind "$open_finder_ctrl_o" \
     --preview-window hidden \
     )"
 
-  # [[ -z "$selected" ]] && return 0
-
   if [[ -d "$selected" ]]; then
-    echo "$selected"
     builtin cd "$selected" && return 0
   fi
 
   if [[ -f "$selected" ]]; then
-    echo "$selected"
     open "$selected" && return 0
   fi
 
