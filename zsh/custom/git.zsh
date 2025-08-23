@@ -96,12 +96,12 @@ function git_clone_clean_from_front_tab_chrome() {
 }
 
 function git_clone_from_front_tab_chrome() {
-  local flag_help flag_path flag_name flag_https
+  local flag_help flag_output flag_name flag_https
   local dir_path="${CODE_PERSONAL:-$PWD}"
   local usage=(
     "git_clone_from_front_tab_chrome [-h|--help] [-p|--path <path>] [-n|--name <name>] [--https]"
     "  -h, --help     Show this help message"
-    "  -p, --path     Specify output directory (default: $dir_path)"
+    "  -o, --output   Specify output directory (default: $dir_path)"
     "  -n, --name     Specify project name"
     "     --https     Use HTTPS instead of SSH (default: SSH)"
   )
@@ -109,7 +109,7 @@ function git_clone_from_front_tab_chrome() {
   zmodload zsh/zutil
   zparseopts -D -F -K -E -- \
     {h,-help}=flag_help \
-    {p,-path}:=flag_path \
+    {o,-output}:=flag_output \
     {n,-name}:=flag_name \
     -https=flag_https || return 1
 
@@ -122,7 +122,7 @@ function git_clone_from_front_tab_chrome() {
 
   local repo=${url:t2}
   local project_name="${flag_name[-1]:-${repo:t}}"
-  local clone_path="${flag_path[-1]:-$dir_path}/$project_name"
+  local clone_path="${flag_output[-1]:-$dir_path}/$project_name"
 
   local clone_url
   if [[ -n "$flag_https" ]]; then
