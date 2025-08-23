@@ -1,51 +1,78 @@
-#autoload
-
 # Safer default
-alias cp="cp -i"
-alias mv="mv -i"
-alias rm="trash"
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='trash'
 
+alias ez='exec zsh'
 alias sz='source ~/.zshrc'
-alias sb='source ~/.bash_profile'
-
-# open current directory in Finder
-alias od="open-directory"
-
-# Text-Editor
-alias vim=nvim
-alias v=nvim
-alias c='open -b com.microsoft.VSCode'
-alias c.='open -b com.microsoft.VSCode .'
-
-# Cursor
-alias cc='open -b com.todesktop.230313mzl4w4u92'
-alias cc.='open -b com.todesktop.230313mzl4w4u92 .'
 
 # Rust replacement for `cat`
 alias cat='bat'
 
-# to align `clear` with ^-l keystroke behavior
-# that is modified by my .zshrc
-# ! it doesn't work', find a solution
-# alias cl="unset NEW_LINE_BEFORE_PROMPT && clear"
-
 # Rust replacement for `ls`
-alias ls='eza --sort=name --group --group-directories-first --header --git'
-# alias lsa='ls -la'
+alias ls='eza --sort=name --group --group-directories-first --header --git --icons'
 alias l='ls -la'
 alias ll='ls -l'
 alias la='ls -laa'
 alias lsd='ls -D'
 alias ld='l -D'
 
-# SSH
-# alias sadd='ssh-add -K &>/dev/null'
+alias vim=nvim
+alias v=nvim
+alias c='open -b com.microsoft.VSCode'
+alias c.='c .'
+alias cc='open -b com.todesktop.230313mzl4w4u92'
+alias cc.='cc .'
+
+alias sd='fzf_code_projects'
+# alias ccd='cc "$(eza --absolute $CODE_DIRS | fzf)" && z $_'
+# alias ccd='cc "$(get_code_projects | fzf)" && z $_'
+
+alias w='z $CODE_WORK'
+alias p='z $CODE_PERSONAL'
+alias o='z $CODE_PROJECTS/oss'
+alias ref='z $CODE_REFS'
+alias prj='z $CODE_PROJECTS'
+
+alias ghc='gh pr create --web' # Create a new GitHub pull request (using GitHub CLI)
+alias ghd='gh pr create -d'    # Create a new draft GitHub pull request (using GitHub CLI)
+alias ghv='gh pr view --web'   # View a GitHub pull request (using GitHub CLI)
+alias ghr='gh repo view --web' # View a GitHub repository (using GitHub CLI)
+
+# alias gb="git branch --sort=-committerdate | fzf | xargs git checkout" # Checkout a Git branch (using fzf to select the branch interactively)
+# alias gbr="git branch -r --sort=committerdate | sed 's/^[[:space:]]*[[:alnum:]_-]*\///' | grep -v 'HEAD ->' | fzf | xargs git checkout" # Checkout a remote Git branch (using fzf to select the branch interactively)
+# alias gbd="git branch | fzf -m | xargs git branch -D" # Delete a Git branch (using fzf to select the branch interactively)
+# alias gbdm="git branch --merged origin/main | grep -v 'main' | xargs git branch -d" # Delete a Git branch that is merged to main (using fzf to select the branch interactively)
+
+# Package managers
+alias pn='pnpm'
+alias b='bun'
+alias n='npm'
+alias y='yarn'
+alias nr='npm run'
+
+# Interactive script selector with fzf and package manager runners
+alias s="cat package.json | jq -r '.scripts | keys[]' | sort -r | fzf"
+alias pm="cat package.json | jq -r '.packageManager' | cut -d '@' -f1"
+alias sr="s | xargs $(pm || pnpm) run"
+alias pns="s | xargs pnpm run"
+alias ns="s | xargs npm run"
+alias ys="s | xargs yarn run"
+
+# Watch scripts
+alias nw='node --watch'
+alias bunw='bun --watch'
+alias tscw='tsc --watch --noEmit'
+
+# Docker
+alias dcs='docker container stop $(docker container ps -aq)'
+alias dcd='docker container rm $(docker container ps -aq)'
 
 # tmux
 alias tmuxcf='code ~/.tmux.conf'
 
 # Pretty-print json on terminal
-alias ppjson="python -m json.tool"
+alias ppjson='python -m json.tool'
 
 # Utilities
 # Brew
@@ -73,22 +100,8 @@ alias fixdock='defaults write com.apple.dock static-only -bool false; killall Do
 # NPM
 alias npmlg='npm ls -g --depth 0' # Get NPM modules' list used globally
 
-
-
 # Custom scripts
 alias mmdc='~/bin/mmd2cheatset.rb'
-
-# Open VLC cli ?
-alias vlc='/Applications/VLC.app/Contents/MacOS/VLC'
-
-# Open Chrome/Chromium cli
-alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
-alias chrome-canary="/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary"
-alias chromium="/Applications/Chromium.app/Contents/MacOS/Chromium"
-
-# Get front tab's url & title
-# alias chromeUrl='/Users/mac/.dotfiles/zsh/chromeUrl'
-# alias chromeTitle='/Users/mac/.dotfiles/zsh/chromeTitle'
 
 # System
 # top
@@ -103,9 +116,9 @@ alias cfnh='chflags nohidden'
 alias usage='du -h -d1'
 
 # Check a given port is opened (syntax `:PORT``)
-alias ipg='lsof -nPi | rg -i'
+# alias ipg='lsof -nPi | rg -i'
 # List opened TCP and UDP ips:ports
-alias ipls='lsof -nPi'
+# alias ipls='lsof -nPi'
 
 ## FZF
 # Search for zsh plugins with fzf
@@ -125,16 +138,13 @@ alias tls="tag -tgf \* | rg '^    ' | cut -c5- | sort -u --parallel 4"
 alias rmds="fd -H --no-ignore '.DS_Store' -X /bin/rm"
 
 # du default options: Get directory's contents size
-alias du="du -hd 1"
+alias du='du -hd 1'
 
 alias cfv="code $DOTFILES/nvim/init.vim"
-alias env="env | sort -s"
-alias bunw="bun --watch"
+alias env='env | sort -s'
 
 # npm-check-updates
 alias ncu="ncu --configFileName .ncurc.json --configFilePath $DOTFILES/ncu"
-alias nw="node --watch"
-alias nr="npm run"
 
 # alias dk="docker"
 
@@ -144,33 +154,36 @@ alias nr="npm run"
 # Python3
 # alias python=python3
 # alias pip=pip3
-alias py="python3"
+alias py='python3'
 
-alias lg="lazygit"
-alias rgv="rg --smart-case --hidden --no-heading --column --line-number"
+alias lg='lazygit'
 
-alias killbg="builtin kill -KILL"
-alias loc="scc"
+# rg setup to make the file open in default editor at the line number it's found at
+alias rgc="rg --smart-case --hidden --no-heading --column --line-number -g '!package-lock.json' -g '!pnpm-lock.yaml' -g '!bun.lockb' -g '!.git'"
+
+alias killbg='builtin kill -KILL'
+alias loc='scc'
 
 ######### Expo #########
 # Development Aliases
-alias es="npx expo start"
-alias esc="npx expo start --clear"
+alias es='npx expo start'
+alias esc='npx expo start --clear'
 # Expo Build & Preview Aliases
-alias epc="npx expo prebuild --clean"
-alias epci="npx expo prebuild -p ios --clean"
-alias epca="npx expo prebuild -p android --clean"
+alias ep='npx expo prebuild --clean'
+alias epi='npx expo prebuild -p ios --clean'
+alias epa='npx expo prebuild -p android --clean'
 
-alias eri="npx expo run:ios"
-alias era="npx expo run:android"
+alias eri='npx expo run:ios'
+alias era='npx expo run:android'
 # EAS Build Aliases
-alias ebdev="eas build:run --profile development"
-alias ebprod="eas build:run --profile production"
+alias ebdev='eas build:run --profile development'
+alias ebprod='eas build:run --profile production'
 
 # Android emulator appearance
 alias aemdark="adb shell 'cmd uimode night yes'"
 alias aemlight="adb shell 'cmd uimode night no'"
 
 # Tree
-alias treecode="tree . -a --dirsfirst --gitignore -I '.git|.specstory|dist'"
+alias t='tree'
+alias tcode="tree . -a --dirsfirst --gitignore -I '.git|.specstory|dist|node_modules|.expo'"
 
