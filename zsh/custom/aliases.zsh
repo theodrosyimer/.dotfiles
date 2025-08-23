@@ -17,11 +17,13 @@ alias la='ls -laa'
 alias lsd='ls -D'
 alias ld='l -D'
 
+alias t='tree_code'
+
 alias vim=nvim
 alias v=nvim
 alias c='open -b com.microsoft.VSCode'
 alias c.='c .'
-alias cc='open -b com.todesktop.230313mzl4w4u92'
+alias cc='open -b com.todesktop.230313mzl4w4u92' # Cursor
 alias cc.='cc .'
 
 alias sd='fzf_code_projects'
@@ -182,8 +184,3 @@ alias ebprod='eas build:run --profile production'
 # Android emulator appearance
 alias aemdark="adb shell 'cmd uimode night yes'"
 alias aemlight="adb shell 'cmd uimode night no'"
-
-# Tree
-alias t='tree'
-alias tcode="tree . -a --dirsfirst --gitignore -I '.git|.specstory|dist|node_modules|.expo'"
-
