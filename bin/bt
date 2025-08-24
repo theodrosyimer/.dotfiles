@@ -1,5 +1,34 @@
 #!/usr/bin/env zsh
- [[ "$(blueutil --is-connected 6c-b1-33-80-c0-89)" == '1' ]] && blueutil --disconnect 6c-b1-33-80-c0-89 && echo "ty-airpods disconnected!" && exit 0
 
- [[ "$(blueutil --is-connected 6c-b1-33-80-c0-89)" == '0' ]] && blueutil --connect 6c-b1-33-80-c0-89 && echo "ty-airpods connected!" && exit 0
+devices=$(blueutil --paired | while read -r line; do
+    address=$(echo "$line" | sed 's/address: \([^,]*\),.*/\1/')
+    name=$(echo "$line" | sed 's/.*name: "\([^"]*\)".*/\1/')
+
+    # Check connection status using blueutil --is-connected
+    if [[ "$(blueutil --is-connected "$address")" == '1' ]]; then
+        connected="🔗"
+    else
+        connected="  "
+    fi
+
+    echo "$connected $name"
+done)
+
+selected=$(echo "$devices" | fzf --prompt="Select device: " --height=50% --layout=reverse --border)
+
+[[ -z "$selected" ]] && exit 0
+
+device_name=$(echo "$selected" | sed 's/^.. //')
+
+# Get address by re-parsing blueutil output for the selected device
+address=$(blueutil --paired | grep "name: \"$device_name\"" | sed 's/address: \([^,]*\),.*/\1/')
+
+# Check if device is already connected and toggle
+if [[ "$(blueutil --is-connected "$address" 2>/dev/null)" == '1' ]]; then
+    blueutil --disconnect "$address" 2>/dev/null
+    echo "Disconnected: $device_name"
+else
+    blueutil --connect "$address" 2>/dev/null
+    echo "Connected: $device_name"
+fi
 

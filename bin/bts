@@ -1,6 +1,0 @@
-#!/usr/bin/env zsh
-
- [[ "$(blueutil --is-connected 54-26-98-52-43-f6)" == '1' ]] && blueutil --disconnect 54-26-98-52-43-f6 && echo "Studio Wireless disconnected!" && exit 0
-
- [[ "$(blueutil --is-connected 54-26-98-52-43-f6)" == '0' ]] && blueutil --connect 54-26-98-52-43-f6 && echo "Studio Wireless connected!" && exit 0
-
