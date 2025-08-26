@@ -56,7 +56,7 @@ alias nr='npm run'
 # Interactive script selector with fzf and package manager runners
 alias s="cat package.json | jq -r '.scripts | keys[]' | sort -r | fzf"
 alias pm="cat package.json | jq -r '.packageManager // \"pnpm\"' | cut -d '@' -f1"
-alias sr="s | xargs $(pm) run"
+alias sr="s | xargs \$(pm) run"
 alias pns="s | xargs pnpm run"
 alias ns="s | xargs npm run"
 alias ys="s | xargs yarn run"
