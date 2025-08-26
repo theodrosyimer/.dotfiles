@@ -34,7 +34,7 @@ alias w='z $CODE_WORK'
 alias p='z $CODE_PERSONAL'
 alias o='z $CODE_PROJECTS/oss'
 alias ref='z $CODE_REFS'
-alias prj='z $CODE_PROJECTS'
+alias pc='z $CODE_PROJECTS'
 
 alias ghc='gh pr create --web' # Create a new GitHub pull request (using GitHub CLI)
 alias ghd='gh pr create -d'    # Create a new draft GitHub pull request (using GitHub CLI)
