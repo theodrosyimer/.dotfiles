@@ -8,7 +8,7 @@
                       :held 40}} ;; 250 to_if_held_down_threshold_milliseconds (def: 500)
                       ;; key is fired twice when 500 ms is elapsed (otherwise seen as a hold command)
 
- :templates {:alfred "osascript -e 'tell application \"Alfred 4\" to run trigger \"%s\" in workflow \"%s\" with argument \"%s\"'"
+ :templates {:alfred "osascript -e 'tell application \"Alfred 5\" to run trigger \"%s\" in workflow \"%s\" with argument \"%s\"'"
              :code-project "osascript -e 'tell application \"Visual Studio Code\" to activate' && open -a 'Visual Studio Code' %s -g %s"
              :km "osascript -e 'tell application \"Keyboard Maestro Engine\" to do script \"%s\"'"
              :scriptkit "~/.kit/kar \"%s\""
@@ -35,21 +35,21 @@
                               open location \"https://\" & adress
                             end tell'
                             EndOfScript"
-             :popclip "tell application \"PopClip\" to appear"
+             :popclip "tell application \"PopClip\" to appear"}
              ;
-             }
+
 
  :applications {:chrome ["com.google.Chrome"]
                 :code ["com.microsoft.VSCode"]
                 :cursor ["com.todesktop.230313mzl4w4u92"]
                 :lpx ["com.apple.logic10"]
-                :finder ["^com\\.apple\\.finder$"]
+                :finder ["^com\\.apple\\.finder$"]}
                ;
-                }
- :layers {; :tab-mode {:key :tab :alone {:key :tab}
+
+ :layers {}; :tab-mode {:key :tab :alone {:key :tab}
           ;; :caps_lock {:key :caps_lock :alone {:key :caps_lock}}
           ;
-          }
+
 
  :simlayers-threshold 250
 
@@ -78,9 +78,9 @@
             ;;  :n-mode {:key :n}
             ;;  :m-mode {:key :m} ; (m=,)
              :spacebar-mode {:key :spacebar}
-             :tilde-mode {:key :grave_accent_and_tilde}
+             :tilde-mode {:key :grave_accent_and_tilde}}
              ;
-             }
+
  :main [;
         ;; {:des "caps_lock to esc when pressed alone, to hyper as modifier"
         ;;  :rules [;
@@ -92,9 +92,9 @@
         {:des "caps_lock to esc when pressed alone, to hyper as modifier"
          :rules [;
                  ;
-                 [:##tab :!TCOleft_shift nil {:alone :tab}]
+                 [:##tab :!TCOleft_shift nil {:alone :tab}]]}
                  ;
-                 ]}
+
 
         ;; {:des "spacebar to spacebar when pressed alone, to hyper as modifier"
         ;;  :rules [;
@@ -104,21 +104,21 @@
         ;;          ]}
 
         {:des "Homerow"
-         :rules [;
+         :rules []};
                  ;
-                ;; ;;  Left Command
-                ;;  [:##a :left_command nil {:alone :a}]
-                ;;  [:##s :left_shift nil {:alone :s}]
-                ;;  [:##d :left_option nil {:alone :d}]
-                ;;  [:##f :left_control nil {:alone :f}]
+        ;; ;;  Left Command
+        ;;  [:##a :left_command nil {:alone :a}]
+        ;;  [:##s :left_shift nil {:alone :s}]
+        ;;  [:##d :left_option nil {:alone :d}]
+        ;;  [:##f :left_control nil {:alone :f}]
 
-                ;; ;;  Right Command
-                ;;  [:##j :right_control nil {:alone :j}]
-                ;;  [:##k :right_option nil {:alone :k}]
-                ;;  [:##l :right_shift nil {:alone :l}]
-                ;;  [:##semicolon :right_command nil {:alone :semicolon}]
-                ;;  ;
-                 ]}
+        ;; ;;  Right Command
+        ;;  [:##j :right_control nil {:alone :j}]
+        ;;  [:##k :right_option nil {:alone :k}]
+        ;;  [:##l :right_shift nil {:alone :l}]
+        ;;  [:##semicolon :right_command nil {:alone :semicolon}]
+        ;;  ;
+
 
         {:des "caps_lock to esc when pressed alone, to control as modifier"
          :rules [;
@@ -130,41 +130,41 @@
                  [:!T4 :!CTOS4] ;
                  [:!T5 :!CTOS5]
                  [:!T6 :!CTOS6]
-                 [:!T7 :!CTOS7]
+                 [:!T7 :!CTOS7]]}
                  ;
-                 ]}
+
 
         {:des "launch things"
          :rules [:l-mode
                  ;
                  [:a :!Ospacebar] ; launch Alfred ; (a=q)
-                 [:c [:alfred "code" "com.ty.alfred.vs-code.open"]]
-                 [:n [:alfred "plantMe" "com.ty.alfred.plantme"]]
+                 [:c :!CTOSc] ; launch Claude
+                ;;  [:n [:alfred "plantMe" "com.ty.alfred.plantme"]]
                  [:d :!CTOSd] ; launch Moom
-                 [:k :!CTOSs] ; launch Chrome
+                  ;; [:f :!TOspacebar]
+                  [:f [:open-b "app.scriptkit"]]
+                 [:j :!CTOSe] ; launch $EDITOR
                  ;;  [:j [:open-b "com.microsoft.VSCode"]]
-                 ;;  [:l :!CTOSn]
-                  [:j :!CTOSe]
-                 [:f :!TOspacebar]
+                 [:k :!CTOSs] ; launch Chrome
+         ;;  [:k [:open-b "com.stairways.keyboardmaestro.editor"]]
+                 [:n :!CTOSn] ; launch Notion
                  [:t [:scriptkit "open-tab"]]
-                 ;;  [:k [:open-b "com.stairways.keyboardmaestro.editor"]]
-                 ;;  [:w :!CTOSo] ; launch 1Password (w=z)
-                 ;
-                 ]}
+          [:w :!CTOSo]] ; launch 1Password (w=z)
+          }
 
         {:des "Both shift keys toggles caps lock"
          :rules [[:!S#Pright_shift :caps_lock]
-                 [:!R#Pleft_shift :caps_lock]
+                 [:!R#Pleft_shift :caps_lock]]}
                  ;
-                 ]}
+
 
         {:des "w-mode (w=z) Undo and Redo"
-         :rules [:s-mode ;
+         :rules [:s-mode]} ;
                  ;
-                ;;  [:d :!Cw] ; (w=z)
-                ;;  [:f :!CSw] ; (w=z)
+        ;;  [:d :!Cw] ; (w=z)
+        ;;  [:f :!CSw] ; (w=z)
                   ;
-                 ]}
+
 
         ;; {:des "enter and cmd+enter"
         ;;  :rules [;
@@ -179,56 +179,56 @@
          :rules [:a-mode ; (a=q)
                  ;
                  ; Modifiers
-                ;;  [:##c :left_control]
-                ;;  [:##f :left_option]
-                ;;  [:##d :left_shift]
-                ;;  [:##s :left_command]
+                 ;;  [:##c :left_control]
+                 ;;  [:##f :left_option]
+                 ;;  [:##d :left_shift]
+                 ;;  [:##s :left_command]
 
-                ;; ; Select word
-                ;;  [:spacebar :!Cd]
+                 ;; ; Select word
+                 ;;  [:spacebar :!Cd]
 
-                ;;  [:spacebar :!CTOSspacebar] ; launch Dash
+                 ;;  [:spacebar :!CTOSspacebar] ; launch Dash
 
                 ; Shrink/Expand selection (VSCode)
-                ;;  [:g :!CSTleft_arrow]
-                ;;  [:h :!CSTright_arrow]
+                 ;;  [:g :!CSTleft_arrow]
+                 ;;  [:h :!CSTright_arrow]
 
                  ; Navigation
-                ;;  [:##h :left_arrow]
-                ;;  [:##j :down_arrow]
-                ;;  [:##k :up_arrow]
-                ;;  [:##l :right_arrow]
+                 ;;  [:##h :left_arrow]
+                 ;;  [:##j :down_arrow]
+                 ;;  [:##k :up_arrow]
+                 ;;  [:##l :right_arrow]
 
-                ;;  [:##u :home]
-                ;;  [:##o :end]
+                 ;;  [:##u :home]
+                 ;;  [:##o :end]
 
-                ;; ; Jump directly to Spaces 1,2,3 (create Space(s) and then setup keystrokes in System Preferences/Keyboard/Shortcuts/Mission Control)
-                ;;  [:##w :!COSf16] ; (w=z)
-                ;;  [:##e :!COSf17]
-                ;;  [:##r :!COSf18]
+                 ;; ; Jump directly to Spaces 1,2,3 (create Space(s) and then setup keystrokes in System Preferences/Keyboard/Shortcuts/Mission Control)
+                 ;;  [:##w :!COSf16] ; (w=z)
+                 ;;  [:##e :!COSf17]
+                 ;;  [:##r :!COSf18]
 
                 ; Go to Left/Right Space
                  [:##e :!COSf14]
-                 [:##r :!COSf15]
+                 [:##r :!COSf15]]}
                  ;
-                 ]}
+
 
         {:des "Delete"
-         :rules [:d-mode
+         :rules [:d-mode]}
                   ;
                   ; Delete back/forward by character
-                ;;  [:j :delete_or_backspace]
-                ;;  [:k :delete_forward]
+        ;;  [:j :delete_or_backspace]
+        ;;  [:k :delete_forward]
 
                   ; Delete back/forward by word
-                ;;  [:u :!Odelete_or_backspace]
-                ;;  [:u :!Tz]
-                ;;  [:i :!Odelete_forward]
+        ;;  [:u :!Odelete_or_backspace]
+        ;;  [:u :!Tz]
+        ;;  [:i :!Odelete_forward]
                  ;
                   ; Delete line (only in iTerm2)
-                ;;  [:l :!Tu]
+        ;;  [:l :!Tu]
                  ;
-                 ]}
+
 
 
         {:des "Symbols and Symbols strings"
@@ -250,21 +250,21 @@
                  [:semicolon :!Sgrave_accent_and_tilde];>
 
                   ;sequences
-                 [:w [:spacebar :slash :!Sgrave_accent_and_tilde :spacebar :!O5 :!Ohyphen :left_arrow]]; => {} ;(w=z)
+                 ;;  [:w [:spacebar :slash :!Sgrave_accent_and_tilde :spacebar :!O5 :!Ohyphen :left_arrow]]; => {} ;(w=z)
                  [:e [:spacebar :slash :!Sgrave_accent_and_tilde :spacebar :!O5 :!Ohyphen :left_arrow]]; => {}
                  [:r [:spacebar :slash :!Sgrave_accent_and_tilde :spacebar]]; =>
                  [:u [:spacebar :slash :spacebar]]; =
                  [:i [:spacebar :slash :spacebar :4 :4 :left_arrow]]; = ''
                  [:o [:period :spacebar :4 :4 :left_arrow]];: ''
-                 [:quote [:!Cd :!Cx :close_bracket :!O5 :!Cv :!Ohyphen :left_arrow]];${}
+                 ;;  [:quote [:!Cd :!Cx :close_bracket :!O5 :!Cv :!Ohyphen :left_arrow]];${}
 
                   ; Code block
                  [:b [:km "41)Create Fenced Code Line or Block from Selection"]]
 
                   ;comment/uncomment then save file
-                 [:c [:!CSperiod :!Cs]]
+                 [:c [:!CSperiod :!Cs]]]}
                   ;
-                 ]}
+
 
         ;; {:des "Finder: Return => Cmd+O (Open in new tab)"
         ;;  :rules [[:return_or_enter :!CTo [:finder]]]}
@@ -280,20 +280,20 @@
 
         {:des "Google Chrome"
          :rules [:chrome
-                 [:button1 :!TOleft_arrow]
+                 [:button1 :!TOleft_arrow]]}
                  ;
-                 ]}
+
 
         {:des "Code"
-         :rules [:code
+         :rules [:code]}
                   ;
-                  ;;  [:left_shift :left_shift nil {:alone :!CSp}]
-                ;;  [:a :t :code] ; launch Alfred
-                ;;  [:g [:!Sspacebar]]
-                ;;  [[:d :f] :!Cd]
+        ;;  [:left_shift :left_shift nil {:alone :!CSp}]
+        ;;  [:a :t :code] ; launch Alfred
+        ;;  [:g [:!Sspacebar]]
+        ;;  [[:d :f] :!Cd]
 
                   ;
-                 ]}
+
 
         {:des "Listen to Music"
          :rules [:tilde-mode ; tilde = grave_accent_and_tilde
@@ -310,9 +310,9 @@
                  [:z :!CTSf5]; rewind ; (z=w)
                  [:c :!CTSf6]; fast-forward
                  [:e :!CTSf4]; switch current player
-                 [:r :!CTSf3]; toggle controller
+                 [:r :!CTSf3]]}; toggle controller
                 ;
-                 ]}
+
 
 
 
@@ -328,9 +328,9 @@
                  ; Copy
                  [:c :!Cc]
                  ; Paste
-                 [:v :!Cv]
+                 [:v :!Cv]]}
                  ;
-                 ]}
+
 
         {:des "trackpad2: examples using :condi"
          :rules [;
@@ -339,9 +339,9 @@
                  ; click f and get the right-click
                  [:f :button2]
                  ; click v and get left-click + paste
-                 [:v [:button1 :!Cv]]
+                 [:v [:button1 :!Cv]]]}]}
                  ;
-                 ]}
+
 
         ;; {:des "Delayed example "
         ;;   :rules [;
@@ -359,7 +359,7 @@
         ;;         ;;  [:slash :right_command nil {:alone :slash}]
         ;;          ;
         ;;          ]}
-        ]}
+
 
 ;; rule [:period ["period-mode" 1] nil {:afterup ["period-mode" 0] :alone :period}]
 ;;       |_____| |_______________| |_| |_________________________________________|

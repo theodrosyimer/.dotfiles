@@ -183,7 +183,8 @@
             "key_code" : "c"
           },
           "to" : [ {
-            "shell_command" : "osascript -e 'tell application \"Alfred 4\" to run trigger \"code\" in workflow \"com.ty.alfred.vs-code.open\" with argument \"\"'"
+            "key_code" : "c",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
           } ],
           "conditions" : [ {
             "name" : "l-mode",
@@ -202,58 +203,14 @@
               "value" : 1
             }
           }, {
-            "shell_command" : "osascript -e 'tell application \"Alfred 4\" to run trigger \"code\" in workflow \"com.ty.alfred.vs-code.open\" with argument \"\"'"
+            "key_code" : "c",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
           } ],
           "from" : {
             "simultaneous" : [ {
               "key_code" : "l"
             }, {
               "key_code" : "c"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "l-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "n"
-          },
-          "to" : [ {
-            "shell_command" : "osascript -e 'tell application \"Alfred 4\" to run trigger \"plantMe\" in workflow \"com.ty.alfred.plantme\" with argument \"\"'"
-          } ],
-          "conditions" : [ {
-            "name" : "l-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "l-mode",
-              "value" : 1
-            }
-          }, {
-            "shell_command" : "osascript -e 'tell application \"Alfred 4\" to run trigger \"plantMe\" in workflow \"com.ty.alfred.plantme\" with argument \"\"'"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "l"
-            }, {
-              "key_code" : "n"
             } ],
             "simultaneous_options" : {
               "detect_key_down_uninterruptedly" : true,
@@ -317,11 +274,10 @@
           }
         }, {
           "from" : {
-            "key_code" : "k"
+            "key_code" : "f"
           },
           "to" : [ {
-            "key_code" : "s",
-            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
+            "shell_command" : "open -b \"app.scriptkit\""
           } ],
           "conditions" : [ {
             "name" : "l-mode",
@@ -340,14 +296,13 @@
               "value" : 1
             }
           }, {
-            "key_code" : "s",
-            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
+            "shell_command" : "open -b \"app.scriptkit\""
           } ],
           "from" : {
             "simultaneous" : [ {
               "key_code" : "l"
             }, {
-              "key_code" : "k"
+              "key_code" : "f"
             } ],
             "simultaneous_options" : {
               "detect_key_down_uninterruptedly" : true,
@@ -411,11 +366,11 @@
           }
         }, {
           "from" : {
-            "key_code" : "f"
+            "key_code" : "k"
           },
           "to" : [ {
-            "key_code" : "spacebar",
-            "modifiers" : [ "left_control", "left_option" ]
+            "key_code" : "s",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
           } ],
           "conditions" : [ {
             "name" : "l-mode",
@@ -434,14 +389,61 @@
               "value" : 1
             }
           }, {
-            "key_code" : "spacebar",
-            "modifiers" : [ "left_control", "left_option" ]
+            "key_code" : "s",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
           } ],
           "from" : {
             "simultaneous" : [ {
               "key_code" : "l"
             }, {
-              "key_code" : "f"
+              "key_code" : "k"
+            } ],
+            "simultaneous_options" : {
+              "detect_key_down_uninterruptedly" : true,
+              "key_down_order" : "strict",
+              "key_up_order" : "strict_inverse",
+              "key_up_when" : "any",
+              "to_after_key_up" : [ {
+                "set_variable" : {
+                  "name" : "l-mode",
+                  "value" : 0
+                }
+              } ]
+            }
+          }
+        }, {
+          "from" : {
+            "key_code" : "n"
+          },
+          "to" : [ {
+            "key_code" : "n",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
+          } ],
+          "conditions" : [ {
+            "name" : "l-mode",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "type" : "basic",
+          "parameters" : {
+            "basic.simultaneous_threshold_milliseconds" : 250
+          },
+          "to" : [ {
+            "set_variable" : {
+              "name" : "l-mode",
+              "value" : 1
+            }
+          }, {
+            "key_code" : "n",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
+          } ],
+          "from" : {
+            "simultaneous" : [ {
+              "key_code" : "l"
+            }, {
+              "key_code" : "n"
             } ],
             "simultaneous_options" : {
               "detect_key_down_uninterruptedly" : true,
@@ -487,6 +489,53 @@
               "key_code" : "l"
             }, {
               "key_code" : "t"
+            } ],
+            "simultaneous_options" : {
+              "detect_key_down_uninterruptedly" : true,
+              "key_down_order" : "strict",
+              "key_up_order" : "strict_inverse",
+              "key_up_when" : "any",
+              "to_after_key_up" : [ {
+                "set_variable" : {
+                  "name" : "l-mode",
+                  "value" : 0
+                }
+              } ]
+            }
+          }
+        }, {
+          "from" : {
+            "key_code" : "w"
+          },
+          "to" : [ {
+            "key_code" : "o",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
+          } ],
+          "conditions" : [ {
+            "name" : "l-mode",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "type" : "basic",
+          "parameters" : {
+            "basic.simultaneous_threshold_milliseconds" : 250
+          },
+          "to" : [ {
+            "set_variable" : {
+              "name" : "l-mode",
+              "value" : 1
+            }
+          }, {
+            "key_code" : "o",
+            "modifiers" : [ "left_command", "left_control", "left_option", "left_shift" ]
+          } ],
+          "from" : {
+            "simultaneous" : [ {
+              "key_code" : "l"
+            }, {
+              "key_code" : "w"
             } ],
             "simultaneous_options" : {
               "detect_key_down_uninterruptedly" : true,
@@ -1096,81 +1145,6 @@
           }
         }, {
           "from" : {
-            "key_code" : "w"
-          },
-          "to" : [ {
-            "key_code" : "spacebar"
-          }, {
-            "key_code" : "slash"
-          }, {
-            "key_code" : "grave_accent_and_tilde",
-            "modifiers" : [ "left_shift" ]
-          }, {
-            "key_code" : "spacebar"
-          }, {
-            "key_code" : "5",
-            "modifiers" : [ "left_option" ]
-          }, {
-            "key_code" : "hyphen",
-            "modifiers" : [ "left_option" ]
-          }, {
-            "key_code" : "left_arrow"
-          } ],
-          "conditions" : [ {
-            "name" : "spacebar-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "spacebar-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "spacebar"
-          }, {
-            "key_code" : "slash"
-          }, {
-            "key_code" : "grave_accent_and_tilde",
-            "modifiers" : [ "left_shift" ]
-          }, {
-            "key_code" : "spacebar"
-          }, {
-            "key_code" : "5",
-            "modifiers" : [ "left_option" ]
-          }, {
-            "key_code" : "hyphen",
-            "modifiers" : [ "left_option" ]
-          }, {
-            "key_code" : "left_arrow"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "w"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "spacebar-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
             "key_code" : "e"
           },
           "to" : [ {
@@ -1468,85 +1442,6 @@
               "key_code" : "spacebar"
             }, {
               "key_code" : "o"
-            } ],
-            "simultaneous_options" : {
-              "detect_key_down_uninterruptedly" : true,
-              "key_down_order" : "strict",
-              "key_up_order" : "strict_inverse",
-              "key_up_when" : "any",
-              "to_after_key_up" : [ {
-                "set_variable" : {
-                  "name" : "spacebar-mode",
-                  "value" : 0
-                }
-              } ]
-            }
-          }
-        }, {
-          "from" : {
-            "key_code" : "quote"
-          },
-          "to" : [ {
-            "key_code" : "d",
-            "modifiers" : [ "left_command" ]
-          }, {
-            "key_code" : "x",
-            "modifiers" : [ "left_command" ]
-          }, {
-            "key_code" : "close_bracket"
-          }, {
-            "key_code" : "5",
-            "modifiers" : [ "left_option" ]
-          }, {
-            "key_code" : "v",
-            "modifiers" : [ "left_command" ]
-          }, {
-            "key_code" : "hyphen",
-            "modifiers" : [ "left_option" ]
-          }, {
-            "key_code" : "left_arrow"
-          } ],
-          "conditions" : [ {
-            "name" : "spacebar-mode",
-            "value" : 1,
-            "type" : "variable_if"
-          } ],
-          "type" : "basic"
-        }, {
-          "type" : "basic",
-          "parameters" : {
-            "basic.simultaneous_threshold_milliseconds" : 250
-          },
-          "to" : [ {
-            "set_variable" : {
-              "name" : "spacebar-mode",
-              "value" : 1
-            }
-          }, {
-            "key_code" : "d",
-            "modifiers" : [ "left_command" ]
-          }, {
-            "key_code" : "x",
-            "modifiers" : [ "left_command" ]
-          }, {
-            "key_code" : "close_bracket"
-          }, {
-            "key_code" : "5",
-            "modifiers" : [ "left_option" ]
-          }, {
-            "key_code" : "v",
-            "modifiers" : [ "left_command" ]
-          }, {
-            "key_code" : "hyphen",
-            "modifiers" : [ "left_option" ]
-          }, {
-            "key_code" : "left_arrow"
-          } ],
-          "from" : {
-            "simultaneous" : [ {
-              "key_code" : "spacebar"
-            }, {
-              "key_code" : "quote"
             } ],
             "simultaneous_options" : {
               "detect_key_down_uninterruptedly" : true,
