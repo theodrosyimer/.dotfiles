@@ -6,29 +6,29 @@ function config() {
     ln -s "$HOME/.dotfiles/keybindings/DefaultKeyBinding.dict" "$HOME/Library/KeyBindings/DefaultKeyBinding.dict"
   fi
 
-  code -gn "$HOME/.dotfiles/karabiner" "$HOME/.dotfiles/karabiner/karabiner.edn" "$HOME/Library/KeyBindings/DefaultKeyBinding.dict"
+  $EDITOR -gn "$HOME/.dotfiles/karabiner" "$HOME/.dotfiles/karabiner/karabiner.edn" "$HOME/Library/KeyBindings/DefaultKeyBinding.dict"
 }
 
 function ebin() {
-  code -gn "$HOME/bin"
+  $EDITOR -gn "$HOME/bin"
 }
 
 function ejs() {
-  code -g "$HOME/.js"
+  $EDITOR -g "$HOME/.js"
 }
 
 function ekenv() {
-  code -gn "$HOME/.kenv"
+  $EDITOR -gn "$HOME/.kenv"
 }
 
 function erefs() {
-  code -gn "$HOME/Code/refs/$1"
+  $EDITOR -gn "$HOME/Code/refs/$1"
 }
 
 function ezfunc() {
-  code -gn "$HOME/.dotfiles/zsh/custom"
+  $EDITOR -gn "$HOME/.dotfiles/zsh/custom"
 }
 
 function ezsh() {
-  code -gn "$HOME/.oh-my-zsh" "$HOME/.zprofile" "$HOME/.zshrc"
+  $EDITOR -gn "$HOME/.oh-my-zsh" "$HOME/.zprofile" "$HOME/.zshrc"
 }
