@@ -1,7 +1,16 @@
+alias -- -='cd -'
+alias -g ..='cd ../'
+alias -g ...='cd ../..'
+alias -g ....='cd ../../..'
+alias -g .....='cd ../../../..'
+alias -g ......='cd ../../../../..'
+
 # Safer default
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='trash'
+alias rmdir='trash'
+
 
 alias ez='exec zsh'
 alias sz='source ~/.zshrc'
@@ -17,6 +26,7 @@ alias la='ls -laa'
 alias lsd='ls -D'
 alias ld='l -D'
 
+alias md='mkdir -p'
 alias t='tree_code'
 
 alias vim=nvim
@@ -30,26 +40,30 @@ alias sd='fzf_code_projects'
 # alias ccd='cc "$(eza --absolute $CODE_DIRS | fzf)" && z $_'
 # alias ccd='cc "$(get_code_projects | fzf)" && z $_'
 
+alias d='z $CODE'
 alias w='z $CODE_WORK'
 alias p='z $CODE_PERSONAL'
 alias o='z $CODE_PROJECTS/oss'
 alias ref='z $CODE_REFS'
 alias pc='z $CODE_PROJECTS'
 
-alias ghc='gh pr create --web' # Create a new GitHub pull request (using GitHub CLI)
+alias ghw='gh pr create --web' # Create a new GitHub pull request (using GitHub CLI)
 alias ghd='gh pr create -d'    # Create a new draft GitHub pull request (using GitHub CLI)
 alias ghv='gh pr view --web'   # View a GitHub pull request (using GitHub CLI)
 alias ghr='gh repo view --web' # View a GitHub repository (using GitHub CLI)
-
+alias ghc='gh repo clone' # Clone a GitHub repository (using GitHub CLI)
 # alias gb="git branch --sort=-committerdate | fzf | xargs git checkout" # Checkout a Git branch (using fzf to select the branch interactively)
 # alias gbr="git branch -r --sort=committerdate | sed 's/^[[:space:]]*[[:alnum:]_-]*\///' | grep -v 'HEAD ->' | fzf | xargs git checkout" # Checkout a remote Git branch (using fzf to select the branch interactively)
 # alias gbd="git branch | fzf -m | xargs git branch -D" # Delete a Git branch (using fzf to select the branch interactively)
 # alias gbdm="git branch --merged origin/main | grep -v 'main' | xargs git branch -d" # Delete a Git branch that is merged to main (using fzf to select the branch interactively)
 
-# Package managers
+# Package managers + npq (https://github.com/lirantal/npq)
+alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
 alias pn='pnpm'
 alias b='bun'
+# alias npm="npq-hero"
 alias n='npm'
+alias yarn="NPQ_PKG_MGR=yarn npq-hero"
 alias y='yarn'
 alias nr='npm run'
 
@@ -124,7 +138,7 @@ alias usage='du -h -d1'
 
 ## FZF
 # Search for zsh plugins with fzf
-alias fzfz='fd ".+\.plugin\..+" $ZSH/plugins -x echo {/.} | sort | uniq | fzf --height 80% --border none --margin 10% --bind "?:toggle-preview" --preview "bat --color=always --style=numbers $ZSH/plugins/{}" --preview-window right,49% --nohidden'
+alias fzfz='fd ".+\.plugin\..+" $ZSH/plugins -x echo {/.} | sort | uniq | fzf --height 80% --border none --margin 10% --bind "?:toggle-preview" --preview "bat --color=always --style=numbers $ZSH/plugins/{}" --preview-window right,49%'
 
 # Search through my aliases with fzf
 alias sa="bat $HOME/.dotfiles/zsh/custom/aliases.zsh | fzf --layout=reverse --border sharp --margin 5% --bind \"?:toggle-preview\" --preview \"rg -A 1 --smart-case --hidden --no-heading --column {} $HOME/.dotfiles/zsh/custom/aliases.zsh | bat --color=always --style=numbers $HOME/.dotfiles/zsh/custom/aliases.zsh\"  --preview-window nohidden"
@@ -184,3 +198,5 @@ alias ebprod='eas build:run --profile production'
 # Android emulator appearance
 alias aemdark="adb shell 'cmd uimode night yes'"
 alias aemlight="adb shell 'cmd uimode night no'"
+
+alias audio="SwitchAudioSource -s \$(SwitchAudioSource -a | fzf)"
