@@ -1,0 +1,137 @@
+#!/usr/bin/env zsh
+
+# Convert video files to optimized GIFs for GitHub
+#
+# Usage: togif input.mov [-o output.gif] [-f fps] [-w width]
+#
+# Examples:
+# togif docs/videos/demo.mov                    # Basic conversion
+# togif docs/videos/demo.mov -o assets/tutorial.gif  # Custom output name
+# togif docs/videos/demo.mov -f 15 -w 1024     # Higher quality
+# togif docs/videos/demo.mov -f 8 -w 480       # Lower file size
+# togif docs/videos/demo.mov -f 15             # Just change fps
+#
+# Defaults: fps=10, width=720
+
+set -e
+
+DEFAULT_FPS=30
+DEFAULT_WIDTH=720
+
+if ! command -v ffmpeg &> /dev/null; then
+    echo "❌ Error: ffmpeg is not installed"
+    echo "Install with: brew install ffmpeg"
+    exit 1
+fi
+
+flag_help=""
+output_file=""
+fps=""
+width=""
+usage=(
+    "togif [ -h | --help ]"
+    "togif input.mov [ -o | --output output.gif ] [ -f | --fps N ] [ -w | --width N ]"
+)
+
+zmodload zsh/zutil
+zparseopts -D -F -K -- \
+    {h,-help}=flag_help \
+    {o,-output}:=output_file \
+    {f,-fps}:=fps \
+    {w,-width}:=width || exit 1
+
+[[ -n "$flag_help" ]] && { printf '%s\n' "${usage[@]}" && exit 0; }
+
+# Debug zparseopts results
+echo "DEBUG: All args: $@"
+echo "DEBUG: fps='$fps' width='$width' output_file='$output_file'"
+echo "DEBUG: Remaining args after zparseopts: $@"
+
+INPUT_FILE="$1"
+OUTPUT_FILE="${output_file:-${INPUT_FILE%.*}.gif}"
+FPS="${fps:-$DEFAULT_FPS}"
+WIDTH="${width:-$DEFAULT_WIDTH}"
+
+if ! [[ "$FPS" =~ ^[0-9]+$ ]] || [ "$FPS" -lt 1 ] || [ "$FPS" -gt 60 ]; then
+    echo "❌ Error: FPS must be a number between 1-60 (got: $FPS)"
+    exit 1
+fi
+
+if ! [[ "$WIDTH" =~ ^[0-9]+$ ]] || [ "$WIDTH" -lt 100 ] || [ "$WIDTH" -gt 4000 ]; then
+    echo "❌ Error: Width must be a number between 100-4000 (got: $WIDTH)"
+    exit 1
+fi
+
+if [ -z "$INPUT_FILE" ]; then
+    echo "🎬 Video to GIF Converter"
+    echo ""
+    echo "Usage: $0 input.mov [-o output.gif] [-f fps] [-w width]"
+    echo ""
+    echo "Examples:"
+    echo "  $0 video.mov                          # Convert to video.gif"
+    echo "  $0 video.mov -o demo.gif              # Convert to demo.gif"
+    echo "  $0 video.mov -f 15                    # 15 fps, auto output name"
+    echo "  $0 video.mov -f 15 -w 1024            # 15 fps, 1024px width"
+    echo "  $0 video.mov -o demo.gif -f 15 -w 1024  # All options"
+    echo ""
+    echo "Options:"
+    echo "  -h, --help     Show this help"
+    echo "  -o, --output   Output file path"
+    echo "  -f, --fps      Frames per second (1-60, default: $DEFAULT_FPS)"
+    echo "  -w, --width    Width in pixels (100-4000, default: $DEFAULT_WIDTH)"
+    exit 1
+fi
+
+if [ ! -f "$INPUT_FILE" ]; then
+    echo "❌ Error: Input file '$INPUT_FILE' not found"
+    exit 1
+fi
+
+if [ -f "$OUTPUT_FILE" ]; then
+    echo "⚠️  Warning: Output file '$OUTPUT_FILE' already exists"
+    read -p "Overwrite? (y/N): " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "❌ Conversion cancelled"
+        exit 1
+    fi
+fi
+
+OUTPUT_DIR="$(dirname "$OUTPUT_FILE")"
+if [ ! -d "$OUTPUT_DIR" ]; then
+    echo "❌ Error: Output directory '$OUTPUT_DIR' does not exist"
+    exit 1
+fi
+
+if [ ! -w "$OUTPUT_DIR" ]; then
+    echo "❌ Error: Cannot write to output directory '$OUTPUT_DIR'"
+    exit 1
+fi
+
+echo "🎬 Converting video to GIF..."
+echo "📄 Input:  $INPUT_FILE"
+echo "📄 Output: $OUTPUT_FILE"
+echo "⚡ FPS:    $FPS"
+echo "📐 Width:  ${WIDTH}px"
+echo ""
+
+# Convert with optimized settings (two-pass with palette)
+echo "🎨 Generating color palette..."
+PALETTE=$(mktemp "${TMPDIR:-/tmp}/togif_palette_XXXXXX").png
+ffmpeg -v warning -i "$INPUT_FILE" -vf "fps=$FPS,scale=$WIDTH:-1:flags=lanczos,palettegen" -update 1 -frames:v 1 -y "$PALETTE"
+
+echo "🎬 Converting to GIF..."
+ffmpeg -v warning -i "$INPUT_FILE" -i "$PALETTE" -lavfi "fps=$FPS,scale=$WIDTH:-1:flags=lanczos[x];[x][1:v]paletteuse" -loop 0 -y "$OUTPUT_FILE"
+
+rm -f "$PALETTE"
+
+if [ -f "$OUTPUT_FILE" ]; then
+    FILE_SIZE=$(du -h "$OUTPUT_FILE" | cut -f1)
+    echo ""
+    echo "✅ Conversion complete!"
+    echo "📦 Size: $FILE_SIZE"
+    echo "📍 Location: $OUTPUT_FILE"
+else
+    echo "❌ Conversion failed"
+    exit 1
+fi
