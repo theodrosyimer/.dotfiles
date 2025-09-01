@@ -101,6 +101,8 @@ export LPX_COMPOS="$LPX/Compos"
 
 export AUDIO_LIBRARIES="/Volumes/Librairies Samples"
 export VIDEOS="$AUDIO_LIBRARIES/Videos"
+# export VIDEOS="$HOME/Movies"
+export VIDEOS_INBOX="$HOME/Movies/_inbox"
 
 export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PROJECTS"/oss "$CODE_PROJECTS"/oss/@theodrosyimer/ "$CODE_PROJECTS"/oss/@theodrosyimer/cli "$CODE_PERSONAL" "$CODE_WORK"/** "$JS_SANDBOX" "$JS_SANDBOX"/* "$CODE_REFS" "$CODE_TEMPLATES" "$CODE_TEMPLATES"/* "$CODE_TEMPLATES"/dev/* "$CODE_COURSES" "$DOTFILES" "$CODE/design" "$HOME")
 
