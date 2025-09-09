@@ -3,9 +3,10 @@ function fm() {
 
   # bind actions
   local find_videos="ctrl-f:reload(find {} -type f -iname \"*.mp4\")"
-  local exit="esc:execute-silent()+close"
-  local got_to_selected_dir="ctrl-d:execute(echo {})+accept"
-  local open_editor="enter:execute-silent("$EDITOR" {})+accept"
+  local exit="esc:abort+close"
+  local open_editor_or_mkdir="enter:accept-or-print-query"
+  local go_to_selected_dir="ctrl-d:execute(echo {})+accept"
+  local edit_path="ctrl-e:replace-query"
   local copy_in_current_dir="ctrl-i:execute-silent(cp -Ri {} .)+close"
   local go_back_start="ctrl-r:reload(echo \"$dir_list\")"
   local go_back_start_change_prompt="ctrl-r:+change-prompt()"
@@ -16,8 +17,9 @@ function fm() {
     fzf \
     --bind "$find_videos" \
     --bind "$exit" \
-    --bind "$got_to_selected_dir" \
-    --bind "$open_editor" \
+    --bind "$go_to_selected_dir" \
+    --bind "$open_editor_or_mkdir" \
+    --bind "$edit_path" \
     --bind "$copy_in_current_dir" \
     --bind "$go_back_start" \
     --bind "$go_back_start_change_prompt" \
@@ -27,15 +29,17 @@ function fm() {
     )"
 
   if [[ -d "$selected" ]]; then
-    builtin cd "$selected" && return 0
+    "$EDITOR" "$selected" && z "$selected" && return 0
+    # if [[ $2 == "-l" ]]; then
+    #   echo "$selected"
+    # fi
   fi
 
-  # if [[ ! -d "$selected" ]]; then
-  #   mkdir -p "$selected" && builtin cd "$selected" && return 0
-  # fi
-
-  if [[ -f "$selected" ]]; then
-    open "$selected" && return 0
+  if [[ -n "$selected" ]]; then
+    mkdir -p "$selected" && z "$selected" && return 0
+    # if [[ $2 == "-l" ]]; then
+    #   echo "$selected"
+    # fi
   fi
 
   return 0
