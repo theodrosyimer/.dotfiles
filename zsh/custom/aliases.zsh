@@ -11,7 +11,6 @@ alias mv='mv -i'
 alias rm='trash'
 alias rmdir='trash'
 
-
 alias ez='exec zsh'
 alias sz='source ~/.zshrc'
 
@@ -51,17 +50,20 @@ alias ghw='gh pr create --web' # Create a new GitHub pull request (using GitHub 
 alias ghd='gh pr create -d'    # Create a new draft GitHub pull request (using GitHub CLI)
 alias ghv='gh pr view --web'   # View a GitHub pull request (using GitHub CLI)
 alias ghr='gh repo view --web' # View a GitHub repository (using GitHub CLI)
-alias ghc='gh repo clone' # Clone a GitHub repository (using GitHub CLI)
+alias ghc='gh repo clone "$(chrome_get_front_window_url)"' # Clone a GitHub repository (using GitHub CLI)
+# alias ghc='gh repo clone "$(chrome_get_front_window_url)" "$(fzf_code_projects -l)"' # Clone a GitHub repository (using GitHub CLI)
+
 # alias gb="git branch --sort=-committerdate | fzf | xargs git checkout" # Checkout a Git branch (using fzf to select the branch interactively)
 # alias gbr="git branch -r --sort=committerdate | sed 's/^[[:space:]]*[[:alnum:]_-]*\///' | grep -v 'HEAD ->' | fzf | xargs git checkout" # Checkout a remote Git branch (using fzf to select the branch interactively)
 # alias gbd="git branch | fzf -m | xargs git branch -D" # Delete a Git branch (using fzf to select the branch interactively)
 # alias gbdm="git branch --merged origin/main | grep -v 'main' | xargs git branch -d" # Delete a Git branch that is merged to main (using fzf to select the branch interactively)
 
 # Package managers + npq (https://github.com/lirantal/npq)
+alias inpq="npm i -g npq-hero"
 alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
 alias pn='pnpm'
 alias b='bun'
-# alias npm="npq-hero"
+alias npm="npq-hero"
 alias n='npm'
 alias yarn="NPQ_PKG_MGR=yarn npq-hero"
 alias y='yarn'
@@ -199,4 +201,4 @@ alias ebprod='eas build:run --profile production'
 alias aemdark="adb shell 'cmd uimode night yes'"
 alias aemlight="adb shell 'cmd uimode night no'"
 
-alias audio="SwitchAudioSource -s \$(SwitchAudioSource -a | fzf)"
+alias audio="SwitchAudioSource -s \"\$(SwitchAudioSource -a | fzf)\""
