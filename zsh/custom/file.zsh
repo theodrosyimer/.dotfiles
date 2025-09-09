@@ -1,4 +1,9 @@
-alias dirsls="get_dirs_list"
+alias dls="get_dirs_list"
+alias dn="get_parent_dirname"
+alias fxt="get_extension"
+alias fbn="get_basename_no_ext"
+alias fex="isRegularFileExist"
+alias fei="isFileEmpty"
 
 function getExtension() {
   echo "${1##*.}"
