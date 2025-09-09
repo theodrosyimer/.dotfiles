@@ -5,6 +5,11 @@
 
 function fzf_code_projects() {
   local dir_list="$(find "${CODE_DIRS[@]}" -mindepth 1 -maxdepth 1 -type d)"
+
+  if [[ $2 == "-l" ]]; then
+    fm "${dir_list[@]}" -l
+  fi
+
   fm "${dir_list[@]}"
 
   # Reset the prompt if zle is enabled
@@ -16,6 +21,14 @@ function fzf_code_projects() {
 zle -N fzf_code_projects
 bindkey -v
 bindkey "^[f" fzf_code_projects
+
+# "zf ~/Documents" goes there and lists the files with a preview
+function zf() {
+  local dir_list="$(find ${1:-.} -type d -mindepth 1 -maxdepth 1 | sort | fzf --preview "tree {}")"
+  [[ -z "$dir_list" ]] && return
+
+  z "$dir_list"
+}
 
 function nt() {
   local dir_list="$(find $NOTES -type f -regex ".*.md$" | sort -r --parallel 4 | fzf --preview "bat --color=always --style=numbers {}" \
