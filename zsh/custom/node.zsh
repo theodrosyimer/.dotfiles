@@ -136,3 +136,15 @@ function nodelts_to_nvmrc() {
   local node_lts_version_without_v=$(echo ${node_lts_version:1})
   echo $node_lts_version_without_v > .nvmrc
 }
+
+function nclean() {
+  rm -rf node_modules
+  npm cache clean --force
+  npm install
+}
+
+function pclean() {
+  rm -rf node_modules
+  npm cache clean --force
+  pnpm install
+}
