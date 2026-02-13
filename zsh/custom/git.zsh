@@ -12,14 +12,16 @@ alias gac='git_add_all_commit'
 alias gacp='git_add_all_commit_push'
 alias gc='git_clone_from_front_tab_chrome'
 alias gccl='git_clone_clean_from_front_tab_chrome'
-alias gccb='git_clone_clean_from_cb'
+alias gcclb='git_clone_clean_from_cb'
 alias gcb='git_clone_with_all_branches'
-alias gurl=git_get_remote_url_from_cwd_as_ssh
+alias gssh=git_get_remote_url_from_cwd_as_ssh
+alias ghttp='git_get_remote_url_from_cwd_as_https'
 alias glf="git log --oneline | fzf --multi --preview 'git show {+1}'"
 alias groot="git rev-parse --git-dir"
 alias gstsb="git status -sb"
 alias gdis="git_disable_signing"
 alias gfp="git fetch origin && git pull"
+alias gpf="git push --force-with-lease --force-if-includes"
 
 source "$ZSH_CUSTOM/colorize.zsh"
 
