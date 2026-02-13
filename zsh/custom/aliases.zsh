@@ -32,8 +32,10 @@ alias vim=nvim
 alias v=nvim
 alias c='open -b com.microsoft.VSCode'
 alias c.='c .'
-alias cc='open -b com.todesktop.230313mzl4w4u92' # Cursor
-alias cc.='cc .'
+alias cs='open -b com.todesktop.230313mzl4w4u92' # Cursor
+alias cs.='cs .'
+
+alias cc='claude'
 
 alias sd='fzf_code_projects'
 # alias ccd='cc "$(eza --absolute $CODE_DIRS | fzf)" && z $_'
@@ -59,11 +61,11 @@ alias ghc='gh repo clone "$(chrome_get_front_window_url)"' # Clone a GitHub repo
 # alias gbdm="git branch --merged origin/main | grep -v 'main' | xargs git branch -d" # Delete a Git branch that is merged to main (using fzf to select the branch interactively)
 
 # Package managers + npq (https://github.com/lirantal/npq)
-alias inpq="npm i -g npq-hero"
+alias inpq="npm i -g npq"
 alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
 alias pn='pnpm'
 alias b='bun'
-alias npm="npq-hero"
+alias npm="npq-hero || npm"
 alias n='npm'
 alias yarn="NPQ_PKG_MGR=yarn npq-hero"
 alias y='yarn'
