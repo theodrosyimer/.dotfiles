@@ -153,3 +153,6 @@ typings/
 .specstory
 .cursorrules
 .cursorindexingignore
+
+# Claude Code
+.claude.json
