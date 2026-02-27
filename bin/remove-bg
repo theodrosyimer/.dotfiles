@@ -1,0 +1,67 @@
+#!/usr/bin/env uv run --script
+# /// script
+# dependencies = ["rembg[cpu]", "pillow"]
+# ///
+import argparse
+from pathlib import Path
+from PIL import Image
+from rembg import remove, new_session
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Remove background from image(s)")
+    parser.add_argument("input", help="Input image file or directory")
+    parser.add_argument("-o", "--output", help="Output file or directory (default: alongside input, suffixed _no_bg)")
+    return parser.parse_args()
+
+def is_image(path: Path) -> bool:
+    try:
+        with Image.open(path) as img:
+            img.verify()
+        return True
+    except Exception:
+        return False
+
+def process_file(input_path: Path, output_path: Path, session) -> None:
+    output = remove(Image.open(input_path), session=session)
+    output.save(output_path)
+    print(f"Saved: {output_path}")
+
+def main():
+    args = parse_args()
+    input_path = Path(args.input)
+
+    if not input_path.exists():
+        print(f"Error: '{input_path}' not found")
+        raise SystemExit(1)
+
+    session = new_session()
+
+    if input_path.is_dir():
+        files = [f for f in input_path.iterdir() if f.is_file() and is_image(f)]
+        if not files:
+            print(f"Error: no supported images found in '{input_path}'")
+            raise SystemExit(1)
+
+        out_dir = Path(args.output) if args.output else input_path
+        out_dir.mkdir(parents=True, exist_ok=True)
+
+        for f in files:
+            out = out_dir / f.with_stem(f.stem + "_no_bg").with_suffix(".png").name
+            try:
+                process_file(f, out, session)
+            except Exception as e:
+                print(f"Error processing '{f}': {e}")
+    else:
+        if not is_image(input_path):
+            print(f"Error: '{input_path}' is not a supported image")
+            raise SystemExit(1)
+
+        out = Path(args.output) if args.output else input_path.with_stem(input_path.stem + "_no_bg").with_suffix(".png")
+        try:
+            process_file(input_path, out, session)
+        except Exception as e:
+            print(f"Error: {e}")
+            raise SystemExit(1)
+
+if __name__ == "__main__":
+    main()

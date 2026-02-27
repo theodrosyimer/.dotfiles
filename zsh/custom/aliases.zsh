@@ -204,3 +204,5 @@ alias aemdark="adb shell 'cmd uimode night yes'"
 alias aemlight="adb shell 'cmd uimode night no'"
 
 alias audio="SwitchAudioSource -s \"\$(SwitchAudioSource -a | fzf)\""
+
+alias rmbg='remove-bg'
