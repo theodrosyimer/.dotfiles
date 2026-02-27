@@ -1,4 +1,4 @@
-source $HOME/.dotfiles/zsh/.extras.zsh
+source $HOME/.dotfiles/zsh/.zextras.zsh
 
 export EDITOR='cursor'
 # export VISUAL='code -n -w'

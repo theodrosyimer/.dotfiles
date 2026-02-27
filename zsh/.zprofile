@@ -1,6 +1,3 @@
-# Amazon Q pre block. Keep at the top of this file.
-[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zprofile.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zprofile.pre.zsh"
-
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
 export PATH="$HOME/.fnm:$PATH"
@@ -10,7 +7,7 @@ export FNM_COREPACK_ENABLED=true
 # export PATH="/opt/homebrew/opt/*/bin:$PATH"
 
 # Remove an annoying warning
-export NODE_OPTIONS='--disable-warning=ExperimentalWarning'
+# export NODE_OPTIONS='--disable-warning=ExperimentalWarning'
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"
@@ -102,11 +99,9 @@ export LPX_COMPOS="$LPX/Compos"
 export AUDIO_LIBRARIES="/Volumes/Librairies Samples"
 export VIDEOS="$AUDIO_LIBRARIES/Videos"
 # export VIDEOS="$HOME/Movies"
-export VIDEOS_INBOX="$HOME/Movies/_inbox"
+export VIDEOS_INBOX="$HOME/Movies/@inbox"
 
 export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PROJECTS"/oss "$CODE_PROJECTS"/oss/@theodrosyimer/ "$CODE_PROJECTS"/oss/@theodrosyimer/cli "$CODE_PERSONAL" "$CODE_WORK"/** "$JS_SANDBOX" "$JS_SANDBOX"/* "$CODE_REFS" "$CODE_TEMPLATES" "$CODE_TEMPLATES"/* "$CODE_TEMPLATES"/dev/* "$CODE_COURSES" "$DOTFILES" "$CODE/design" "$HOME")
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Amazon Q post block. Keep at the bottom of this file.
-[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zprofile.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zprofile.post.zsh"

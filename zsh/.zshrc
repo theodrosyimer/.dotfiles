@@ -1,6 +1,3 @@
-# Amazon Q pre block. Keep at the top of this file.
-[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh"
-
 # Use to profile my shell performance,
 # need to uncomment the last line of this file
 # zmodload zsh/zprof
@@ -18,6 +15,7 @@ plugins=(
   git
   macos
   zsh-completions
+  you-should-use
   zsh-autosuggestions
   zsh-syntax-highlighting
   fzf-tab
@@ -107,6 +105,3 @@ fpath=(/Users/ty/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
-
-# Amazon Q post block. Keep at the bottom of this file.
-[[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
