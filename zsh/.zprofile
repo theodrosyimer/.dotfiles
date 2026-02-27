@@ -53,7 +53,7 @@ export PATH="$PATH:$HOME/.js"
 # Script Kit
 export PATH="$PATH:$HOME/.kit/bin"
 export PATH="$PATH:$HOME/.kenv/bin"
-export PATH="$PATH:$HOME/.knode/bin"
+# export PATH="$PATH:$HOME/.knode/bin"
 
 ### Paths i use for my automation
 export DOTFILES="$HOME/.dotfiles"
