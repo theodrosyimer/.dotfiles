@@ -30,6 +30,15 @@ export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
+# curl
+export PATH="/opt/homebrew/opt/curl/bin:$PATH"
+export LDFLAGS="-L/opt/homebrew/opt/curl/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/curl/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/curl/lib/pkgconfig"
+
+# coreutils
+export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
+
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
