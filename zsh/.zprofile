@@ -1,7 +1,7 @@
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
 export PATH="$HOME/.fnm:$PATH"
-export FNM_COREPACK_ENABLED=true
+export FNM_COREPACK_ENABLED=false
 
 # Homebrew
 # export PATH="/opt/homebrew/opt/*/bin:$PATH"
