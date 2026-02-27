@@ -17,5 +17,4 @@ ansible/*
 nvim/undo
 nvim.bak
 git/.gitconfig.local
-
-!obsidian
+obsidian
