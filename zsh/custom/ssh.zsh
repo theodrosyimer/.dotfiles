@@ -6,7 +6,7 @@ source "$ZSH_CUSTOM/colorize.zsh"
 # Creates an Ed25519 SSH key, starts the ssh-agent, and adds the key.
 # ! Works on macOS and Linux (should work for Windows using WSL2 or Git Bash)
 function ssh_create_ssh_key() {
-  local ssh_label ssh_key_path ssh_key_path_pub comment_sanitized default_filename
+  local ssh_label ssh_key_path ssh_key_path_pub label_sanitized default_filename
   local ssh_dir="$HOME/.ssh"
 
   # Safety prompt before modifying SSH directory
@@ -22,14 +22,14 @@ function ssh_create_ssh_key() {
   mkdir -p "$ssh_dir"
   chmod 700 "$ssh_dir"
 
-  # Prompt for SSH key comment
+  # Prompt for SSH key label
   read -r "ssh_label?Enter a label for your new SSH key (e.g., user@hostname): "
   if [[ -z "$ssh_label" ]]; then
-    printf "\n%s" "Error: SSH key comment cannot be empty." >&2
+    printf "\n%s" "Error: SSH key label cannot be empty." >&2
     return 1
   fi
 
-  # Suggest a filename based on the comment
+  # Suggest a filename based on the label
   label_sanitized=$(echo "$ssh_label" | tr -c '[:alnum:]_.' '_') # Sanitize label for filename
   default_filename="${label_sanitized%?}_id_ed25519"
   read -r "ssh_key_path?Enter the path and filename for the new key [${default_filename}]: "
