@@ -24,10 +24,28 @@ function chmodall() {
     "[ =all | a=all | u=user | g=group | o=others ]"
   )
 
-  if [[ -z $who ]] || [[ $who == "u" ]] || [[ $who == "g" ]] || [[ $who == "o" ]] || [[ $who == "a" ]]; then
-    'fd' --base-directory "$dir" -x chmod $who+x {}
-  else
-    print -l $usage
-  fi
+  # if [[ -z $who ]] || [[ $who == "u" ]] || [[ $who == "g" ]] || [[ $who == "o" ]] || [[ $who == "a" ]]; then
+  #   'fd' --base-directory "$dir" -x chmod $who+x {}
+  # else
+  #   print -l $usage
+  # fi
+
+# case $who in
+#   u)
+#     'fd' --base-directory "$dir" -x chmod u+x {}
+#   ;;
+#   g)
+#     'fd' --base-directory "$dir" -x chmod g+x {}
+#   ;;
+#   o)
+#     'fd' --base-directory "$dir" -x chmod o+x {}
+#   ;;
+#   a)
+#     'fd' --base-directory "$dir" -x chmod a+x {}
+#   ;;
+#   *)
+#     print -l $usage
+#   ;;
+# esac
 
 }
