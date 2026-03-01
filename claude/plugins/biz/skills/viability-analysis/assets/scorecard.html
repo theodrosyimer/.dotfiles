@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viability Scorecard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0f0f1a; color: #e0e0e0; min-height: 100vh; padding: 2rem; }
+  .container { max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; color: #fff; margin-bottom: 0.25rem; }
+  .subtitle { color: #888; font-size: 0.9rem; margin-bottom: 2rem; }
+  .project-input { background: transparent; border: none; border-bottom: 1px solid #333; color: #7c8cf8; font-size: 0.9rem; padding: 0.2rem 0; outline: none; width: 200px; }
+  .project-input:focus { border-bottom-color: #7c8cf8; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+  @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+  .chart-container { background: #1a1a2e; border-radius: 12px; padding: 1.5rem; display: flex; align-items: center; justify-content: center; }
+  .scores-container { background: #1a1a2e; border-radius: 12px; padding: 1.5rem; overflow-y: auto; max-height: 420px; }
+  .score-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid #252540; }
+  .score-row:last-child { border-bottom: none; }
+  .score-num { color: #555; font-size: 0.75rem; width: 18px; text-align: right; flex-shrink: 0; }
+  .score-label { flex: 1; font-size: 0.82rem; color: #ccc; line-height: 1.3; }
+  .score-weight { color: #666; font-size: 0.7rem; width: 28px; text-align: center; flex-shrink: 0; }
+  .score-input { width: 48px; background: #252540; border: 1px solid #333; border-radius: 6px; color: #7c8cf8; font-size: 1rem; text-align: center; padding: 0.35rem; outline: none; -moz-appearance: textfield; }
+  .score-input::-webkit-outer-spin-button, .score-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .score-input:focus { border-color: #7c8cf8; box-shadow: 0 0 0 2px rgba(124,140,248,0.2); }
+  .score-weighted { width: 32px; text-align: center; font-size: 0.85rem; color: #888; flex-shrink: 0; }
+  .decision-bar { background: #1a1a2e; border-radius: 12px; padding: 1.5rem; text-align: center; margin-bottom: 2rem; }
+  .decision-score { font-size: 3rem; font-weight: 700; color: #fff; }
+  .decision-max { font-size: 1rem; color: #555; }
+  .decision-label { font-size: 1.4rem; font-weight: 600; margin-top: 0.5rem; }
+  .decision-action { color: #888; font-size: 0.85rem; margin-top: 0.5rem; }
+  .progress-bar { height: 6px; background: #252540; border-radius: 3px; margin-top: 1rem; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease, background 0.5s ease; }
+  .thresholds { display: flex; justify-content: space-between; margin-top: 0.4rem; font-size: 0.65rem; color: #555; }
+  .legend { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: #888; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Pre-Build Viability Scorecard</h1>
+  <div class="subtitle">Project: <input type="text" class="project-input" id="projectName" placeholder="Enter project name" /></div>
+
+  <div class="decision-bar" id="decisionBar">
+    <div><span class="decision-score" id="totalScore">0</span><span class="decision-max"> / 110</span></div>
+    <div class="decision-label" id="decisionLabel">Enter scores to see decision</div>
+    <div class="decision-action" id="decisionAction"></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="thresholds">
+      <span>0</span><span>44 — Kill</span><span>66 — Pivot</span><span>88 — Cond. Go</span><span>110</span>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#ef5350"></div>Kill (&lt;40%)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ffa726"></div>Pivot (40-59%)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ffee58"></div>Conditional (60-79%)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#66bb6a"></div>Strong Go (80%+)</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="chart-container">
+      <canvas id="radarChart" width="380" height="380"></canvas>
+    </div>
+    <div class="scores-container" id="scoresContainer"></div>
+  </div>
+</div>
+
+<script>
+const dimensions = [
+  { id: 1, label: 'Problem severity', short: 'Problem', weight: 3 },
+  { id: 2, label: 'Persona clarity', short: 'Persona', weight: 2 },
+  { id: 3, label: 'Market size', short: 'Market', weight: 2 },
+  { id: 4, label: 'Competitive gap', short: 'Comp. Gap', weight: 3 },
+  { id: 5, label: 'Differentiation', short: 'Differentiator', weight: 2 },
+  { id: 6, label: 'Business model', short: 'Biz Model', weight: 3 },
+  { id: 7, label: 'Acquisition channel', short: 'Acquisition', weight: 2 },
+  { id: 8, label: 'Technical feasibility', short: 'Tech', weight: 1 },
+  { id: 9, label: 'Founder-market fit', short: 'Founder Fit', weight: 2 },
+  { id: 10, label: 'Solo founder viability', short: 'Solo Viable', weight: 2 },
+];
+
+const scores = new Array(10).fill(0);
+const container = document.getElementById('scoresContainer');
+
+dimensions.forEach((dim, i) => {
+  const row = document.createElement('div');
+  row.className = 'score-row';
+  row.innerHTML = `
+    <span class="score-num">${dim.id}</span>
+    <span class="score-label">${dim.label}</span>
+    <span class="score-weight">×${dim.weight}</span>
+    <input type="number" class="score-input" min="1" max="5" id="score-${i}" placeholder="—" />
+    <span class="score-weighted" id="weighted-${i}">—</span>
+  `;
+  container.appendChild(row);
+
+  const input = row.querySelector('.score-input');
+  input.addEventListener('input', () => {
+    let val = parseInt(input.value);
+    if (val > 5) { val = 5; input.value = 5; }
+    if (val < 1 && input.value !== '') { val = 1; input.value = 1; }
+    scores[i] = isNaN(val) ? 0 : val;
+    const weighted = scores[i] * dim.weight;
+    document.getElementById(`weighted-${i}`).textContent = scores[i] ? weighted : '—';
+    updateAll();
+  });
+});
+
+const ctx = document.getElementById('radarChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'radar',
+  data: {
+    labels: dimensions.map(d => d.short),
+    datasets: [{
+      label: 'Score',
+      data: scores.map(() => 0),
+      backgroundColor: 'rgba(124, 140, 248, 0.15)',
+      borderColor: '#7c8cf8',
+      borderWidth: 2,
+      pointBackgroundColor: '#7c8cf8',
+      pointBorderColor: '#7c8cf8',
+      pointRadius: 4,
+    }, {
+      label: 'Max (5)',
+      data: scores.map(() => 5),
+      backgroundColor: 'transparent',
+      borderColor: 'rgba(255,255,255,0.08)',
+      borderWidth: 1,
+      borderDash: [4, 4],
+      pointRadius: 0,
+    }]
+  },
+  options: {
+    responsive: false,
+    scales: {
+      r: {
+        min: 0, max: 5,
+        ticks: { stepSize: 1, color: '#555', backdropColor: 'transparent', font: { size: 10 } },
+        grid: { color: 'rgba(255,255,255,0.06)' },
+        angleLines: { color: 'rgba(255,255,255,0.06)' },
+        pointLabels: { color: '#999', font: { size: 10 } }
+      }
+    },
+    plugins: {
+      legend: { display: false }
+    }
+  }
+});
+
+function updateAll() {
+  const total = dimensions.reduce((sum, dim, i) => sum + scores[i] * dim.weight, 0);
+  const pct = total / 110;
+
+  document.getElementById('totalScore').textContent = total;
+
+  const fill = document.getElementById('progressFill');
+  fill.style.width = (pct * 100) + '%';
+
+  let color, label, action;
+  if (total === 0) {
+    color = '#333'; label = 'Enter scores to see decision'; action = '';
+  } else if (total >= 88) {
+    color = '#66bb6a'; label = '🟢 STRONG GO'; action = 'Proceed to SaaS Intake Questionnaire immediately';
+  } else if (total >= 66) {
+    color = '#ffee58'; label = '🟡 CONDITIONAL GO'; action = 'Address weak areas before committing. Re-run weak phases.';
+  } else if (total >= 44) {
+    color = '#ffa726'; label = '🟠 PIVOT'; action = 'Core idea has potential but needs significant rethinking.';
+  } else {
+    color = '#ef5350'; label = '🔴 KILL'; action = 'Save your time. Move to next idea. Keep the research.';
+  }
+
+  fill.style.background = color;
+  document.getElementById('decisionLabel').style.color = color;
+  document.getElementById('decisionLabel').textContent = label;
+  document.getElementById('decisionAction').textContent = action;
+
+  chart.data.datasets[0].data = scores.map(s => s || 0);
+  chart.data.datasets[0].borderColor = color === '#333' ? '#7c8cf8' : color;
+  chart.data.datasets[0].pointBackgroundColor = color === '#333' ? '#7c8cf8' : color;
+  chart.data.datasets[0].backgroundColor = (color === '#333' ? 'rgba(124,140,248,0.15)' : color.replace(')', ',0.12)').replace('rgb', 'rgba'));
+  chart.update();
+}
+</script>
+</body>
+</html>

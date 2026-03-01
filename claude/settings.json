@@ -1,0 +1,59 @@
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_TELEMETRY": "1"
+  },
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Read(~/.zshrc)"
+    ],
+    "deny": [
+      "Bash(curl:*)",
+      "Read(**/.env)",
+      "Read(**/*.key)",
+      "Read(**/*.pem)",
+      "Read(**/secrets/**)",
+      "Read(**/credentials/**)",
+      "Read(**/.aws/**)",
+      "Read(**/.ssh/**)"
+    ]
+  },
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if jq -e '.tool_input.command | test(\"/bin/rm(dir)?\\\\b\")' > /dev/null; then echo 'Use rm/rmdir (aliased to trash) instead of /bin/rm or /bin/rmdir' >&2; exit 2; fi"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bun x ccusage statusline --visual-burn-rate emoji",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "playground@claude-plugins-official": true,
+    "biz@ty": true,
+    "commit@ty": true,
+    "context-optimizer@ty": true,
+    "skill-evaluator@ty": true,
+    "api-docs@ty": true
+  },
+  "extraKnownMarketplaces": {
+    "ty": {
+      "source": {
+        "source": "directory",
+        "repo": "theodrosyimer/dotfiles",
+        "path": "/Users/ty/.dotfiles/claude"
+      }
+    }
+  }
+}

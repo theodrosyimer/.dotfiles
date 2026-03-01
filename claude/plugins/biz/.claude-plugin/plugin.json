@@ -1,0 +1,22 @@
+{
+  "name": "biz",
+  "version": "0.1.0",
+  "description": "A Claude Code plugin for solo founders that turns business ideas into launch-ready plans — validation, naming, marketing, legal, and growth strategy.",
+  "author": {
+    "name": "theodrosyimer"
+  },
+  "homepage": "https://github.com/theodrosyimer/dotfiles/claude/plugins/biz#README.md",
+  "repository": "https://github.com/theodrosyimer/dotfiles/claude/plugins/biz",
+  "keywords": [
+    "skill",
+    "business",
+    "plan",
+    "idea",
+    "saas",
+    "application",
+    "founder",
+    "legal",
+    "marketing"
+  ],
+  "license": "MIT"
+}

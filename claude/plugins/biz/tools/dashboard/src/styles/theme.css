@@ -1,0 +1,138 @@
+@import 'tailwindcss';
+
+/* ── Design System: biz dashboard ── */
+:root {
+  /* Light mode (default) */
+  --bg-page: #f7f7fb;
+  --bg-card: #ffffff;
+  --bg-card-alt: #f9fafb;
+  --bg-inset: #f0f2ff;
+  --text-primary: #1a1a2e;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --border: #e5e7eb;
+  --border-subtle: #f0f0f5;
+
+  /* Accent: indigo */
+  --accent: #5d6dd9;
+  --accent-light: #e8ebff;
+  --accent-dark: #4a58b5;
+  --accent-glow: rgba(93, 109, 217, 0.12);
+
+  /* Semantic */
+  --green: #22c55e;
+  --green-bg: #f0fdf4;
+  --yellow: #f59e0b;
+  --yellow-bg: #fffbeb;
+  --orange: #f97316;
+  --orange-bg: #fff7ed;
+  --red: #ef4444;
+  --red-bg: #fef2f2;
+  --blue: #3b82f6;
+
+  /* Surfaces */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* Typography */
+  --font-display: 'Poppins', system-ui, sans-serif;
+  --font-body: 'Poppins', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+[data-theme='dark'] {
+  --bg-page: #0f0f1a;
+  --bg-card: #1a1a2e;
+  --bg-card-alt: #16163a;
+  --bg-inset: #252545;
+  --text-primary: #e0e0e0;
+  --text-secondary: #888899;
+  --text-tertiary: #666677;
+  --border: #2a2a45;
+  --border-subtle: #222240;
+
+  --accent: #7c8cf8;
+  --accent-light: #2a2a55;
+  --accent-dark: #6b7be5;
+  --accent-glow: rgba(124, 140, 248, 0.15);
+
+  --green-bg: rgba(34, 197, 94, 0.1);
+  --yellow-bg: rgba(245, 158, 11, 0.1);
+  --orange-bg: rgba(249, 115, 22, 0.1);
+  --red-bg: rgba(239, 68, 68, 0.1);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Base ── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+/* ── Markdown rendered content ── */
+.md-content h1 { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 0.75rem; color: var(--text-primary); }
+.md-content h2 { font-size: 1.25rem; font-weight: 600; margin: 1.25rem 0 0.5rem; color: var(--text-primary); }
+.md-content h3 { font-size: 1.05rem; font-weight: 600; margin: 1rem 0 0.5rem; color: var(--text-primary); }
+.md-content p { margin: 0.5rem 0; line-height: 1.7; color: var(--text-secondary); }
+.md-content ul, .md-content ol { padding-left: 1.5rem; margin: 0.5rem 0; color: var(--text-secondary); }
+.md-content li { margin: 0.25rem 0; line-height: 1.6; }
+.md-content code { font-family: var(--font-mono); font-size: 0.85em; background: var(--bg-inset); padding: 0.15em 0.4em; border-radius: 4px; }
+.md-content pre { background: var(--bg-inset); border-radius: var(--radius-md); padding: 1rem; overflow-x: auto; margin: 0.75rem 0; }
+.md-content pre code { background: none; padding: 0; }
+.md-content blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: var(--text-tertiary); font-style: italic; margin: 0.75rem 0; }
+.md-content table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.85rem; }
+.md-content th { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 2px solid var(--border); font-weight: 600; color: var(--text-primary); }
+.md-content td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
+.md-content strong { color: var(--text-primary); font-weight: 600; }
+.md-content a { color: var(--accent); text-decoration: none; }
+.md-content a:hover { text-decoration: underline; }
+
+/* ── Animations ── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-in {
+  animation: fadeInUp 0.4s ease both;
+}
+
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+.stagger-4 { animation-delay: 0.2s; }
+.stagger-5 { animation-delay: 0.25s; }
+.stagger-6 { animation-delay: 0.3s; }

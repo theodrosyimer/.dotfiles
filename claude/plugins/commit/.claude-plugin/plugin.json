@@ -1,0 +1,20 @@
+{
+  "name": "commit",
+  "version": "0.1.0",
+  "description": "A Claude Code skill for generating conventional commit messages.",
+  "author": {
+    "name": "Theodros Yimer"
+  },
+  "homepage": "https://github.com/theodrosyimer/dotfiles/claude/plugins/commit#README.md",
+  "repository": "https://github.com/theodrosyimer/dotfiles/claude/plugins/commit",
+  "keywords": [
+    "skill",
+    "git",
+    "conventional-commit",
+    "commit",
+    "commitlint",
+    "message",
+    "generator"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Persona Card</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0f0f1a; color: #e0e0e0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+  .card { background: #1a1a2e; border-radius: 16px; max-width: 520px; width: 100%; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+  .card-header { background: linear-gradient(135deg, #16213e, #1a1a3e); padding: 2rem; text-align: center; position: relative; }
+  .avatar { width: 72px; height: 72px; border-radius: 50%; background: #7c8cf8; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.8rem; color: #fff; font-weight: 700; }
+  .persona-name { font-size: 1.5rem; font-weight: 700; color: #fff; }
+  .persona-role { color: #7c8cf8; font-size: 0.9rem; margin-top: 0.25rem; }
+  .persona-context { color: #888; font-size: 0.8rem; margin-top: 0.25rem; }
+  .tag { display: inline-block; background: #252540; color: #aaa; font-size: 0.7rem; padding: 0.2rem 0.6rem; border-radius: 10px; margin: 0.5rem 0.15rem 0; }
+  .sections { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+  .section { background: #16213e; border-radius: 10px; padding: 1rem 1.25rem; }
+  .section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: #7c8cf8; margin-bottom: 0.6rem; font-weight: 600; }
+  .section-content { font-size: 0.85rem; color: #ccc; line-height: 1.5; }
+  .pain-item { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .pain-icon { color: #ef5350; flex-shrink: 0; margin-top: 0.1rem; }
+  .channel-item { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .channel-icon { color: #66bb6a; flex-shrink: 0; margin-top: 0.1rem; }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .stat { text-align: center; }
+  .stat-value { font-size: 1.3rem; font-weight: 700; color: #fff; }
+  .stat-label { font-size: 0.7rem; color: #888; margin-top: 0.15rem; }
+  .quote { font-style: italic; color: #aaa; border-left: 2px solid #7c8cf8; padding-left: 0.75rem; font-size: 0.85rem; line-height: 1.5; }
+  .editable { cursor: text; outline: none; min-height: 1em; }
+  .editable:empty::before { content: attr(data-placeholder); color: #555; }
+  .editable:focus { border-bottom: 1px dashed #7c8cf8; }
+  .edit-hint { text-align: center; color: #444; font-size: 0.7rem; padding: 0.75rem; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <div class="avatar" contenteditable="true" data-placeholder="?" title="Edit initials">?</div>
+    <div class="persona-name editable" contenteditable="true" data-placeholder="Persona Name">Persona Name</div>
+    <div class="persona-role editable" contenteditable="true" data-placeholder="Job Title / Role">Job Title / Role</div>
+    <div class="persona-context editable" contenteditable="true" data-placeholder="Company size · Industry · Location">Company size · Industry · Location</div>
+    <div>
+      <span class="tag editable" contenteditable="true" data-placeholder="segment">segment</span>
+      <span class="tag editable" contenteditable="true" data-placeholder="budget tier">budget tier</span>
+      <span class="tag editable" contenteditable="true" data-placeholder="tech comfort">tech comfort</span>
+    </div>
+  </div>
+
+  <div class="sections">
+    <div class="section">
+      <div class="section-title">🔥 Pain Points</div>
+      <div class="section-content">
+        <div class="pain-item"><span class="pain-icon">✕</span><span class="editable" contenteditable="true" data-placeholder="Primary pain point — describe the #1 frustration">Primary pain point</span></div>
+        <div class="pain-item"><span class="pain-icon">✕</span><span class="editable" contenteditable="true" data-placeholder="Secondary pain point">Secondary pain point</span></div>
+        <div class="pain-item"><span class="pain-icon">✕</span><span class="editable" contenteditable="true" data-placeholder="Third pain point">Third pain point</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📊 Impact</div>
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-value editable" contenteditable="true" data-placeholder="X hrs">X hrs</div>
+          <div class="stat-label">wasted / week</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value editable" contenteditable="true" data-placeholder="€X">€X</div>
+          <div class="stat-label">lost / month</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value editable" contenteditable="true" data-placeholder="€X-Y">€X-Y</div>
+          <div class="stat-label">budget / month</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value editable" contenteditable="true" data-placeholder="Self">Self</div>
+          <div class="stat-label">purchase authority</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">📍 Where to Find Them</div>
+      <div class="section-content">
+        <div class="channel-item"><span class="channel-icon">→</span><span class="editable" contenteditable="true" data-placeholder="Community / platform / publication #1">Channel 1</span></div>
+        <div class="channel-item"><span class="channel-icon">→</span><span class="editable" contenteditable="true" data-placeholder="Community / platform / publication #2">Channel 2</span></div>
+        <div class="channel-item"><span class="channel-icon">→</span><span class="editable" contenteditable="true" data-placeholder="Community / platform / publication #3">Channel 3</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">💬 In Their Own Words</div>
+      <div class="quote editable" contenteditable="true" data-placeholder="Paste a real quote from your research — forums, reviews, social media. This grounds the persona in reality.">"Paste a real quote from your research here"</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">🎯 Key Insight for Next Phase</div>
+      <div class="section-content editable" contenteditable="true" data-placeholder="What's the single most important finding about this persona that shapes your competitive analysis and positioning?">What's the single most important finding?</div>
+    </div>
+  </div>
+
+  <div class="edit-hint">Click any field to edit · All fields are editable</div>
+</div>
+</body>
+</html>

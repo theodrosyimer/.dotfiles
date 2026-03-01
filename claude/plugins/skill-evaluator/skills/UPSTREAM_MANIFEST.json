@@ -1,0 +1,31 @@
+{
+  "skill_name": "skill-evaluator",
+  "version": "1.0.0",
+  "last_synced": "2026-02-25",
+  "sync_reminder_days": 30,
+  "upstream": {
+    "source": "skill-creator (Anthropic built-in)",
+    "repo": "https://github.com/anthropics/skills",
+    "description": "Some scripts and agents are bundled from skill-creator for portability. They should be periodically synced to pick up improvements."
+  },
+  "bundled_files": [
+    {
+      "local_path": "eval-viewer/generate_review.py",
+      "upstream_path": "skill-creator/eval-viewer/generate_review.py",
+      "description": "HTML report generator for eval results",
+      "last_synced": "2026-02-25"
+    },
+    {
+      "local_path": "eval-viewer/viewer.html",
+      "upstream_path": "skill-creator/eval-viewer/viewer.html",
+      "description": "Interactive eval review HTML template",
+      "last_synced": "2026-02-25"
+    },
+    {
+      "local_path": "scripts/aggregate_benchmark.py",
+      "upstream_path": "skill-creator/scripts/aggregate_benchmark.py",
+      "description": "Benchmark aggregation with variance stats (mean, stddev, min, max)",
+      "last_synced": "2026-02-25"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "skill-evaluator",
+  "version": "0.1.0",
+  "description": "A Claude Code skill for evaluating the efficiency/quality of Claude Code skills.",
+  "author": {
+    "name": "Theodros Yimer"
+  },
+  "homepage": "https://github.com/theodrosyimer/dotfiles/claude/plugins/skill-evaluator#README.md",
+  "repository": "https://github.com/theodrosyimer/dotfiles/claude/plugins/skill-evaluator",
+  "keywords": [
+    "skill",
+    "evaluation",
+    "quality",
+    "efficiency",
+    "testing",
+    "benchmarking",
+    "self-improving",
+    "evals"
+  ],
+  "license": "MIT"
+}

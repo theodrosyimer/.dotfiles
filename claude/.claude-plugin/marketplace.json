@@ -1,0 +1,42 @@
+{
+  "name": "ty",
+  "owner": {
+    "name": "Theodros Yimer"
+  },
+  "metadata": {
+    "description": "My personal Claude Code plugins/skills",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "api-docs",
+      "source": "./plugins/api-docs",
+      "description": "API docs generator",
+      "version": "0.1.0"
+    },
+    {
+      "name": "biz",
+      "source": "./plugins/biz",
+      "description": "Business workflows",
+      "version": "0.1.0"
+    },
+    {
+      "name": "commit",
+      "source": "./plugins/commit",
+      "description": "Git commit workflows",
+      "version": "0.1.0"
+    },
+    {
+      "name": "context-optimizer",
+      "source": "./plugins/context-optimizer",
+      "description": "Context optimizer",
+      "version": "0.1.0"
+    },
+    {
+      "name": "skill-evaluator",
+      "source": "./plugins/skill-evaluator",
+      "description": "Skill evaluator",
+      "version": "0.1.0"
+    }
+  ]
+}

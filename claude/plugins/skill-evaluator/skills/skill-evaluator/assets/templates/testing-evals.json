@@ -1,0 +1,364 @@
+{
+  "skill_name": "testing",
+  "eval_config": {
+    "runs_per_eval": 3,
+    "structural_gate": true,
+    "judge_model": "claude-sonnet-4-5-20250929",
+    "baseline_comparison": true
+  },
+  "evals": [
+    {
+      "id": 1,
+      "name": "Command Use Case TDD",
+      "prompt": "Write tests for a CreateBookingUseCase. The use case should: create a booking with a generated ID, validate that bookings are within business hours (8AM-10PM), reject bookings when the space is not available, and calculate the total price based on hourly rate × duration. Use the testing skill's TDD approach with fakes.",
+      "expected_output": "A complete test file following TDD principles with fake container, sociable unit tests at use case boundary, proper fixture factories, and no mocks",
+      "files": [],
+      "structural_expectations": [
+        {
+          "id": "S1",
+          "type": "file_exists",
+          "description": "Test file created",
+          "pattern": "*.test.ts",
+          "critical": true
+        },
+        {
+          "id": "S2",
+          "type": "file_contains",
+          "description": "Uses Vitest describe blocks",
+          "pattern": "*.test.ts",
+          "match": "describe(",
+          "critical": true
+        },
+        {
+          "id": "S3",
+          "type": "file_not_contains",
+          "description": "No Jest imports or references",
+          "pattern": "*.test.ts",
+          "match_any": ["from 'jest'", "from \"jest\"", "require('jest')", "@jest"],
+          "critical": true
+        },
+        {
+          "id": "S4",
+          "type": "file_not_contains",
+          "description": "No vi.fn() for business logic (allowed for React callback props only)",
+          "pattern": "*.test.ts",
+          "match": "vi.fn(",
+          "except_context": ["onSubmit", "onChange", "onPress", "callback"]
+        },
+        {
+          "id": "S5",
+          "type": "file_not_contains",
+          "description": "No vi.mock() module mocking",
+          "pattern": "*.test.ts",
+          "match": "vi.mock(",
+          "critical": true
+        },
+        {
+          "id": "S6",
+          "type": "file_contains",
+          "description": "Uses fake container or InMemory implementations",
+          "pattern": "*.test.ts",
+          "match_any": ["createFakeContainer", "createTestContainer", "InMemory", "inMemory"]
+        },
+        {
+          "id": "S7",
+          "type": "file_contains",
+          "description": "Uses fixture factory pattern (create prefix)",
+          "pattern": "*.test.ts",
+          "match_regex": "create[A-Z]\\w*(Fixture|Test)"
+        },
+        {
+          "id": "S8",
+          "type": "file_not_contains",
+          "description": "No barrel file imports",
+          "pattern": "*.test.ts",
+          "match_any": ["from '../index'", "from './index'", "from \"../index\"", "from \"./index\""]
+        },
+        {
+          "id": "S9",
+          "type": "file_contains",
+          "description": "Has expect assertions",
+          "pattern": "*.test.ts",
+          "match": "expect(",
+          "critical": true
+        }
+      ],
+      "quality_rubric": {
+        "dimensions": [
+          {
+            "id": "Q1",
+            "name": "tdd_philosophy",
+            "description": "Tests focus on business behavior at use case boundary. Tests validate WHAT the system does (outcomes), not HOW (implementation). No testing of private methods or internal state.",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Tests implementation details, internal methods, or private state",
+              "3": "Tests outcomes but some tests are coupled to implementation choices",
+              "5": "All tests validate business behavior through use case boundary only"
+            }
+          },
+          {
+            "id": "Q2",
+            "name": "fake_driven_correctness",
+            "description": "Infrastructure ports (repos, ID providers, external APIs) use fakes. Domain services use REAL instances. No mocks (vi.fn/vi.mock) anywhere except React callback props.",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Uses mocks for business logic or fakes domain services",
+              "3": "Mostly correct boundary but fakes a domain service or uses a mock for convenience",
+              "5": "Perfect: fakes only for infrastructure ports, real domain services, no mocks"
+            }
+          },
+          {
+            "id": "Q3",
+            "name": "fixture_pattern",
+            "description": "Test data uses create*Fixture or create*Test factories with sensible defaults and targeted overrides. No floating literals. Expressive, minimal test setup.",
+            "weight": 1.5,
+            "scoring": {
+              "1": "Raw inline objects everywhere, no factories",
+              "3": "Some factories but also inline objects, or factories without override pattern",
+              "5": "All test data through factories with defaults + targeted overrides"
+            }
+          },
+          {
+            "id": "Q4",
+            "name": "coverage_completeness",
+            "description": "Covers: booking creation with ID, business hours validation (8AM-10PM), availability check, price calculation (hourly rate × duration). Both happy path and error cases.",
+            "weight": 1.5,
+            "scoring": {
+              "1": "Only happy path tested",
+              "3": "Happy path + some error cases, but missing important scenarios",
+              "5": "Comprehensive: happy path + all 4 business rules + edge cases"
+            }
+          },
+          {
+            "id": "Q5",
+            "name": "naming_conventions",
+            "description": "InMemory* (no suffix needed), SequentialIdProvider (no suffix), *FailingStub (always suffixed), ExpectedErrors for error maps. File: kebab-case.test.ts.",
+            "weight": 1.0,
+            "scoring": {
+              "1": "Random naming, no convention visible",
+              "3": "Mostly consistent but some deviations",
+              "5": "Perfect adherence to all naming conventions"
+            }
+          },
+          {
+            "id": "Q6",
+            "name": "test_readability",
+            "description": "Clear describe/it blocks mapping to acceptance criteria. Given/When/Then structure visible. Minimal setup noise.",
+            "weight": 1.0,
+            "scoring": {
+              "1": "Hard to understand what behavior is being validated",
+              "3": "Readable but verbose or unclear structure",
+              "5": "Each test clearly maps to a business requirement, minimal noise"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "name": "Query Use Case with Stubs",
+      "prompt": "Write tests for a GetListingsByHostUseCase (query use case). This returns all listings for a given host ID with pagination. Follow the testing skill's approach for query use cases: use stubs returning fixture data, not fakes. Include tests for: host with multiple listings, host with no listings, and pagination.",
+      "expected_output": "Test file using stubs (not fakes) for query use case, fixture data as canned responses, FailingStub for error scenario, proper stub naming convention",
+      "files": [],
+      "structural_expectations": [
+        {
+          "id": "S1",
+          "type": "file_exists",
+          "pattern": "*.test.ts",
+          "description": "Test file created",
+          "critical": true
+        },
+        {
+          "id": "S2",
+          "type": "file_contains",
+          "pattern": "*.test.ts",
+          "match": "describe(",
+          "description": "Uses Vitest describe blocks",
+          "critical": true
+        },
+        {
+          "id": "S3",
+          "type": "file_contains",
+          "pattern": "*.test.ts",
+          "match_any": ["Stub", "stub"],
+          "description": "Uses stub pattern for query use case"
+        },
+        {
+          "id": "S4",
+          "type": "file_contains",
+          "pattern": "*.test.ts",
+          "match_regex": "create[A-Z]\\w*(Fixture|Test)",
+          "description": "Uses fixture factories for canned data"
+        },
+        {
+          "id": "S5",
+          "type": "file_not_contains",
+          "pattern": "*.test.ts",
+          "match": "vi.mock(",
+          "description": "No module mocking",
+          "critical": true
+        },
+        {
+          "id": "S6",
+          "type": "file_not_contains",
+          "pattern": "*.test.ts",
+          "match_any": ["from 'jest'", "from \"jest\""],
+          "description": "No Jest imports",
+          "critical": true
+        }
+      ],
+      "quality_rubric": {
+        "dimensions": [
+          {
+            "id": "Q1",
+            "name": "stub_vs_fake_correctness",
+            "description": "Query use cases use STUBS (canned fixture data) not FAKES (in-memory with logic). Stubs return predetermined data without business logic.",
+            "weight": 2.5,
+            "scoring": {
+              "1": "Uses fakes (InMemoryRepository) for a query use case",
+              "3": "Uses stubs but with some logic inside them",
+              "5": "Pure stubs returning fixture data, no logic in test doubles"
+            }
+          },
+          {
+            "id": "Q2",
+            "name": "fixture_as_contract",
+            "description": "Fixtures serve as shared contracts reusable across layers. Well-structured, with factory functions.",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Inline data, no reusable fixtures",
+              "3": "Fixtures exist but test-specific, not reusable",
+              "5": "Well-structured shared contract fixtures usable across layers"
+            }
+          },
+          {
+            "id": "Q3",
+            "name": "error_scenario_handling",
+            "description": "Includes FailingStub for error scenarios. Uses ExpectedErrors map pattern for typed errors.",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No error scenarios tested",
+              "3": "Some error cases but ad-hoc error throwing",
+              "5": "FailingStub with ExpectedErrors map, typed error scenarios"
+            }
+          },
+          {
+            "id": "Q4",
+            "name": "coverage_completeness",
+            "description": "Tests cover: results found, no results, pagination handling.",
+            "weight": 1.5,
+            "scoring": {
+              "1": "Only happy path",
+              "3": "Happy path + empty results",
+              "5": "Happy path, empty results, pagination, edge cases"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "name": "Fake Container Setup",
+      "prompt": "Create a fake container (test infrastructure) for a SpaceListing module. The module has: CreateListingUseCase (command), GetListingsByHostUseCase (query), a ListingRepository port, an IdProvider port, a DateProvider port, and a PricingService (domain service with calculatePrice method). Follow the testing skill's container pattern — fakes for infrastructure ports, real instances for domain services.",
+      "expected_output": "A fake container file wiring fakes for infrastructure ports and REAL PricingService, with proper typing and helper methods",
+      "files": [],
+      "structural_expectations": [
+        {
+          "id": "S1",
+          "type": "file_exists",
+          "pattern": "*.ts",
+          "description": "Container file created",
+          "critical": true
+        },
+        {
+          "id": "S2",
+          "type": "file_contains",
+          "pattern": "*.ts",
+          "match_any": ["InMemory", "inMemory"],
+          "description": "Uses InMemory prefix for repository fakes"
+        },
+        {
+          "id": "S3",
+          "type": "file_contains",
+          "pattern": "*.ts",
+          "match_any": ["SequentialIdProvider", "sequentialIdProvider"],
+          "description": "Uses SequentialIdProvider for predictable IDs"
+        },
+        {
+          "id": "S4",
+          "type": "file_contains",
+          "pattern": "*.ts",
+          "match_any": ["PricingService", "pricingService"],
+          "description": "PricingService referenced (should be real instance)"
+        },
+        {
+          "id": "S5",
+          "type": "file_not_contains",
+          "pattern": "*.ts",
+          "match_any": [
+            "FakePricingService", "PricingServiceFake", "PricingServiceStub",
+            "MockPricingService", "PricingServiceMock"
+          ],
+          "description": "Domain service (PricingService) must NOT be faked",
+          "critical": true
+        },
+        {
+          "id": "S6",
+          "type": "file_not_contains",
+          "pattern": "*.ts",
+          "match": "vi.fn(",
+          "description": "No mocks in container",
+          "critical": true
+        }
+      ],
+      "quality_rubric": {
+        "dimensions": [
+          {
+            "id": "Q1",
+            "name": "boundary_rule_correctness",
+            "description": "Infrastructure ports (repos, ID provider, date provider) are faked. Domain services (PricingService) use REAL instances wired with the faked infrastructure.",
+            "weight": 3.0,
+            "scoring": {
+              "1": "Fakes domain services or uses mocks",
+              "3": "Correct boundary but domain service wiring unclear or PricingService not using injected fakes",
+              "5": "Perfect: fakes for infra, real PricingService constructed with faked dependencies"
+            }
+          },
+          {
+            "id": "Q2",
+            "name": "container_structure",
+            "description": "Container is a function returning a typed object with all use cases and infrastructure fakes accessible. Follows createFakeContainer pattern.",
+            "weight": 2.0,
+            "scoring": {
+              "1": "No clear container pattern — ad-hoc setup",
+              "3": "Container function exists but missing type or exposing internals poorly",
+              "5": "Clean createFakeContainer() returning typed Container with all dependencies"
+            }
+          },
+          {
+            "id": "Q3",
+            "name": "helper_methods",
+            "description": "Fakes include helper methods for testing (clear(), getAll(), hasItem()). Container is usable in beforeEach without boilerplate.",
+            "weight": 1.0,
+            "scoring": {
+              "1": "No helper methods, awkward to use in tests",
+              "3": "Some helpers but incomplete",
+              "5": "Rich helpers for test setup, teardown, and inspection"
+            }
+          },
+          {
+            "id": "Q4",
+            "name": "naming_conventions",
+            "description": "InMemoryListingRepository (no suffix), SequentialIdProvider (no suffix), FixedDateProvider (no suffix). Container function: createFakeContainer or createTestContainer.",
+            "weight": 1.0,
+            "scoring": {
+              "1": "Random naming, no convention",
+              "3": "Mostly consistent but some deviations",
+              "5": "Perfect convention adherence"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
