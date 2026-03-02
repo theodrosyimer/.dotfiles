@@ -18,3 +18,5 @@ nvim/undo
 nvim.bak
 git/.gitconfig.local
 obsidian
+
+claude/skill-evaluator-handoff.md
