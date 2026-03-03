@@ -44,8 +44,10 @@ function envx() {
 
   [[ "${#ENV_FILE[@]}" -eq "0" ]] && echo "No .env file was found!" && return 1
 
-  local ENV_FILE_CONTENT=$(< ${ENV_FILE[1]})
+  local ENV_FILE_CONTENT=$(< ${ENV_FILE[-1]})
   local ENV_KEYS="$(printf "%s" $ENV_FILE_CONTENT | sed -e 's/^\(.*=\).*$/\1/')"
+
+  printf $ENV_FILE
 
   printf "%s" $ENV_KEYS > .env.example
   printf "\n%s\n\n" "$cyan""Copied to .env.example$reset"
