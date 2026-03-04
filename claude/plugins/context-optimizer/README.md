@@ -10,4 +10,4 @@ A Claude Code skill for optimizing the Claude Code's context files.
 
 ## Usage
 
-TODO: Add usage instructions.
+See [README.Md](./skills/context-optimizer/README.md)

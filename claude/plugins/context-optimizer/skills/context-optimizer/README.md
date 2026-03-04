@@ -1,6 +1,8 @@
-# Context Engineer
+# Context Optimizer
 
 Stop bloating your CLAUDE.md. Keep only what the agent can't discover on its own.
+
+> **Research-backed:** detailed context files *reduce* agent success rates while increasing cost 20%+. This skill applies those findings — [see why](#research-foundation).
 
 ## Quick Start
 
@@ -23,37 +25,50 @@ You: "Audit my context files"
 ## What To Do and When
 
 ### Your context feels bloated or you haven't reviewed it in a while
-**→ Run an audit (Mode 1)**
+**→ Run an audit**
 ```
 You: "Audit my context files"
 ```
 **Outcome:** A report classifying every line as KEEP, DELETE, SCOPE, MOVE, or PROMOTE. You approve, agent executes.
 
 ### The agent just made a recurring mistake
-**→ Evolve your context (Mode 2)**
+**→ Evolve your context**
 ```
 You: "Update context from this session"
 ```
 **Outcome:** Agent diagnoses the friction, proposes a single-bullet fix in the right file. Never rewrites — only appends.
 
-**Or:** The agent self-flags during work:
+### The agent flagged something during work
+
+Agents don't self-flag by default — you enable it by adding this to your CLAUDE.md:
+
+```markdown
+# Context Maintenance
+If you encounter something surprising, confusing, or that caused a mistake in this project,
+flag it: "CONTEXT_FLAG: [description]". These flags indicate either:
+1. A codebase smell to fix (preferred), OR
+2. A missing context rule to add via the context-optimizer skill
+```
+
+Once enabled, the agent will flag friction as it encounters it:
 ```
 Agent: "CONTEXT_FLAG: Drizzle ORM requires explicit .execute() on insert"
 ```
-**You decide:**
-- Fix the codebase (preferred) → no context change needed
-- "Add that as a rule" → agent creates a scoped rule
-- Ignore it → one-off issue, not worth tracking
+
+When you see a flag, you have three options:
+1. **Fix the codebase** (preferred) — eliminate the friction at the source, no context change needed
+2. **"Add that as a rule"** — agent creates a scoped rule to prevent recurrence
+3. **Ignore it** — one-off issue, not worth tracking
 
 ### You want to reorganize your entire context setup
-**→ Restructure (Mode 3)**
+**→ Restructure**
 ```
 You: "Restructure my context files"
 ```
 **Outcome:** Full redistribution across the 3-layer architecture. Before/after diff. You approve, agent executes.
 
 ### You want to add a new constraint
-**→ Create a rule (Mode 4)**
+**→ Create a rule**
 ```
 You: "Create a rule for [constraint]"
 ```
@@ -112,3 +127,20 @@ Context files get tighter, not fatter:
 4. Codebase fixes eliminate the need for context lines
 
 Every context line is a signal about codebase friction. Fix the root cause, then delete the line.
+
+---
+
+## Research Foundation
+
+This skill is built on findings from [*"Evaluating AGENTS.md: Are Repository-Level Context Files Helpful for Coding Agents?"*](https://arxiv.org/abs/2602.11988) (Gloaguen et al., ETH Zurich, Feb 2026).
+
+**What they found** across multiple coding agents (Claude Code, Codex, Qwen Code) and benchmarks:
+
+- **LLM-generated context files hurt**: −3% success rate on average, +20% inference cost
+- **Developer-written files barely help**: +4% success rate, but still increase cost and steps
+- **Codebase overviews are useless**: agents discover relevant files just as fast without them
+- **Root cause**: agents are too obedient — they follow unnecessary requirements in context files even when counterproductive, leading to more exploration steps without better outcomes
+
+**The paper's recommendation**: *"unnecessary requirements from context files make tasks harder, and human-written context files should describe only minimal requirements."*
+
+**How this skill applies it**: only keep non-discoverable constraints, scope rules to relevant paths so they don't load unnecessarily, prune regularly through audits, and prefer fixing the codebase over adding context lines.
