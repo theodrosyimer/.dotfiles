@@ -52,7 +52,7 @@ flag it: "CONTEXT_FLAG: [description]". These flags indicate either:
 
 Once enabled, the agent will flag friction as it encounters it:
 ```
-Agent: "CONTEXT_FLAG: Drizzle ORM requires explicit .execute() on insert"
+"CONTEXT_FLAG: Drizzle ORM requires explicit .execute() on insert"
 ```
 
 When you see a flag, you have three options:
