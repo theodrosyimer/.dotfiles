@@ -15,12 +15,6 @@
       "version": "0.1.0"
     },
     {
-      "name": "biz",
-      "source": "./plugins/biz",
-      "description": "Business workflows",
-      "version": "0.1.0"
-    },
-    {
       "name": "commit",
       "source": "./plugins/commit",
       "description": "Git commit workflows",

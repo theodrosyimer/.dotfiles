@@ -7,7 +7,3 @@ A Claude Code skill for generating conventional commit messages.
 ```bash
 /plugin install commit@ty
 ```
-
-## Usage
-
-TODO: Add usage instructions.

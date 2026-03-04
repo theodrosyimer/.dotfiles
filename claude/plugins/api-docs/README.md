@@ -7,7 +7,3 @@ A Claude Code plugin for generating API documentation.
 ```bash
 /plugin install api-docs@ty
 ```
-
-## Usage
-
-TODO: Add usage instructions.
