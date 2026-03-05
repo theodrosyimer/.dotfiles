@@ -1,6 +1,6 @@
 source $HOME/.dotfiles/zsh/.zextras.zsh
 
-export EDITOR='cursor'
+export EDITOR='code'
 # export VISUAL='code -n -w'
 export VISUAL='nvim'
 
