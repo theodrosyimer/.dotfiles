@@ -1,3 +1,24 @@
+# git-init.zsh — Repository initialization with GitHub remote creation
+#
+# Creates a local git repo + GitHub remote (personal or org) in one command.
+# Detects existing repos, handles rollback on abort, supports dry-run.
+#
+# Flow:
+#   1. Snapshot state (.git, README.md) for rollback
+#   2. git init (if needed)
+#   3. Create README.md (if needed)
+#   4. If --local: commit and stop
+#   5. Check if GitHub repo exists
+#      - Exists: prompt to reuse as origin (handles origin conflicts)
+#      - New: gh repo create (personal or org)
+#   6. Commit + push
+#
+# Dependencies: git, gh (GitHub CLI, authenticated)
+# Provided by oh-my-zsh auto-sourcing $ZSH_CUSTOM/*.zsh
+# Uses: git_add_all_commit, git_get_current_branch_name,
+#       git_get_remote_url_from_cwd_as_https, is_installed (from git.zsh)
+# Uses: $GREEN, $YELLOW, $RED, $RESET (from colorize.zsh)
+
 function git_create_readme_if_not_exists() {
   if [[ -f "README.md" || -f "readme.md" ]]; then
     printf "\n%b\n" "$YELLOW""README.md already exists, skipping creation$RESET"
@@ -80,7 +101,7 @@ function git_init() {
   [[ -d ".git" ]] && had_git=true
   [[ -f "README.md" || -f "readme.md" ]] && had_readme=true
 
-  # Initialize local repository
+  # --- Local init ---
   if git rev-parse --git-dir > /dev/null 2>&1; then
     printf "\n%b\n" "$GREEN""Repository already initialized!$RESET"
   else
@@ -88,7 +109,6 @@ function git_init() {
       git init || { printf "\n%b\n" "$RED""Failed to initialize git repository$RESET"; return 1; }
   fi
 
-  # README
   if [[ "$had_readme" == false ]]; then
     _git_init_run "$dry_run" "Would create: README.md" \
       git_create_readme_if_not_exists
@@ -96,7 +116,7 @@ function git_init() {
     printf "\n%b\n" "$GREEN""README.md already exists$RESET"
   fi
 
-  # Local-only mode: skip remote creation
+  # --- Local-only mode ---
   if [[ -n "$flag_local" ]]; then
     if [[ -n "$(ls -A | grep -v '^.git$')" || "$had_readme" == false ]]; then
       _git_init_run "$dry_run" "Would commit: \"$commit_message\"" \
@@ -134,13 +154,13 @@ function git_init() {
     repo_exists=true
   fi
 
+  # --- Existing repo: prompt to reuse or abort ---
   if [[ "$repo_exists" == true ]]; then
     printf "\n%b\n" "$YELLOW""Repository '$full_repo' already exists on GitHub.$RESET"
 
     local remote_url="git@github.com:$full_repo.git"
 
     if [[ "$dry_run" == true ]]; then
-      # Dry run: report what would happen without prompting
       if git remote get-url origin >/dev/null 2>&1; then
         local existing_origin="$(git remote get-url origin)"
         if [[ "$existing_origin" == "$remote_url" || "$existing_origin" == "https://github.com/$full_repo.git" || "$existing_origin" == "https://github.com/$full_repo" ]]; then
@@ -152,12 +172,12 @@ function git_init() {
         printf "\n%b\n" "$YELLOW""[dry-run] Would prompt to use existing repo, then add remote origin: $remote_url$RESET"
       fi
     else
-      # Real run: interactive prompts
       printf "%b" "$YELLOW""Use it as remote origin? [y/N] $RESET"
 
       if read -q; then
         printf "\n"
 
+        # Handle origin: already correct / conflicts / missing
         if git remote get-url origin >/dev/null 2>&1; then
           local existing_origin="$(git remote get-url origin)"
           if [[ "$existing_origin" == "$remote_url" || "$existing_origin" == "https://github.com/$full_repo.git" || "$existing_origin" == "https://github.com/$full_repo" ]]; then
@@ -188,8 +208,9 @@ function git_init() {
         return 1
       fi
     fi
+
+  # --- New repo: create on GitHub ---
   else
-    # Repo doesn't exist — create it
     local gh_args=(--source=. --"$repo_visibility" --remote=origin)
     [[ -n "$repo_description" ]] && gh_args+=(--description="$repo_description")
     [[ -n "$org_name" ]] && gh_args+=(--push "$full_repo")
@@ -208,11 +229,12 @@ function git_init() {
     fi
   fi
 
-  # Initial commit + push
+  # --- Commit + push ---
   if [[ -n "$(ls -A | grep -v '^.git$')" || "$had_readme" == false ]]; then
     _git_init_run "$dry_run" "Would commit: \"$commit_message\"" \
       git_add_all_commit "$commit_message"
 
+    # Skip push for new org repos (--push already handled it)
     if [[ -z "$org_name" || "$repo_exists" == true ]]; then
       _git_init_run "$dry_run" "Would push to origin/main" \
         git push -u origin main || {
@@ -224,6 +246,7 @@ function git_init() {
     printf "\n%b\n" "$YELLOW""Directory is empty, skipping initial commit$RESET"
   fi
 
+  # --- Done ---
   if [[ "$dry_run" == true ]]; then
     printf "\n%b\n" "$YELLOW""=== DRY RUN complete — no changes were made ===$RESET"
   else
@@ -233,6 +256,8 @@ function git_init() {
   fi
 }
 
+# Runs a command or prints dry-run description.
+# Usage: _git_init_run <dry_run> <description> <command...>
 function _git_init_run() {
   local dry_run="$1"; shift
   local description="$1"; shift
@@ -244,6 +269,9 @@ function _git_init_run() {
   "$@"
 }
 
+# Reverts artifacts created by git_init on abort.
+# Only removes what the script created (checks pre-existing state).
+# Usage: _git_init_rollback <had_git> <had_readme>
 function _git_init_rollback() {
   local had_git="$1"
   local had_readme="$2"
