@@ -41,6 +41,7 @@
   },
   "enabledPlugins": {
     "playground@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
     "biz@ty": true,
     "commit@ty": true,
     "context-optimizer@ty": true,
@@ -51,7 +52,6 @@
     "ty": {
       "source": {
         "source": "directory",
-        "repo": "theodrosyimer/dotfiles",
         "path": "/Users/ty/.dotfiles/claude"
       }
     }
