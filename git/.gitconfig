@@ -17,9 +17,6 @@
 [includeIf "gitdir:~/dev/projects/work/coqagile/parko/"]
   path = ~/dev/projects/work/coqagile/parko/.gitconfig-parko
 
-[includeIf "gitdir:~/dev/projects/school/etna/bachelor/pli/swampi/"]
-  path = ~/dev/projects/school/etna/bachelor/pli/.gitconfig-swampi
-
 [gpg]
 	format = ssh
 
