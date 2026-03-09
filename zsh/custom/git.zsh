@@ -347,13 +347,24 @@ function git_create_readme_if_not_exists() {
 }
 
 function git_init() {
-  local flag_help flag_local flag_desc flag_visibility
+  local flag_help flag_local flag_desc flag_public flag_private flag_org
   local usage=(
-    "git_init [-h|--help] [-l|--local] [-d|--desc <description>] [-v|--visibility <public|private>]"
-    "  -h, --help                 Show this help message"
+    "git_init [-h|--help] [-l|--local] [-d|--desc <description>] [--public|--private] [-o|--org <org>]"
+    ""
+    "  -h, --help                Show this help message"
     "  -l, --local               Initialize local repository only"
     "  -d, --desc                Repository description"
-    "  -v, --visibility          Repository visibility (public/private, default: private)"
+    "     --public               Create public repository"
+    "     --private              Create private repository (default)"
+    "  -o, --org                 GitHub organization (creates repo under org instead of personal)"
+    "\n"
+    "Examples:"
+    "  ginit                              # private, personal"
+    "  ginit --public                     # public, personal"
+    "  ginit -o my-org                    # private, org"
+    "  ginit --public -o my-org           # public, org"
+    "  ginit -o my-org -d \"Cool project\"  # private, org, with description"
+    "  ginit -l                           # local only, no remote"
   )
 
   zmodload zsh/zutil
@@ -361,22 +372,27 @@ function git_init() {
     {h,-help}=flag_help \
     {l,-local}=flag_local \
     {d,-desc}:=flag_desc \
-    {v,-visibility}:=flag_visibility || return 1
+    {o,-org}:=flag_org \
+    -public=flag_public \
+    -private=flag_private || return 1
 
   [[ -n "$flag_help" ]] && { print -l $usage; return 0; }
 
-  local repo_visibility="${flag_visibility[-1]:-private}"
+  if [[ -n "$flag_public" && -n "$flag_private" ]]; then
+    printf "\n%b\n" "$RED""Cannot use both --public and --private$RESET"
+    return 1
+  fi
+
+  local repo_visibility="private"
+  [[ -n "$flag_public" ]] && repo_visibility="public"
+
   local repo_description="${flag_desc[-1]:-}"
+  local org_name="${flag_org[-1]:-}"
   local commit_message="chore: project initialization"
 
   [[ -n "$repo_description" ]] && commit_message="chore: initial commit\n\n$repo_description"
 
-  if [[ "$repo_visibility" != "private" && "$repo_visibility" != "public" ]]; then
-    printf "\n%b\n" "$RED""Invalid visibility. Use 'public' or 'private'$RESET"
-    return 1
-  fi
-
-  # Check if already in a git repository
+  # Initialize local repository
   if git rev-parse --git-dir > /dev/null 2>&1; then
     printf "\n%b\n" "$GREEN""Repository already initialized!$RESET"
   else
@@ -386,23 +402,48 @@ function git_init() {
 
   git_create_readme_if_not_exists
 
+  # Local-only mode: skip remote creation
+  if [[ -n "$flag_local" ]]; then
+    if [[ -n "$(ls -A | grep -v '^.git$')" ]]; then
+      git_add_all_commit "$commit_message"
+    fi
+    printf "\n%b\n" "$GREEN""Local repository initialized successfully!$RESET"
+    return 0
+  fi
+
+  # Remote creation
   is_installed gh "GitHub CLI (gh) is required for remote repository creation" || return 1
 
   printf "\n%b\n" "$GREEN""Creating remote repository...$RESET"
 
-  if ! gh repo create --source=. --"$repo_visibility" --description="$repo_description" --remote=origin; then
-    printf "\n%b\n" "$RED""Failed to create GitHub repository$RESET"
-    return 1
+  local gh_args=(--source=. --"$repo_visibility" --remote=origin)
+  [[ -n "$repo_description" ]] && gh_args+=(--description="$repo_description")
+
+  if [[ -n "$org_name" ]]; then
+    local repo_name="${PWD:t}"
+    gh_args+=(--push "$org_name/$repo_name")
+
+    if ! gh repo create "${gh_args[@]}"; then
+      printf "\n%b\n" "$RED""Failed to create GitHub repository under org '$org_name'$RESET"
+      return 1
+    fi
+  else
+    if ! gh repo create "${gh_args[@]}"; then
+      printf "\n%b\n" "$RED""Failed to create GitHub repository$RESET"
+      return 1
+    fi
   fi
 
-  # Check if directory is empty (excluding .git)
+  # Initial commit + push (skip for org — --push already handled it)
   if [[ -n "$(ls -A | grep -v '^.git$')" ]]; then
     printf "\n%b\n" "$GREEN""Files detected, creating initial commit...$RESET"
     if git_add_all_commit "$commit_message"; then
-      printf "\n%b\n" "$GREEN""Pushing initial commit...$RESET"
-      if ! git push -u origin main; then
-        printf "\n%b\n" "$RED""Failed to push to remote repository$RESET"
-        return 1
+      if [[ -z "$org_name" ]]; then
+        printf "\n%b\n" "$GREEN""Pushing initial commit...$RESET"
+        if ! git push -u origin main; then
+          printf "\n%b\n" "$RED""Failed to push to remote repository$RESET"
+          return 1
+        fi
       fi
     fi
   else
