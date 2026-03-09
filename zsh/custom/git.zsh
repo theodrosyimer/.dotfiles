@@ -351,13 +351,13 @@ function git_init() {
   local usage=(
     "git_init [-h|--help] [-l|--local] [-d|--desc <description>] [--public|--private] [-o|--org <org>]"
     ""
-    "  -h, --help                Show this help message"
+    "  -h, --help                 Show this help message"
     "  -l, --local               Initialize local repository only"
     "  -d, --desc                Repository description"
     "     --public               Create public repository"
     "     --private              Create private repository (default)"
     "  -o, --org                 GitHub organization (creates repo under org instead of personal)"
-    "\n"
+    ""
     "Examples:"
     "  ginit                              # private, personal"
     "  ginit --public                     # public, personal"
@@ -392,6 +392,13 @@ function git_init() {
 
   [[ -n "$repo_description" ]] && commit_message="chore: initial commit\n\n$repo_description"
 
+  # --- Snapshot pre-existing state for rollback ---
+  local had_git=false
+  local had_readme=false
+
+  [[ -d ".git" ]] && had_git=true
+  [[ -f "README.md" || -f "readme.md" ]] && had_readme=true
+
   # Initialize local repository
   if git rev-parse --git-dir > /dev/null 2>&1; then
     printf "\n%b\n" "$GREEN""Repository already initialized!$RESET"
@@ -411,34 +418,101 @@ function git_init() {
     return 0
   fi
 
-  # Remote creation
+  # --- Remote creation ---
   is_installed gh "GitHub CLI (gh) is required for remote repository creation" || return 1
 
-  printf "\n%b\n" "$GREEN""Creating remote repository...$RESET"
-
-  local gh_args=(--source=. --"$repo_visibility" --remote=origin)
-  [[ -n "$repo_description" ]] && gh_args+=(--description="$repo_description")
+  local repo_name="${PWD:t}"
+  local repo_owner
 
   if [[ -n "$org_name" ]]; then
-    local repo_name="${PWD:t}"
-    gh_args+=(--push "$org_name/$repo_name")
-
-    if ! gh repo create "${gh_args[@]}"; then
-      printf "\n%b\n" "$RED""Failed to create GitHub repository under org '$org_name'$RESET"
-      return 1
-    fi
+    repo_owner="$org_name"
   else
-    if ! gh repo create "${gh_args[@]}"; then
-      printf "\n%b\n" "$RED""Failed to create GitHub repository$RESET"
+    repo_owner="$(gh api user --jq '.login' 2>/dev/null)"
+    if [[ -z "$repo_owner" ]]; then
+      printf "\n%b\n" "$RED""Failed to get GitHub username. Are you authenticated with gh?$RESET"
+      _git_init_rollback "$had_git" "$had_readme"
       return 1
     fi
   fi
 
-  # Initial commit + push (skip for org — --push already handled it)
+  local full_repo="$repo_owner/$repo_name"
+  local repo_exists=false
+
+  # Check if remote repo already exists
+  if gh repo view "$full_repo" --json name >/dev/null 2>&1; then
+    repo_exists=true
+  fi
+
+  if [[ "$repo_exists" == true ]]; then
+    printf "\n%b\n" "$YELLOW""Repository '$full_repo' already exists on GitHub.$RESET"
+    printf "%b" "$YELLOW""Use it as remote origin? [y/N] $RESET"
+
+    if read -q; then
+      printf "\n"
+
+      local remote_url="git@github.com:$full_repo.git"
+
+      # Handle origin: add or update
+      if git remote get-url origin >/dev/null 2>&1; then
+        local existing_origin="$(git remote get-url origin)"
+        if [[ "$existing_origin" == "$remote_url" || "$existing_origin" == "https://github.com/$full_repo.git" || "$existing_origin" == "https://github.com/$full_repo" ]]; then
+          printf "\n%b\n" "$GREEN""Remote origin already points to '$full_repo'$RESET"
+        else
+          printf "\n%b\n" "$YELLOW""Remote origin exists but points to '$existing_origin'$RESET"
+          printf "%b" "$YELLOW""Overwrite with '$remote_url'? [y/N] $RESET"
+
+          if read -q; then
+            printf "\n"
+            git remote set-url origin "$remote_url"
+            printf "\n%b\n" "$GREEN""Updated remote origin to '$remote_url'$RESET"
+          else
+            printf "\n"
+            printf "\n%b\n" "$RED""Aborted.$RESET"
+            _git_init_rollback "$had_git" "$had_readme"
+            return 1
+          fi
+        fi
+      else
+        git remote add origin "$remote_url"
+        printf "\n%b\n" "$GREEN""Added remote origin '$remote_url'$RESET"
+      fi
+    else
+      printf "\n"
+      printf "\n%b\n" "$RED""Aborted.$RESET"
+      _git_init_rollback "$had_git" "$had_readme"
+      return 1
+    fi
+  else
+    # Repo doesn't exist — create it
+    printf "\n%b\n" "$GREEN""Creating remote repository...$RESET"
+
+    local gh_args=(--source=. --"$repo_visibility" --remote=origin)
+    [[ -n "$repo_description" ]] && gh_args+=(--description="$repo_description")
+
+    if [[ -n "$org_name" ]]; then
+      gh_args+=(--push "$full_repo")
+
+      if ! gh repo create "${gh_args[@]}"; then
+        printf "\n%b\n" "$RED""Failed to create GitHub repository under org '$org_name'$RESET"
+        _git_init_rollback "$had_git" "$had_readme"
+        return 1
+      fi
+    else
+      if ! gh repo create "${gh_args[@]}"; then
+        printf "\n%b\n" "$RED""Failed to create GitHub repository$RESET"
+        _git_init_rollback "$had_git" "$had_readme"
+        return 1
+      fi
+    fi
+  fi
+
+  # Initial commit + push (skip for org new repos — --push already handled it)
   if [[ -n "$(ls -A | grep -v '^.git$')" ]]; then
     printf "\n%b\n" "$GREEN""Files detected, creating initial commit...$RESET"
     if git_add_all_commit "$commit_message"; then
-      if [[ -z "$org_name" ]]; then
+      # Skip push only for NEW org repos (--push handled it)
+      # Always push for: personal repos and existing repo reuse
+      if [[ -z "$org_name" || "$repo_exists" == true ]]; then
         printf "\n%b\n" "$GREEN""Pushing initial commit...$RESET"
         if ! git push -u origin main; then
           printf "\n%b\n" "$RED""Failed to push to remote repository$RESET"
@@ -453,6 +527,21 @@ function git_init() {
   printf "\n%b\n" "$GREEN""Repository initialized successfully!$RESET"
   printf "\n%b\n" "$GREEN""Current branch: $YELLOW$(git_get_current_branch_name)$RESET"
   printf "%b\n" "$GREEN""Remote URL: $YELLOW$(git_get_remote_url_from_cwd_as_https)$RESET"
+}
+
+function _git_init_rollback() {
+  local had_git="$1"
+  local had_readme="$2"
+
+  if [[ "$had_readme" == false && -f "README.md" ]]; then
+    rm -f "README.md"
+    printf "%b\n" "$YELLOW""Removed created README.md$RESET"
+  fi
+
+  if [[ "$had_git" == false && -d ".git" ]]; then
+    rm -rf ".git"
+    printf "%b\n" "$YELLOW""Removed created .git directory$RESET"
+  fi
 }
 
 function git_is_main_or_master() {
