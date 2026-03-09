@@ -62,12 +62,12 @@ alias ghc='gh repo clone "$(chrome_get_front_window_url)"' # Clone a GitHub repo
 
 # Package managers + npq (https://github.com/lirantal/npq)
 alias inpq="npm i -g npq"
-alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
+# alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
 alias pn='pnpm'
 alias b='bun'
-alias npm="npq-hero || npm"
+# alias npm="npq-hero || npm"
 alias n='npm'
-alias yarn="NPQ_PKG_MGR=yarn npq-hero"
+# alias yarn="NPQ_PKG_MGR=yarn npq-hero"
 alias y='yarn'
 alias nr='npm run'
 
