@@ -64,6 +64,7 @@ alias ghc='gh repo clone "$(chrome_get_front_window_url)"' # Clone a GitHub repo
 alias inpq="npm i -g npq"
 # alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
 alias pn='pnpm'
+alias pnf='pnpm --filter'
 alias b='bun'
 # alias npm="npq-hero || npm"
 alias n='npm'
