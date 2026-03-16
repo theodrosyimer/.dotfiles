@@ -1,7 +1,11 @@
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
+# fnm
 export PATH="$HOME/.fnm:$PATH"
 export FNM_COREPACK_ENABLED=false
+
+# rtk
+export PATH="$HOME/.local/bin:$PATH"
 
 # Homebrew
 # export PATH="/opt/homebrew/opt/*/bin:$PATH"
