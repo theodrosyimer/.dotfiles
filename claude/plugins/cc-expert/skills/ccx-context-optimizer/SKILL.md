@@ -1,5 +1,5 @@
 ---
-name: context-optimizer
+name: ccx-context-optimizer
 description: >
   Manage and optimize CLAUDE.md, .claude/rules/, and nested context files for Claude Code projects.
   Use this skill whenever the user asks to audit, restructure, evolve, or maintain their agent context files.
@@ -42,6 +42,7 @@ Analyze existing context files and produce a concrete report.
    - **PROMOTE TO CLAUDE.md** — critical constraint buried in a rule/skill that should be in the root protocol file
 
 **Critical audit questions per line:**
+
 - Can the agent discover this by running `ls`, reading `package.json`, or grepping the codebase?
 - Would the agent get this wrong without being told? (If no → delete)
 - Does this apply to ALL tasks or only specific file types? (If specific → needs `paths:` scoping)
@@ -66,18 +67,21 @@ Capture friction from the current session and propose incremental deltas.
 4. Present the delta for user approval before adding
 
 **Delta format:**
+
 ```markdown
 ## Proposed Context Delta
 
 **Trigger**: [What went wrong in this session]
 **Diagnosis**: [Codebase smell vs context gap]
 **Proposed addition**:
-  - File: `.claude/rules/schema-first.md`
-  - Content: `- Never use z.lazy() for recursive types — use explicit type assertion instead`
-**Redundancy check**: [Not found in existing rules/CLAUDE.md]
+
+- File: `.claude/rules/schema-first.md`
+- Content: `- Never use z.lazy() for recursive types — use explicit type assertion instead`
+  **Redundancy check**: [Not found in existing rules/CLAUDE.md]
 ```
 
 **Grow-and-refine principle (from ACE):**
+
 - New items get appended with a unique identifier
 - If a delta contradicts an existing bullet, replace it (don't add both)
 - Periodically audit for bullets that are no longer relevant (codebase changed)
@@ -116,6 +120,7 @@ Layer 2b files are created only when a directory has landmines that don't fit in
 6. Present the full restructure plan for user approval before executing
 
 **Bootstrap scenario** (no context files exist yet):
+
 - Skip audit — nothing to classify
 - Interview the user: communication preferences, known landmines, MCPs/tools in use
 - Generate root CLAUDE.md from template
@@ -165,6 +170,7 @@ Gate 4: SCOPE CHECK
    - No implementation patterns, templates, or step-by-step guides
 
 5. **Add `paths:` frontmatter** for scoped rules:
+
    ```yaml
    ---
    paths:
@@ -176,6 +182,7 @@ Gate 4: SCOPE CHECK
 6. **Present for user approval** before writing the file
 
 **Naming convention for rule files:**
+
 - Use the domain concept: `schema-first.md`, `caching.md`, `design-tokens.md`
 - NOT the technology: `zod.md`, `redis.md`, `tailwind.md`
 - NOT generic: `rules.md`, `conventions.md`, `guidelines.md`
@@ -191,6 +198,7 @@ The root CLAUDE.md should be a **routing document with landmines**, not a codeba
 5. **Active context maintenance instruction** — tells the agent to flag friction for evolution
 
 **It should NOT contain:**
+
 - Codebase overview, directory structure, tech stack description
 - Commands (discoverable from package.json)
 - Workflow sequences (discoverable from skill descriptions)
@@ -202,8 +210,10 @@ Add this to the root CLAUDE.md to enable semi-active evolution:
 
 ```markdown
 ## Context Maintenance
+
 If you encounter something surprising, confusing, or that caused you to make a mistake in this project,
 flag it as a comment: "CONTEXT_FLAG: [description of the friction]". These flags indicate either:
+
 1. A codebase smell that should be fixed (preferred), OR
 2. A missing context rule that should be added via the context-optimizer skill
 ```
