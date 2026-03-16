@@ -25,14 +25,14 @@
 
 ```yaml
 ---
-name: my-skill                        # REQUIRED. lowercase + hyphens, max 64 chars → becomes /my-skill
-description: "..."                     # REQUIRED. max 1024 chars — primary model discovery mechanism
+name: my-skill                        # optional. lowercase + hyphens, max 64 chars → becomes /my-skill. Defaults to directory name if omitted.
+description: "..."                     # recommended. max 1024 chars — primary model discovery mechanism. Falls back to first paragraph if omitted.
 disable-model-invocation: true         # optional. default false. true = only user can invoke via /name
 user-invocable: false                  # optional. default true. false = only model can invoke
 allowed-tools: Read, Grep, Glob        # optional. restricts tool surface. Comma-sep or YAML list.
 context: fork                          # optional. runs in isolated subagent context (own context window)
 agent: Explore                         # optional. Explore | Plan | general-purpose | <custom-agent-name>
-model: sonnet                          # optional. sonnet | opus | haiku | opusplan | default
+model: opus                          # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6)
 # effortLevel: low                     # optional. 🆕 low | medium | high  (max was removed)
 argument-hint: "<topic>"               # optional. autocomplete hint shown after /skill-name in UI
 hooks:                                 # optional. scoped to skill lifecycle, auto-cleaned when done
@@ -72,7 +72,7 @@ Single `.md` file only — no directories, no supporting files.
 ---
 description: "..."                     # REQUIRED. shown in / autocomplete menu
 allowed-tools: Read, Grep, Glob        # optional. same syntax as skills
-model: sonnet                          # optional. sonnet | opus | haiku | opusplan | default
+model: opus                          # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6)
 ---
 ```
 
@@ -108,8 +108,8 @@ name: code-reviewer                    # REQUIRED. identifier used for delegatio
 description: "..."                     # REQUIRED. model reads to decide when to delegate
 tools: Read, Glob, Grep                # optional. comma-sep allowlist. Omit = inherits ALL tools incl. MCP
 disallowedTools: Bash                  # optional. block specific tools
-model: sonnet                          # optional. sonnet | opus | haiku | opusplan | default
-permissionMode: default                # optional. default | acceptEdits | bypassPermissions | plan | dontAsk | ignore
+model: opus                          # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6) | inherit. Default: inherit (uses parent model)
+permissionMode: default                # optional. default | acceptEdits | bypassPermissions | plan | dontAsk
 maxTurns: 20                           # optional. limit agentic loop iterations
 skills:                                # optional. inject full skill content at subagent startup
   - api-conventions
@@ -136,7 +136,7 @@ mcpServers:                            # optional. MCP servers scoped to this su
 System prompt body goes here.
 ```
 
-**Built-in agents:** `Explore` (Haiku, read-only), `Plan` (Sonnet, read-only), `general-purpose` (Sonnet, full tools).
+**Built-in agents:** `Explore` (Haiku, read-only), `Plan` (inherits model, read-only), `general-purpose` (inherits model, full tools), `Bash` (inherits, terminal commands), `statusline-setup` (Sonnet), `Claude Code Guide` (Haiku).
 
 **Key constraints:**
 - Subagents CANNOT spawn other subagents
@@ -299,9 +299,9 @@ Same `{"decision": "approve/block"}` response schema as prompt hooks.
 |---|---|---|
 | `disableAllHooks` | any | Disables all hooks. Managed-level only can disable managed hooks. |
 | `allowManagedHooksOnly` | managed only | Blocks user/project/plugin hooks. Only managed hooks run. |
-| `hookAllowedURLs` | any, merges | Restricts HTTP hook target URLs. Supports `*` wildcard. |
-| `hookAllowedEnvVars` | any, merges | Restricts env var names for HTTP header interpolation. Effective set = **intersection** with handler's own `allowedEnvVars`. |
-| 🆕 `autoMemoryDirectory` | any | Custom directory for auto-memory storage. Default is project-scoped. Useful for synced drives or shared team memory. |
+| `allowedHttpHookUrls` | any, merges | Restricts HTTP hook target URLs. Supports `*` wildcard. Non-matching URLs are blocked. Undefined = no restriction, empty array = block all HTTP hooks. |
+| `httpHookAllowedEnvVars` | any, merges | Restricts env var names for HTTP header interpolation. Effective set = **intersection** with handler's own `allowedEnvVars`. |
+| 🆕 `autoMemoryDirectory` | policy, local, user (NOT project settings — prevents shared repos redirecting memory writes) | Custom directory for auto-memory storage. Supports `~/` expansion. Useful for synced drives or shared team memory. |
 
 ### Environment variables available to hook commands
 
@@ -366,8 +366,8 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 
 | Feature | Skill | Command | Subagent | Rule | Hook |
 |---|---|---|---|---|---|
-| `name` field | ✅ required | ❌ (filename) | ✅ required | ❌ invalid | — |
-| `description` field | ✅ required | ✅ required | ✅ required | ❌ invalid | — |
+| `name` field | optional (defaults to dir name) | ❌ (filename) | ✅ required | ❌ invalid | — |
+| `description` field | recommended (falls back to first paragraph) | ✅ required | ✅ required | ❌ invalid | — |
 | `model` field | ✅ | ✅ | ✅ | ❌ | ✅ (prompt/agent types) |
 | `allowed-tools` / `tools` | ✅ | ✅ | ✅ | ❌ | — |
 | `hooks` in frontmatter | ✅ | ❌ | ✅ | ❌ | N/A |
@@ -399,12 +399,18 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 ### Subagents
 - Omitting `tools` gives the subagent **all tools including MCP** — always be explicit
 - `permissionMode: bypassPermissions` on the parent silently cascades — you cannot override it per-subagent
-- `memory: project` persists at `~/.claude/projects/<project>/memory/agents/<name>/`
+- Two separate memory systems exist — don't confuse them:
+
+| System | Purpose | Paths |
+|---|---|---|
+| **Agent memory** (subagent `memory:` field) | Per-subagent, persists across conversations | `user` → `~/.claude/agent-memory/<name>/`<br>`project` → `.claude/agent-memory/<name>/`<br>`local` → `.claude/agent-memory-local/<name>/` |
+| **Auto memory** (session-level) | Per-project, written by Claude during sessions | `~/.claude/projects/<project>/memory/` — relocatable via `autoMemoryDirectory` setting |
 
 ### Hooks
 - Exit 0 + JSON on stdout OR exit 2 + plain text on stderr — **never both**. Exit 2 ignores stdout entirely.
 - `PostToolUse` JSON fields `decision`/`reason` belong inside `hookSpecificOutput`, not at top level
 - `Stop` hook: always check `stop_hook_active` field — if true, approve unconditionally to avoid infinite loop
+- `Stop` and `SubagentStop` hooks receive `last_assistant_message` field — final response text without needing to parse transcript files
 - `async: true` is **command-type only** — not supported on http, prompt, or agent handlers
 - HTTP hooks are not supported for `SessionStart` events
 - `CLAUDE_ENV_FILE` is `SessionStart`-only — writing env vars elsewhere has no effect

@@ -50,11 +50,7 @@
   "enabledPlugins": {
     "playground@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "commit@ty": true,
-    "skill-evaluator@ty": true,
-    "api-docs@ty": true,
-    "ccx@ty": true,
-    "kfrom@ty": true
+    "ccx@ty": true
   },
   "extraKnownMarketplaces": {
     "ty": {
