@@ -1,0 +1,31 @@
+
+#------------------------------------------------
+# Add ticket number
+# Answer this question: If applied, this commit will...
+# Do not exceed above line in commit txt length
+#------------------------------------------------
+# This is the empty space to separate the title from the body
+
+#---------------------------------------------------------------------
+
+# Description of what and why, not how.
+# Wrap summary text at the end of the above line, do not exceed line
+# length
+
+#---------------------------------------------------------------------
+# build:
+# chore:
+# ci:
+# docs:
+# feat:
+# fix:
+# perf:
+# refactor:
+# revert:
+# style:
+# test:
+#
+# Additional commit notes:
+# https://chris.beams.io/posts/git-commit/
+# https://github.com/git/git/blob/master/Documentation/SubmittingPatches#L124-L141
+#---------------------------------------------------------------------
