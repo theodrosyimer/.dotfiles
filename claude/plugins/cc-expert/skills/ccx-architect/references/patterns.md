@@ -84,7 +84,7 @@ answers architecture questions without re-discovering things every session.
 **Primitives:** Subagent with `memory: project` + `permissionMode: plan`
 
 **Key design decisions:**
-- `memory: project` — persists at `~/.claude/projects/<project>/memory/agents/<n>/`
+- `memory: project` — persists at `.claude/agent-memory/<n>/` (committable to version control)
 - `permissionMode: plan` — pure investigation, never modifies code
 - `maxTurns: 50` — room for deep exploration
 - System prompt instructs agent to update memory after each investigation
