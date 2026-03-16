@@ -82,8 +82,8 @@ style = 'bold yellow'
 min_time = 1000
 
 
-[time]
-disabled = false
-# time_format = "%R" # Hour:Minute Format
-style = "white"
-format = '[$time]($style)'
+# [time]
+# disabled = false
+# # time_format = "%R" # Hour:Minute Format
+# style = "white"
+# format = '[$time]($style)'

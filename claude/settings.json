@@ -44,7 +44,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "bun x ccusage statusline --visual-burn-rate emoji",
+    "command": "/Users/ty/.dotfiles/claude/scripts/statusline.sh",
     "padding": 0
   },
   "enabledPlugins": {
