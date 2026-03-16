@@ -13,6 +13,12 @@
       "source": "./plugins/cc-expert",
       "description": "Claude Code plugin",
       "version": "0.1.0"
+    },
+    {
+      "name": "skill-lab",
+      "source": "./plugins/skill-lab",
+      "description": "Claude Code plugin for creating skills from structured knowledge sources",
+      "version": "0.1.0"
     }
   ]
 }
