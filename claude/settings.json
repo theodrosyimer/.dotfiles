@@ -20,7 +20,6 @@
       "Read(**/.ssh/**)"
     ]
   },
-  "model": "opus",
   "hooks": {
     "PreToolUse": [
       {
@@ -51,11 +50,11 @@
   "enabledPlugins": {
     "playground@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "biz@ty": true,
     "commit@ty": true,
-    "context-optimizer@ty": true,
     "skill-evaluator@ty": true,
-    "api-docs@ty": true
+    "api-docs@ty": true,
+    "ccx@ty": true,
+    "kfrom@ty": true
   },
   "extraKnownMarketplaces": {
     "ty": {
