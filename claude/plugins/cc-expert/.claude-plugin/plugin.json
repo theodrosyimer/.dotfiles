@@ -1,0 +1,16 @@
+{
+  "name": "ccx",
+  "version": "0.1.0",
+  "description": "Claude Code tooling: schema reference, automation architect, context optimizer, and full setup wizard.",
+  "author": {
+    "name": "theodrosyimer"
+  },
+  "keywords": [
+    "claude-code",
+    "skills",
+    "hooks",
+    "subagents",
+    "primitives",
+    "automation"
+  ]
+}
