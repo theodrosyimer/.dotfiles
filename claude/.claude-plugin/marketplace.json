@@ -9,33 +9,9 @@
   },
   "plugins": [
     {
-      "name": "api-docs",
-      "source": "./plugins/api-docs",
-      "description": "API docs generator",
-      "version": "0.1.0"
-    },
-    {
-      "name": "commit",
-      "source": "./plugins/commit",
-      "description": "Git commit workflows",
-      "version": "0.1.0"
-    },
-    {
-      "name": "skill-evaluator",
-      "source": "./plugins/skill-evaluator",
-      "description": "Skill evaluator",
-      "version": "0.1.0"
-    },
-    {
       "name": "ccx",
       "source": "./plugins/cc-expert",
       "description": "Claude Code plugin",
-      "version": "0.1.0"
-    },
-    {
-      "name": "kfrom",
-      "source": "./plugins/kfrom",
-      "description": "A Claude Code plugin that generates knowledge from different sources.",
       "version": "0.1.0"
     }
   ]
