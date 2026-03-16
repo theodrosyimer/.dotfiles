@@ -285,12 +285,19 @@
 
 
         {:des "Code"
-         :rules [:code]}
+         :rules [:code
                   ;
         ;;  [:left_shift :left_shift nil {:alone :!CSp}]
         ;;  [:a :t :code] ; launch Alfred
         ;;  [:g [:!Sspacebar]]
-        ;;  [[:d :f] :!Cd]
+        ;;  [[:d :f] :!Cd]]
+
+        ; Navigation
+         [[:q :##h] :left_arrow]
+         [[:q :##j] :down_arrow]
+         [[:q :##k] :up_arrow]
+         [[:q :##l] :right_arrow]}
+
 
                   ;
 
