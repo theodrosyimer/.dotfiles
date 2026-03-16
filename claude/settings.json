@@ -3,6 +3,7 @@
     "CLAUDE_CODE_ENABLE_TELEMETRY": "1"
   },
   "permissions": {
+    "defaultmMode": "plan",
     "allow": [
       "WebFetch(domain:docs.anthropic.com)",
       "Bash(npm run lint)",
