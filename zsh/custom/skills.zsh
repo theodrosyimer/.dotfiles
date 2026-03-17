@@ -1,19 +1,39 @@
-function sksym() {
+function ccsync() {
   local errors=()
+  local pairs=(
+    ~/.dotfiles/claude/skills ~/.claude/skills
+    ~/.dotfiles/claude/skills ~/.agents/skills
+    ~/.dotfiles/claude/hooks  ~/.claude/hooks
+    ~/.dotfiles/claude/hooks  ~/.agents/hooks
+  )
 
-	if ln -s ~/.dotfiles/claude/skills/* ~/.claude/skills 2>/dev/null; then
-    echo "Skills symlinked successfully."
-  else
-    errors+=("~/.claude/skills")
-  fi
-	if ln -s ~/.dotfiles/claude/skills/* ~/.agents/skills 2>/dev/null; then
-    echo "Skills symlinked successfully."
-  else
-    errors+=("~/.agents/skills")
-  fi
+  for ((i=1; i<=${#pairs[@]}; i+=2)); do
+    local src_dir="${pairs[$i]}"
+    local dst_dir="${pairs[$((i+1))]}"
 
-  echo "Failed to create symlinks in ${errors[@]}."
-  echo "Please check if the source and target directories exist."
+    [[ -d "$src_dir" ]] || { errors+=("$src_dir (missing source)"); continue; }
+    mkdir -p "$dst_dir"
+
+    for file in "$src_dir"/*; do
+      [[ -e "$file" ]] || continue
+      local dest="$dst_dir/${file:t}"
+
+      if [[ -L "$dest" || -e "$dest" ]]; then
+        errors+=("$dest (exists)")
+      elif ! ln -s "$file" "$dest" 2>/dev/null; then
+        errors+=("$dest")
+      else
+        echo "Linked ${file:t} → $dst_dir"
+      fi
+    done
+  done
+
+  if (( ${#errors[@]} )); then
+    echo "\nSkipped/failed:"
+    printf '  - %s\n' "${errors[@]}"
+  else
+    echo "All symlinks created."
+  fi
 }
 
 function skadd() {
