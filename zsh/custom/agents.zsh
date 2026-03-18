@@ -1,3 +1,12 @@
+# agents.zsh — Claude Code agent utilities
+#
+# Manages symlinks for CLAUDE.md, skills, and hooks between dotfiles
+# and Claude/agent config directories. Includes skill installation
+# and plugin cache management.
+#
+# Dependencies: npx (for skadd)
+# Provided by oh-my-zsh auto-sourcing $ZSH_CUSTOM/*.zsh
+
 function ccsync() {
   local errors=()
 
