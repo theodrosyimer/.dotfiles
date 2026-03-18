@@ -51,6 +51,6 @@ function skadd() {
 	npx skills add https://github.com/theodrosyimer/dotfiles/skills --skill "${1}"
 }
 
-function pluginsrm() {
-  rm -rf ~/.claude/plugins/cache/ty/*
+function ccpcacherm() {
+  rm -rf "~/.claude/plugins/cache/${1:-ty}/"*
 }
