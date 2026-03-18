@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Blocks /bin/rm and /bin/rmdir — use trash aliases instead.
+# Blocks /bin/rm and /bin/rmdir — use rm, an alias for trash (macos) instead.
 # Called as a PreToolUse hook from settings.json.
 
 set -euo pipefail
