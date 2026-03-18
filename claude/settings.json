@@ -9,6 +9,8 @@
       "WebFetch(domain:docs.anthropic.com)",
       "Bash(npm run lint)",
       "Bash(npm run test:*)",
+      "Bash(jq *)",
+      "Bash(rg *)",
       "Read(~/.zshrc)"
     ],
     "deny": [
@@ -49,6 +51,15 @@
           {
             "type": "command",
             "command": "/Users/ty/.claude/hooks/rtk-rewrite.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if jq -e '.tool_input.command | test(\"^git\\\\s+push\\\\b\")' > /dev/null; then echo 'BLOCKED: git push is not allowed. Ask the user to push manually.' >&2; exit 2; fi"
           }
         ]
       }
