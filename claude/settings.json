@@ -41,7 +41,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /Users/ty/.claude/hooks/use-rg.py"
+            "command": "python3 /Users/ty/.claude/hooks/prefer-modern-cli.py"
           }
         ]
       },

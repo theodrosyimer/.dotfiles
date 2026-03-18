@@ -7,11 +7,15 @@ import sys
 _VALIDATION_RULES = [
     (
         r"^grep\b(?!.*\|)",
-        "Use 'rg' (ripgrep) instead of 'grep' for better performance and features",
+        "Use 'rg' (ripgrep) instead of 'grep'",
     ),
     (
-        r"^find\s+\S+\s+-name\b",
-        "Use 'rg --files | rg pattern' or 'rg --files -g pattern' instead of 'find -name' for better performance",
+        r"\bfind\s+",
+        "Use 'fd' instead of 'find'",
+    ),
+    (
+        r"\b(sed|awk|grep)\b.*\.json\b",
+        "Use 'jq' instead of sed/awk/grep for JSON files",
     ),
 ]
 
