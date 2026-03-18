@@ -1,5 +1,16 @@
 function ccsync() {
   local errors=()
+
+  local src=~/.dotfiles/claude/CLAUDE.md
+  local dest=~/.claude/CLAUDE.md
+  if [[ -L "$dest" || -e "$dest" ]]; then
+    errors+=("$dest (exists)")
+  elif ! ln -s "$src" "$dest" 2>/dev/null; then
+    errors+=("$dest")
+  else
+    echo "Linked CLAUDE.md → ~/.claude"
+  fi
+
   local pairs=(
     ~/.dotfiles/claude/skills ~/.claude/skills
     ~/.dotfiles/claude/skills ~/.agents/skills
