@@ -7,7 +7,7 @@ hooks:
     - matcher: "Bash"
       hooks:
         - type: command
-          command: "./scripts/validate-git-command.sh $TOOL_INPUT"
+          command: "./scripts/validate-git-command.sh"
 ---
 
 # Conventional Commit Generator

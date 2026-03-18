@@ -7,19 +7,15 @@
 
 set -euo pipefail
 
-TOOL_INPUT="$*"
+command=$(jq -r '.tool_input.command // empty' < /dev/stdin)
 
-# Extract the command value from the JSON tool input.
-COMMAND=$(echo "$TOOL_INPUT" | jq -r '.command // empty' 2>/dev/null)
-if [ -z "$COMMAND" ]; then
-  COMMAND="$TOOL_INPUT"
-fi
-
-# Allow: git add, git commit, git status, git diff
-if echo "$COMMAND" | rg -q '^git (add|commit|status|diff)\b'; then
+if [ -z "$command" ]; then
   exit 0
 fi
 
-echo "BLOCKED: Only 'git add', 'git commit', 'git status', and 'git diff' are allowed. Got: '$COMMAND'" >&2
-echo "The conventional-commit skill is restricted to staging, committing, and reading diffs." >&2
-exit 1
+if echo "$command" | rg -q '^git (add|commit|status|diff)\b'; then
+  exit 0
+fi
+
+echo "BLOCKED: Only 'git add', 'git commit', 'git status', and 'git diff' are allowed. Got: '$command'" >&2
+exit 2
