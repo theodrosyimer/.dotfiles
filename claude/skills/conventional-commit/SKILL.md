@@ -1,7 +1,7 @@
 ---
 name: conventional-commit
-description: Generates clear, conventional commit messages from git diffs. Use when writing commit messages, reviewing staged changes, or preparing releases. Runs git diff --staged to analyze changes and produces commitlint-compliant messages.
-allowed-tools: Bash, Read, Grep
+description: Generates clear, conventional commit messages from git diffs. Use when writing commit messages, reviewing staged changes, or preparing releases. Runs git diff --staged to analyze changes and produces commitlint-compliant messages. Stages and commits changes after user confirmation.
+allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*), Read, Grep
 hooks:
   PreToolUse:
     - matcher: "Bash"
@@ -12,16 +12,24 @@ hooks:
 
 # Conventional Commit Generator
 
-Generate conventional commit messages from staged changes. The ONLY git command you are allowed to run is `git diff --staged` — no other git subcommands are permitted. Do not run `git add`, `git commit`, `git push`, `git stash`, `git reset`, or any other git command. You read the diff and generate the message; the user confirms and handles the actual commit.
+Generate conventional commit messages from changes in the working tree. The Context section below provides git status, diff, branch, and recent commit history via dynamic interpolation — do not re-run these commands. You are allowed to run `git add` and `git commit` to complete the workflow after the user confirms the message. Do not run `git push`, `git stash`, `git reset`, or any other git command.
+
+## Context
+
+Current git status: !git status
+Current git diff (staged and unstaged changes): !git diff HEAD
+Current branch: !git branch --show-current
+Recent commits: !git log --oneline -10
 
 ## Steps
 
-1. Run `git diff --staged` to inspect the staged changes.
+1. Review the git context provided above (status, diff, branch, recent commits).
 2. Classify each changed file by what changed (logic, formatting, config, docs, tests).
 3. Pick the commit type matching the primary intent of the change.
-4. If the commit mixes concerns (e.g., a bug fix and a formatting change), suggest splitting into separate commits.
+4. If the changes mix concerns (e.g., a bug fix and a formatting change), suggest splitting into separate commits.
 5. Write the commit message following the format and rules below.
 6. The generated commit must pass `commitlint --edit` without errors.
+7. Once the user confirms the message, stage the relevant files with `git add` and run `git commit`.
 
 ## Commit Message Format
 
@@ -37,7 +45,7 @@ Generate conventional commit messages from staged changes. The ONLY git command 
 
 - The full header line (`type(scope): summary`) must be max 72 characters.
 - **Summary**: all lowercase, no period at end, max 50 characters.
-- **Imperative mood**: the subject must use imperative tense. Test: the subject should complete the sentence "If applied, this commit will ___" grammatically.
+- **Imperative mood**: the subject must use imperative tense. Test: the subject should complete the sentence "If applied, this commit will \_\_\_" grammatically.
   - Good: `fix crash on login`, `add retry logic`, `remove unused import`
   - Bad: `fixed crash on login`, `adds retry logic`, `removing unused import`, `fixing crash`
 
@@ -50,19 +58,19 @@ Generate conventional commit messages from staged changes. The ONLY git command 
 
 Use EXACTLY these 11 types — no others are permitted:
 
-| Type | When to use |
-|------|-------------|
-| `build` | Changes to build system or external dependencies (webpack, npm, tsconfig) |
-| `chore` | Maintenance tasks that don't modify src or test files (scripts, config, tooling) |
-| `ci` | Changes to CI/CD configuration and scripts (GitHub Actions, GitLab CI, Docker) |
-| `docs` | Documentation only — README, JSDoc, inline comments, API docs |
-| `feat` | New feature or capability visible to users |
-| `fix` | Bug fix — corrects incorrect behavior |
-| `perf` | Performance improvement with no functional change |
-| `refactor` | Code restructuring that neither fixes a bug nor adds a feature |
-| `revert` | Reverts a previous commit — must reference the reverted commit hash |
-| `style` | Formatting, whitespace, semicolons, linting fixes — no logic change |
-| `test` | Adding, updating, or fixing tests only — no production code change |
+| Type       | When to use                                                                      |
+| ---------- | -------------------------------------------------------------------------------- |
+| `build`    | Changes to build system or external dependencies (webpack, npm, tsconfig)        |
+| `chore`    | Maintenance tasks that don't modify src or test files (scripts, config, tooling) |
+| `ci`       | Changes to CI/CD configuration and scripts (GitHub Actions, GitLab CI, Docker)   |
+| `docs`     | Documentation only — README, JSDoc, inline comments, API docs                    |
+| `feat`     | New feature or capability visible to users                                       |
+| `fix`      | Bug fix — corrects incorrect behavior                                            |
+| `perf`     | Performance improvement with no functional change                                |
+| `refactor` | Code restructuring that neither fixes a bug nor adds a feature                   |
+| `revert`   | Reverts a previous commit — must reference the reverted commit hash              |
+| `style`    | Formatting, whitespace, semicolons, linting fixes — no logic change              |
+| `test`     | Adding, updating, or fixing tests only — no production code change               |
 
 If a type outside this list seems appropriate, do not use it. Map the change to the closest allowed type instead.
 
