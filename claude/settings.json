@@ -32,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if jq -e '.tool_input.command | test(\"/bin/rm(dir)?\\\\b\")' > /dev/null; then echo 'Use rm/rmdir (aliased to trash) instead of /bin/rm or /bin/rmdir' >&2; exit 2; fi"
+            "command": "/Users/ty/.claude/hooks/block-bin-rm.sh"
           }
         ]
       },
@@ -59,7 +59,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "if jq -e '.tool_input.command | test(\"^git\\\\s+push\\\\b\")' > /dev/null; then echo 'BLOCKED: git push is not allowed. Ask the user to push manually.' >&2; exit 2; fi"
+            "command": "/Users/ty/.claude/hooks/block-git-push.sh"
           }
         ]
       }
