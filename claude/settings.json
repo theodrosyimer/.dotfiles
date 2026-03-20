@@ -11,10 +11,13 @@
       "Bash(npm run test:*)",
       "Bash(jq *)",
       "Bash(rg *)",
+      "Bash(npx tsc*)",
+      "Bash(pnpm test*)",
       "Read(~/.zshrc)"
     ],
     "deny": [
       "Bash(curl:*)",
+      "Bash(wget:*)",
       "Read(**/.env)",
       "Read(**/*.key)",
       "Read(**/*.pem)",
@@ -41,6 +44,15 @@
         "hooks": [
           {
             "type": "command",
+            "command": "/Users/ty/.claude/hooks/block-git-push.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
             "command": "python3 /Users/ty/.claude/hooks/prefer-modern-cli.py"
           }
         ]
@@ -51,15 +63,6 @@
           {
             "type": "command",
             "command": "/Users/ty/.claude/hooks/rtk-rewrite.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/ty/.claude/hooks/block-git-push.sh"
           }
         ]
       }
