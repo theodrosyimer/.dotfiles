@@ -1,0 +1,16 @@
+# Font
+font-family = SF Mono
+font-size = 13
+
+# Colors
+theme = One Dark
+
+# Scrollback
+scrollback-limit = 50000
+
+# Splits
+unfocused-split-opacity = 0.65
+split-divider-color = #3e4451
+
+# Working directory
+working-directory = ~/code
