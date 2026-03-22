@@ -12,6 +12,8 @@ Convert YouTube video transcripts into structured, referenceable project knowled
 ```
 yt-transcript/
 ├── SKILL.md                              ← You are here
+├── scripts/
+│   └── yt-transcript.zsh                 ← Fetch transcript via yt-dlp (copy of ~/.dotfiles/zsh/custom/yt-transcript.zsh)
 └── references/
     ├── diagram-standard.md               ← Diagram conventions (MUST read before writing)
     └── example-output.md                 ← Reference example of expected output
@@ -25,9 +27,10 @@ yt-transcript/
 
 The user provides ONE of:
 
-1. **A YouTube URL** — fetch the page to extract the video title and channel, then ask the user to paste the transcript (transcripts cannot be fetched programmatically)
-2. **A transcript file** — an attached `.txt` or `.md` file containing the transcript, plus the URL and/or title in the message
-3. **A pasted transcript** — raw text from a YouTube video, plus the URL and/or title
+1. **A YouTube URL (Claude Code)** — use the bundled `scripts/yt-transcript.zsh` to fetch the transcript, title, channel, and URL automatically via `yt-dlp`. Execute: `source <skill-dir>/scripts/yt-transcript.zsh && yt-transcript <url> -o /tmp/yt-transcript.txt`. This provides everything needed — skip straight to Step 2
+2. **A YouTube URL (other environments)** — fetch the page to extract the video title and channel, then ask the user to paste the transcript
+3. **A transcript file** — an attached `.txt` or `.md` file containing the transcript, plus the URL and/or title in the message
+4. **A pasted transcript** — raw text from a YouTube video, plus the URL and/or title
 
 If the user provides only a transcript without URL/title, ask for both before proceeding.
 
@@ -55,8 +58,8 @@ Collect all three:
 
 How to resolve metadata from a URL:
 
+- **Claude Code**: Run `source <skill-dir>/scripts/yt-transcript.zsh && yt-transcript <url> -o /tmp/yt-transcript.txt` — the output file contains `CHANNEL:`, `TITLE:`, `URL:` headers followed by timestamped transcript lines. Read the file to extract metadata and transcript in one step, then skip to Step 2
 - **claude.ai**: Use `web_fetch` to get the page title and channel name
-- **Claude Code**: Use `curl` to fetch the page, or ask the user
 - **If fetching fails**: Ask the user to provide the title and channel name
 
 ### Step 2 — Read Skill References
