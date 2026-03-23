@@ -1,0 +1,465 @@
+{
+  "timestamp": "2026-03-11T14:29:44.885541+00:00",
+  "output_dir": "/Users/ty/dev/projects/oss/archviz/plan/skills/acd-plan/eval-results/20260311-152944",
+  "runs_per_eval": 1,
+  "evals": [
+    {
+      "eval_id": "large-scope-collab",
+      "name": "Large scope feature \u2014 real-time collaboration",
+      "expected_output": "A complete ACD specification for backend sync (slice 1), with scope-splitting rationale, testable hypothesis, BDD scenarios covering sync/offline/conflict cases, musts vs preferences, verifiable acceptance criteria, and task decomposition. Should flag that the original request is too large and propose slices.",
+      "rounds": [
+        {
+          "role": "planner",
+          "phase": "1-2",
+          "prompt": "You are a planning agent following the ACD Plan skill. The user says:\n\n\"I need to add real-time collaboration to the canvas editor \u2014 multiple users editing at once.\"\n\nRun Phase 1 (Initial Framing) and Phase 2 (Deep-Dive Interview):\n1. Explore the codebase to understand the current architecture\n2. Frame a testable hypothesis\n3. If the scope is too large, flag it and propose slices\n4. Ask 3-5 high-signal questions to surface implicit knowledge\n\nOutput your framing, scope assessment, and questions."
+        },
+        {
+          "role": "user",
+          "response": "Let's spec slice 1 \u2014 backend sync for a single user first, that makes sense. We'll run a Node server, probably on Railway or Fly.io. Just 2-5 teammates on a project, they have GitHub accounts we can use for auth. Simple last-write-wins per record is fine for now. Record-level granularity is okay for now. Offline support is a must \u2014 the app should stay local-first with sync when reconnected."
+        },
+        {
+          "role": "planner",
+          "phase": "3-4",
+          "prompt": "Continue the planning conversation. The user answered your questions (their answers are provided below). Now run Phase 3 (Drafting) and Phase 4 (Stress-Test Review):\n\n1. Synthesize everything into a complete ACD specification with ALL four sections: Intent, User-Facing Behavior (BDD scenarios), Feature Description (Musts/Must Nots/Preferences/Escalation Triggers), Acceptance Criteria (Done Definition + Test Cases)\n2. Include task decomposition if the work exceeds ~2 hours\n3. Stress-test your own draft \u2014 look for vague language, missing edge cases, contradictions, unverifiable criteria\n4. Fix issues inline, flag anything needing user input\n\nSave the complete specification to response.md"
+        }
+      ],
+      "structural_expectations": [
+        {
+          "id": "S1",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "We believe",
+          "description": "Contains testable hypothesis",
+          "critical": true
+        },
+        {
+          "id": "S2",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "Given",
+          "description": "Contains BDD Given/When/Then scenarios",
+          "critical": true
+        },
+        {
+          "id": "S3",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(### Musts|## Musts|\\*\\*Musts\\*\\*)",
+          "description": "Contains Musts section separating hard constraints",
+          "critical": true
+        },
+        {
+          "id": "S4",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(### Preferences|## Preferences|\\*\\*Preferences\\*\\*)",
+          "description": "Contains Preferences section for soft guidelines",
+          "critical": false
+        },
+        {
+          "id": "S5",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(acceptance criteria|done definition)",
+          "description": "Contains acceptance criteria or done definition section",
+          "critical": true
+        },
+        {
+          "id": "S6",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(task decomposition|sub-tasks|tasks?\\s*\\n)",
+          "description": "Contains task decomposition",
+          "critical": false
+        },
+        {
+          "id": "S7",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(stress.test|self.critique|phase 4|issues? (found|identified)|gaps?)",
+          "description": "Contains stress-test or self-critique section",
+          "critical": false
+        },
+        {
+          "id": "S8",
+          "type": "file_not_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(as needed|handle appropriately|etc\\.|if applicable)",
+          "description": "No vague language in spec sections",
+          "critical": false
+        }
+      ],
+      "quality_rubric": {
+        "dimensions": [
+          {
+            "id": "Q1",
+            "name": "hypothesis_quality",
+            "description": "The testable hypothesis clearly connects a specific change to a measurable outcome with reasoning",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No hypothesis or generic statement without measurable outcome",
+              "3": "Hypothesis present but vague outcome or weak reasoning",
+              "5": "Crisp hypothesis with specific change, measurable outcome, and clear causal reasoning"
+            }
+          },
+          {
+            "id": "Q2",
+            "name": "bdd_scenario_coverage",
+            "description": "BDD scenarios cover happy path, error cases, and edge cases with concrete inputs/outputs",
+            "weight": 2.0,
+            "scoring": {
+              "1": "No scenarios or only happy path",
+              "3": "Happy path and 1-2 error cases, but missing edge cases or vague outcomes",
+              "5": "Comprehensive scenarios covering happy path, errors, edge cases, all with concrete observable outcomes"
+            }
+          },
+          {
+            "id": "Q3",
+            "name": "constraint_architecture",
+            "description": "Feature description clearly separates musts from preferences with escalation triggers",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No constraint separation or all constraints treated equally",
+              "3": "Musts and preferences separated but missing must-nots or escalation triggers",
+              "5": "Full constraint architecture: musts, must-nots, preferences, and escalation triggers all present and well-defined"
+            }
+          },
+          {
+            "id": "Q4",
+            "name": "acceptance_criteria_verifiability",
+            "description": "Acceptance criteria are mechanically verifiable \u2014 an independent reviewer can check them without reading code",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Criteria are vague or require subjective judgment",
+              "3": "Most criteria are verifiable but some are ambiguous",
+              "5": "All criteria are concrete, observable, and independently verifiable with specific test cases"
+            }
+          },
+          {
+            "id": "Q5",
+            "name": "scope_awareness",
+            "description": "Recognizes when scope is too large, proposes splitting, and specs a thin vertical slice",
+            "weight": 1.5,
+            "scoring": {
+              "1": "Accepts any scope without question",
+              "3": "Mentions scope but doesn't propose concrete splits",
+              "5": "Explicitly flags oversized scope, proposes named slices, and specs only the chosen slice"
+            }
+          },
+          {
+            "id": "Q6",
+            "name": "self_containment",
+            "description": "The spec is self-contained \u2014 an agent receiving only this document can implement without clarification",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Spec references external context or leaves critical details undefined",
+              "3": "Mostly self-contained but a few implicit assumptions",
+              "5": "Fully self-contained with all necessary context, data shapes, and constraints explicit"
+            }
+          },
+          {
+            "id": "Q7",
+            "name": "stress_test_quality",
+            "description": "The self-critique phase identifies real issues and resolves them rather than rubber-stamping",
+            "weight": 1.0,
+            "scoring": {
+              "1": "No self-critique or superficial 'looks good'",
+              "3": "Identifies some issues but doesn't resolve them",
+              "5": "Identifies specific issues (vague language, missing edge cases, contradictions) and fixes them inline"
+            }
+          }
+        ]
+      },
+      "runs": [
+        {
+          "run_number": 1,
+          "run_dir": "/Users/ty/dev/projects/oss/archviz/plan/skills/acd-plan/eval-results/20260311-152944/large-scope-collab/run_001",
+          "outputs_dir": "/Users/ty/dev/projects/oss/archviz/plan/skills/acd-plan/eval-results/20260311-152944/large-scope-collab/run_001/outputs"
+        }
+      ]
+    },
+    {
+      "eval_id": "search-from-misunderstanding",
+      "name": "New feature from misunderstanding \u2014 search",
+      "expected_output": "Agent should first investigate codebase and discover there is no search feature, clarify with user, then produce a complete ACD spec for tree node search with BDD scenarios, constraints, and verifiable acceptance criteria.",
+      "rounds": [
+        {
+          "role": "planner",
+          "phase": "1-2",
+          "prompt": "You are a planning agent following the ACD Plan skill. The user says:\n\n\"The search is broken \u2014 users type a query and get no results even though matching items exist in the database.\"\n\nRun Phase 1 (Initial Framing) and Phase 2 (Deep-Dive Interview):\n1. Investigate the codebase \u2014 look for any search functionality\n2. If search doesn't exist, be honest about it and clarify with the user\n3. Frame an appropriate hypothesis based on what you find\n4. Ask clarifying questions\n\nOutput your findings, framing, and questions."
+        },
+        {
+          "role": "user",
+          "response": "Oh right, sorry \u2014 I meant I want to ADD search. The app needs it. Let's spec adding search to the structure view. Search tree node names \u2014 users need to find files quickly in large projects. A filter input at the top of the structure view, live filtering as you type. Within the nested tree data of a single record \u2014 searching node names and paths. Non-matching nodes should be hidden, but keep parent nodes visible if they have matching children. Nothing else is out of scope for now, keep it simple."
+        },
+        {
+          "role": "planner",
+          "phase": "3-4",
+          "prompt": "Continue the planning conversation. The user clarified this is a NEW feature (not a bug fix) and provided details (their answers are below). Now run Phase 3 (Drafting) and Phase 4 (Stress-Test Review):\n\n1. Reframe as a new feature, not a bug fix\n2. Synthesize into a complete ACD specification with ALL four sections: Intent, User-Facing Behavior (BDD scenarios), Feature Description (Musts/Must Nots/Preferences/Escalation Triggers), Acceptance Criteria (Done Definition + Test Cases)\n3. Include task decomposition if needed\n4. Stress-test your draft \u2014 fix issues inline, flag what needs user input\n\nSave the complete specification to response.md"
+        }
+      ],
+      "structural_expectations": [
+        {
+          "id": "S1",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "We believe",
+          "description": "Contains testable hypothesis",
+          "critical": true
+        },
+        {
+          "id": "S2",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "Given",
+          "description": "Contains BDD Given/When/Then scenarios",
+          "critical": true
+        },
+        {
+          "id": "S3",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(### Musts|## Musts|\\*\\*Musts\\*\\*)",
+          "description": "Contains Musts section",
+          "critical": true
+        },
+        {
+          "id": "S4",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(acceptance criteria|done definition)",
+          "description": "Contains acceptance criteria",
+          "critical": true
+        },
+        {
+          "id": "S5",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(no search|does not (have|exist)|not found|no .* feature)",
+          "description": "Agent discovers and reports that search does not exist in the codebase",
+          "critical": false
+        }
+      ],
+      "quality_rubric": {
+        "dimensions": [
+          {
+            "id": "Q1",
+            "name": "hypothesis_quality",
+            "description": "The testable hypothesis clearly connects a specific change to a measurable outcome with reasoning",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No hypothesis or generic statement",
+              "3": "Hypothesis present but vague",
+              "5": "Crisp hypothesis with specific change, measurable outcome, and clear reasoning"
+            }
+          },
+          {
+            "id": "Q2",
+            "name": "bdd_scenario_coverage",
+            "description": "BDD scenarios cover matching, no matches, clearing, case sensitivity, and ancestor visibility",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Only happy path",
+              "3": "Happy path and basic edge cases",
+              "5": "Comprehensive: match, no match, clear, case insensitive, ancestor preservation, empty input"
+            }
+          },
+          {
+            "id": "Q3",
+            "name": "constraint_architecture",
+            "description": "Clear musts vs preferences with escalation triggers",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No separation",
+              "3": "Musts and preferences but missing must-nots or escalation triggers",
+              "5": "Full constraint architecture present"
+            }
+          },
+          {
+            "id": "Q4",
+            "name": "acceptance_criteria_verifiability",
+            "description": "Criteria are mechanically verifiable with specific test cases",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Vague criteria",
+              "3": "Mostly verifiable",
+              "5": "All concrete with specific test cases and expected outputs"
+            }
+          },
+          {
+            "id": "Q5",
+            "name": "codebase_honesty",
+            "description": "Agent honestly reports the search feature doesn't exist rather than fabricating a bug fix",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Fabricates a bug fix for nonexistent code",
+              "3": "Notes the discrepancy but doesn't clearly reframe",
+              "5": "Clearly reports no search exists, asks for clarification, and reframes as new feature"
+            }
+          },
+          {
+            "id": "Q6",
+            "name": "self_containment",
+            "description": "Spec is self-contained and implementable without further questions",
+            "weight": 1.5,
+            "scoring": {
+              "1": "Missing critical details",
+              "3": "Mostly complete",
+              "5": "Fully self-contained with data shapes, component hierarchy, and behavior all explicit"
+            }
+          }
+        ]
+      },
+      "runs": [
+        {
+          "run_number": 1,
+          "run_dir": "/Users/ty/dev/projects/oss/archviz/plan/skills/acd-plan/eval-results/20260311-152944/search-from-misunderstanding/run_001",
+          "outputs_dir": "/Users/ty/dev/projects/oss/archviz/plan/skills/acd-plan/eval-results/20260311-152944/search-from-misunderstanding/run_001/outputs"
+        }
+      ]
+    },
+    {
+      "eval_id": "dark-mode-toggle",
+      "name": "Medium feature \u2014 dark mode toggle",
+      "expected_output": "Complete ACD spec for dark mode toggle in kebab menu with three-way selection, BDD scenarios for each mode, FOUC prevention, persistence, and system preference tracking. Clear musts vs preferences, verifiable criteria.",
+      "rounds": [
+        {
+          "role": "planner",
+          "phase": "1-2",
+          "prompt": "You are a planning agent following the ACD Plan skill. The user says:\n\n\"Plan out adding a dark mode toggle to the settings page.\"\n\nRun Phase 1 (Initial Framing) and Phase 2 (Deep-Dive Interview):\n1. Explore the codebase \u2014 check if a settings page exists, understand the current color scheme\n2. Frame a testable hypothesis\n3. Ask 3-5 high-signal questions about placement, modes, persistence, scope boundaries\n\nOutput your findings, framing, and questions."
+        },
+        {
+          "role": "user",
+          "response": "Just put the toggle in the kebab menu for now, no need for a full settings page. Three-way: light, dark, system. Default to system. Standalone localStorage key is fine, don't couple it to the config collection. Scope it as toggle infrastructure + reasonable light palette. Doesn't need to be pixel-perfect but should look decent. Out of scope: per-component overrides, custom themes, animated transitions, cross-device sync."
+        },
+        {
+          "role": "planner",
+          "phase": "3-4",
+          "prompt": "Continue the planning conversation. The user answered your questions (their answers are provided below). Now run Phase 3 (Drafting) and Phase 4 (Stress-Test Review):\n\n1. Synthesize into a complete ACD specification with ALL four sections: Intent, User-Facing Behavior (BDD scenarios), Feature Description (Musts/Must Nots/Preferences/Escalation Triggers), Acceptance Criteria (Done Definition + Test Cases)\n2. Include task decomposition if the work exceeds ~2 hours\n3. Stress-test your draft \u2014 look for vague language, missing edge cases, contradictions, unverifiable criteria\n4. Fix issues inline, flag anything needing user input\n\nSave the complete specification to response.md"
+        }
+      ],
+      "structural_expectations": [
+        {
+          "id": "S1",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "We believe",
+          "description": "Contains testable hypothesis",
+          "critical": true
+        },
+        {
+          "id": "S2",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "Given",
+          "description": "Contains BDD scenarios",
+          "critical": true
+        },
+        {
+          "id": "S3",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(### Musts|## Musts|\\*\\*Musts\\*\\*)",
+          "description": "Contains Musts section",
+          "critical": true
+        },
+        {
+          "id": "S4",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(acceptance criteria|done definition)",
+          "description": "Contains acceptance criteria",
+          "critical": true
+        },
+        {
+          "id": "S5",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(no settings page|no .* settings|kebab)",
+          "description": "Agent discovers there is no settings page and adapts",
+          "critical": false
+        }
+      ],
+      "quality_rubric": {
+        "dimensions": [
+          {
+            "id": "Q1",
+            "name": "hypothesis_quality",
+            "description": "Testable hypothesis connecting theme toggle to user outcome",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No hypothesis",
+              "3": "Vague hypothesis",
+              "5": "Crisp hypothesis with measurable outcome"
+            }
+          },
+          {
+            "id": "Q2",
+            "name": "bdd_scenario_coverage",
+            "description": "Scenarios cover light/dark/system modes, persistence, OS change, first visit, FOUC",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Only basic toggle",
+              "3": "Covers modes and persistence",
+              "5": "Comprehensive: all modes, persistence, OS tracking, first visit, FOUC prevention"
+            }
+          },
+          {
+            "id": "Q3",
+            "name": "constraint_architecture",
+            "description": "Clear musts vs preferences, out-of-scope boundaries enforced",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No separation",
+              "3": "Basic separation",
+              "5": "Full architecture with must-nots matching stated out-of-scope items"
+            }
+          },
+          {
+            "id": "Q4",
+            "name": "acceptance_criteria_verifiability",
+            "description": "Criteria are mechanically verifiable",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Vague",
+              "3": "Mostly verifiable",
+              "5": "All concrete with test cases"
+            }
+          },
+          {
+            "id": "Q5",
+            "name": "codebase_awareness",
+            "description": "Spec reflects actual codebase state (dark-only, hardcoded slate classes, no theme infra)",
+            "weight": 1.5,
+            "scoring": {
+              "1": "Ignores codebase reality",
+              "3": "Some awareness",
+              "5": "Deeply informed by actual code \u2014 references specific files, classes, and current architecture"
+            }
+          },
+          {
+            "id": "Q6",
+            "name": "stress_test_quality",
+            "description": "Self-critique identifies real issues and resolves them",
+            "weight": 1.0,
+            "scoring": {
+              "1": "No self-critique",
+              "3": "Identifies issues but doesn't fix",
+              "5": "Finds and fixes specific issues (FOUC, localStorage edge cases, etc.)"
+            }
+          }
+        ]
+      },
+      "runs": [
+        {
+          "run_number": 1,
+          "run_dir": "/Users/ty/dev/projects/oss/archviz/plan/skills/acd-plan/eval-results/20260311-152944/dark-mode-toggle/run_001",
+          "outputs_dir": "/Users/ty/dev/projects/oss/archviz/plan/skills/acd-plan/eval-results/20260311-152944/dark-mode-toggle/run_001/outputs"
+        }
+      ]
+    }
+  ],
+  "skill_path": "/Users/ty/dev/projects/oss/archviz/plan/skills/acd-plan",
+  "skill_content": "---\nname: acd-plan\ndescription: >\n  Plan work using the Agent Delivery Contract specification from Agentic Continuous Delivery (ACD).\n  Guides an interactive discovery loop to produce a structured specification with Intent, Behavior,\n  Constraints, and Acceptance Criteria \u2014 scoped to thin vertical slices an agent can execute.\n  Use this skill whenever the user says \"plan this\", \"spec this out\", \"help me think through\",\n  \"what should the spec look like\", \"write a spec\", \"plan the implementation\", or wants to\n  break down a feature/task into an agent-executable specification. Also trigger when the user\n  has a vague idea and needs help turning it into a concrete, actionable plan.\nallowed-tools: Read, Grep, Glob, Agent, Bash, WebFetch, WebSearch\n---\n\n# ACD Plan \u2014 Agent-Assisted Specification\n\nProduce agent-executable specifications by guiding the user through a structured discovery loop. The goal is a self-contained document that any agent (or new team member) can pick up and implement without asking clarifying questions.\n\nThe specification covers the **next single unit of work** \u2014 a thin vertical slice, not an entire epic. If scoping takes more than ~15 minutes of human thought, the scope is too large and needs splitting.\n\n## Reference\n\nFor the full ACD specification (all six artifacts, authority rules, validation checklist), read `references/agent-delivery-contract.md`. Consult it when you need to explain the framework to the user or when you're unsure about artifact definitions or authority precedence.\n\n## The Discovery Loop\n\nWalk the user through four phases. Move briskly \u2014 the goal is clarity, not ceremony.\n\n### Phase 1: Initial Framing\n\nAsk the user to state the outcome they want in 1-3 sentences. If they've already described it in the conversation, extract it \u2014 don't make them repeat themselves.\n\nRestate it back as a testable hypothesis:\n\n> \"We believe **[change]** will result in **[outcome]** because **[reason]**.\"\n\nGet confirmation before moving on.\n\n### Phase 2: Deep-Dive Interview\n\nAsk 3-5 high-signal questions to surface implicit knowledge the user hasn't stated. Focus on:\n\n- **Domain definitions** \u2014 Are there terms that mean something specific in this codebase?\n- **Data shapes** \u2014 What inputs/outputs are involved? What do they look like?\n- **Failure modes** \u2014 What happens when things go wrong? What errors matter?\n- **Trade-offs** \u2014 Are there competing concerns (speed vs correctness, simplicity vs flexibility)?\n- **Boundaries** \u2014 What's explicitly out of scope?\n\nDon't ask questions you can answer by reading the codebase \u2014 use Grep/Glob/Read to look things up yourself first. Only ask the human what you genuinely can't discover.\n\n### Phase 3: Drafting\n\nSynthesize everything into a structured specification document (format below). Present the full draft to the user.\n\n### Phase 4: Stress-Test Review\n\nCritique your own draft before the user even reads it. Look for:\n\n- Vague language (\"handle appropriately\", \"as needed\", \"etc.\")\n- Missing edge cases or error paths\n- Implicit assumptions that aren't stated\n- Contradictions between sections\n- Acceptance criteria that can't be mechanically verified\n\nFix what you find, flag what needs the user's input.\n\n---\n\n## Specification Format\n\nThe output is a single markdown document with four sections. Each section has a specific purpose and owner.\n\n```markdown\n# [Feature/Change Title]\n\n## Intent\n<!-- WHY this change exists. Human-owned, highest authority. -->\n\n**Problem:** [What's happening now that shouldn't be, or not happening that should be]\n\n**Desired outcome:** [What the world looks like after this change]\n\n**Rationale:** [Why this matters \u2014 business value, user pain, technical debt]\n\n**Hypothesis:** We believe [change] will result in [outcome] because [reason].\n\n## User-Facing Behavior\n<!-- WHAT users observe. Human-owned. BDD scenarios. -->\n\nScenario: [descriptive name]\n  Given [initial state]\n  When [user action or system event]\n  Then [observable outcome]\n\nScenario: [error/edge case name]\n  Given [initial state]\n  When [trigger condition]\n  Then [expected behavior]\n\n## Feature Description\n<!-- HOW it's constrained. Engineering-owned. Architectural boundaries. -->\n\n### Musts\n- [Hard constraints that cannot be violated]\n\n### Must Nots\n- [Explicit prohibitions]\n\n### Preferences\n- [Soft guidelines \u2014 follow unless there's a good reason not to]\n\n### Escalation Triggers\n- [Conditions where the agent must stop and ask a human]\n\n## Acceptance Criteria\n<!-- DONE definition. Mechanically verifiable. -->\n\n### Done Definition\n- [ ] [Observable outcome an independent reviewer can verify without reading code]\n- [ ] [Another verifiable outcome]\n\n### Test Cases\n| Input | Expected Output | Notes |\n|-------|----------------|-------|\n| [specific input] | [specific expected result] | [edge case?] |\n```\n\n---\n\n## Authority Hierarchy\n\nWhen sections conflict, higher-authority sections win:\n\n1. **Intent** \u2014 defines the \"why\" (highest)\n2. **User-Facing Behavior** \u2014 defines observable outcomes\n3. **Feature Description** \u2014 defines architectural constraints\n4. **Acceptance Criteria** \u2014 defines verification (lowest)\n\nImplementation must satisfy all four. If an acceptance criterion contradicts the intent, the intent wins \u2014 flag the contradiction and fix the criterion.\n\n## Task Decomposition\n\nIf the spec implies more than ~2 hours of implementation work, break it into sub-tasks:\n\n- Each task has clear inputs, outputs, and module boundaries\n- Tasks are independently executable (an agent can pick one up without completing the others first)\n- Dependencies between tasks are explicit\n- Each task maps to a verifiable acceptance criterion\n\nPresent tasks as a numbered list with estimated scope (small/medium/large) rather than time estimates.\n\n## Conversation Flow\n\n**First invocation:** Run the full discovery loop (Phases 1-4), produce the spec.\n\n**Follow-up:** If the user says \"refine this\", \"update the spec\", or provides feedback, apply the critique-decide-refine cycle:\n1. Take the user's feedback\n2. Identify what changes in the spec\n3. Present the updated sections (not the whole doc, unless it's short)\n4. Stress-test the changes\n\n**Splitting:** If during discovery you realize the scope is too large, say so early. Propose how to split it and ask which slice to spec first.\n\n## What Makes a Good Spec\n\nA spec is ready when:\n- An agent receiving only this document can implement it without clarification requests (self-containment test)\n- Every scenario has concrete inputs and observable outputs\n- Constraints distinguish musts from preferences\n- Acceptance criteria are mechanically verifiable\n- No section uses vague language (\"appropriate\", \"as needed\", \"properly\")\n- The hypothesis connects the change to a measurable outcome\n",
+  "reference_content": "# Agent Delivery Contract \u2014 Full Reference\n\nThis reference contains the complete ACD specification details. Read this when you need deeper context on artifact definitions, authority rules, or the agent-assisted specification workflow.\n\n## Table of Contents\n1. [The Six Artifacts](#the-six-artifacts)\n2. [Authority Hierarchy](#authority-hierarchy)\n3. [Critical Principles](#critical-principles)\n4. [Agent-Assisted Specification Workflow](#agent-assisted-specification-workflow)\n5. [Specification Validation Checklist](#specification-validation-checklist)\n\n---\n\n## The Six Artifacts\n\nThese artifacts are **pipeline inputs, not reference documents**. The pipeline and agents consume them mechanically during validation.\n\n### 1. Intent Description\n**Authority:** Highest | **Owner:** Human (non-negotiable)\n\nThe self-contained problem statement explaining what the change accomplishes and why, without prescribing how. An agent receiving only this document should understand the problem without asking clarifying questions.\n\nRequirements:\n- State the problem clearly\n- Define what the change should accomplish\n- Explain why it matters\n- Include a testable hypothesis: \"We believe [change] will result in [outcome] because [reason]\"\n\nAgents help by: identifying ambiguity, suggesting edge cases, simplifying overly broad scope, and stress-testing hypotheses before implementation begins.\n\n### 2. User-Facing Behavior\n**Authority:** Second | **Owner:** Human\n\nDescribes how the system behaves from the user's perspective as observable outcomes.\n\nRequirements:\n- Express as observable, external behaviors\n- Use BDD scenarios with Given/When/Then structure\n- Focus on outcomes users can perceive\n- Exclude internal implementation details\n\nAgents help by: generating initial Gherkin scenarios from intent descriptions, identifying missing scenarios around boundaries, failures, and concurrent access patterns.\n\n### 3. Feature Description (Constraint Architecture)\n**Authority:** Third | **Owner:** Engineering team\n\nSpecifies architectural constraints, dependencies, and trade-off boundaries.\n\nSections:\n- **Musts:** Hard boundaries that cannot be violated\n- **Must Nots:** Prohibitions and limitations\n- **Preferences:** Soft guidelines for approach\n- **Escalation Triggers:** Conditions requiring human decision-making\n\nPrevents agents from modifying architectural decisions \u2014 agents implement within constraints.\n\nAgents help by: suggesting architectural considerations, drafting non-functional requirements, and verifying consistency between technical constraints and user-facing behavior.\n\n### 4. Acceptance Criteria\n**Authority:** Fourth | **Owner:** Humans (criteria), agents (may generate test code)\n\nTwo parts:\n- **Done Definition:** Observable outcomes independent reviewers could verify without seeing code\n- **Evaluation Design:** Test cases with known-good outputs that catch regressions\n\nCriteria must be decoupled from implementation (verify behavior, not internals) and faithful to specifications (exercise all aspects without omitting edge cases).\n\nConnection to Intent: Acceptance criteria verify \"does the code work?\" while the intent hypothesis asks \"did this achieve its purpose?\" Criteria run on every commit; hypothesis validation occurs post-deployment.\n\n### 5. System Constraints\n**Authority:** Fifth | **Owner:** Organizational standards\n\nNon-functional requirements, security policies, performance budgets, and rules applying globally. Must be explicitly stated because agents cannot infer organizational norms.\n\nCategories: security policies, performance budgets, architectural rules, operational requirements, monitoring/logging standards.\n\n### 6. Implementation\n**Authority:** Lowest | **Owner:** Agent (generated), human (reviewed), or co-authored\n\nThe actual code. Must satisfy acceptance criteria, conform to feature description constraints, and achieve intent description goals. Requires human review before merging.\n\nHuman review focuses on: intent alignment, architectural conformance, complexity assessment, and maintainability \u2014 not merely test passage.\n\n---\n\n## Authority Hierarchy\n\nWhen artifacts conflict, higher-priority artifacts override lower ones:\n\n1. Intent Description \u2014 defines the \"why\"\n2. User-Facing Behavior \u2014 defines observable outcomes\n3. Feature Description \u2014 defines architectural constraints\n4. Acceptance Criteria \u2014 pipeline-enforced requirements\n5. System Constraints \u2014 global organizational rules\n6. Implementation \u2014 must satisfy all above\n\n**When an agent detects a conflict between artifacts, it cannot resolve that conflict by modifying the artifact it does not own.** Without explicit authority definitions, agents guess wrong.\n\n---\n\n## Critical Principles\n\n- Artifacts are **pipeline inputs consumed mechanically**, not reference documents for humans to browse\n- Agents cannot modify artifacts they don't own \u2014 they escalate conflicts\n- Human review of implementation goes beyond \"do tests pass\" to assess intent alignment and maintainability\n- If specification effort for a single change takes more than 15 minutes, the change is too large \u2014 split it\n\n---\n\n## Agent-Assisted Specification Workflow\n\n### Core Pattern\n1. **Human drafts** \u2014 create initial version\n2. **Agent critiques** \u2014 identify gaps, ambiguities, inconsistencies\n3. **Human decides** \u2014 accept, reject, or modify suggestions\n4. **Agent refines** \u2014 generate updated version incorporating decisions\n\n### Scope Reality Check\n\n\"If your specification effort for a single change takes more than 15 minutes, the change is too large. Split it.\" Small-scope specification targets individual vertical slices of functionality, not entire feature sets.\n\n### Discovery Loop\n\n**Phase 1: Initial Framing**\nState outcome, assign agent role as Principal Architect (interviewing, not taking orders), declare goal of creating agent-executable specification.\n\n**Phase 2: Deep-Dive Interview**\nAgent asks 3-5 high-signal questions to surface implicit knowledge: domain definitions, data schemas, failure modes, trade-offs.\n\n**Phase 3: Drafting**\nAgent synthesizes conversation into structured specification with all four stages and task decomposition.\n\n**Phase 4: Stress-Test Review**\nAgent critiques its own output for vagueness, missing constraints, confused areas for junior developers, and edge cases.\n\n### Task Decomposition\nTasks are broken into sub-two-hour chunks using a planner-worker pattern with:\n- Explicit module boundaries\n- Clear inputs/outputs\n- Independent executability\n\n---\n\n## Specification Validation Checklist\n\nBefore implementation begins, validate all artifacts together for:\n\n- [ ] **Clarity** \u2014 No ambiguous language\n- [ ] **Testability** \u2014 All outcomes are observable and verifiable\n- [ ] **Scope** \u2014 No over-engineering; thin vertical slice\n- [ ] **Terminology** \u2014 Consistent terms throughout\n- [ ] **Completeness** \u2014 No implied behaviors without scenarios\n- [ ] **Consistency** \u2014 No contradictions between sections\n- [ ] **Hypothesis** \u2014 Change connects to measurable outcome\n- [ ] **Self-containment** \u2014 Agent can implement without clarification\n\nSources:\n- https://migration.minimumcd.org/docs/agentic-cd/specification/first-class-artifacts/\n- https://migration.minimumcd.org/docs/agentic-cd/specification/agent-assisted-specification/\n"
+}

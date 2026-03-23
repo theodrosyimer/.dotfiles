@@ -1,0 +1,51 @@
+{
+  "expectations": [
+    {
+      "id": "S1",
+      "text": "Contains testable hypothesis",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Found 'We believe' in response.md:11 \u2014 **Hypothesis:** We believe adding a three-way theme toggle (light/dark/system) accessible from the k",
+      "critical": true
+    },
+    {
+      "id": "S2",
+      "text": "Contains BDD scenarios",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Found 'Given' in response.md:17 \u2014 Given the user has never visited the application before",
+      "critical": true
+    },
+    {
+      "id": "S3",
+      "text": "Contains Musts section",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Regex matched '### Musts' in response.md",
+      "critical": true
+    },
+    {
+      "id": "S4",
+      "text": "Contains acceptance criteria",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Regex matched 'Acceptance Criteria' in response.md",
+      "critical": true
+    },
+    {
+      "id": "S5",
+      "text": "Agent discovers no settings page and adapts",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Regex matched 'kebab' in response.md",
+      "critical": false
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "gate_passed": true
+}

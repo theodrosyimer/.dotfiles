@@ -1,0 +1,75 @@
+{
+  "expectations": [
+    {
+      "id": "S1",
+      "text": "Contains testable hypothesis",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Found 'We believe' in response.md:11 \u2014 **Hypothesis:** We believe adding server-backed sync with offline support will result in users retai",
+      "critical": true
+    },
+    {
+      "id": "S2",
+      "text": "Contains BDD Given/When/Then scenarios",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Found 'Given' in response.md:19 \u2014 Given a user opens ArchViz for the first time on a new device",
+      "critical": true
+    },
+    {
+      "id": "S3",
+      "text": "Contains Musts section",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Regex matched '### Musts' in response.md",
+      "critical": true
+    },
+    {
+      "id": "S4",
+      "text": "Contains Preferences section",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Regex matched '### Preferences' in response.md",
+      "critical": false
+    },
+    {
+      "id": "S5",
+      "text": "Contains acceptance criteria",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Regex matched 'Acceptance Criteria' in response.md",
+      "critical": true
+    },
+    {
+      "id": "S6",
+      "text": "Contains task decomposition",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Regex matched 'Task Decomposition' in response.md",
+      "critical": false
+    },
+    {
+      "id": "S7",
+      "text": "Contains stress-test section",
+      "type": "file_contains",
+      "passed": true,
+      "evidence": "Regex matched 'Stress-Test' in response.md",
+      "critical": false
+    },
+    {
+      "id": "S8",
+      "text": "No vague language",
+      "type": "file_not_contains",
+      "passed": true,
+      "evidence": "No matches for '(?i)(as needed|handle appropriately|etc\\.|if applicable)' across 1 file(s)",
+      "critical": false
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0,
+    "total": 8,
+    "pass_rate": 1.0
+  },
+  "gate_passed": true
+}

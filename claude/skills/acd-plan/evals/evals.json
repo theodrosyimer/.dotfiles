@@ -1,0 +1,451 @@
+{
+  "skill_name": "acd-plan",
+  "eval_config": {
+    "runs_per_eval": 3,
+    "structural_gate": true,
+    "judge_model": "claude-sonnet-4-6-20250514",
+    "baseline_comparison": false
+  },
+  "evals": [
+    {
+      "id": "large-scope-collab",
+      "name": "Large scope feature — real-time collaboration",
+      "mode": "guided-conversation",
+      "rounds": [
+        {
+          "role": "planner",
+          "phase": "1-2",
+          "prompt": "You are a planning agent following the ACD Plan skill. The user says:\n\n\"I need to add real-time collaboration to the canvas editor — multiple users editing at once.\"\n\nRun Phase 1 (Initial Framing) and Phase 2 (Deep-Dive Interview):\n1. Explore the codebase to understand the current architecture\n2. Frame a testable hypothesis\n3. If the scope is too large, flag it and propose slices\n4. Ask 3-5 high-signal questions to surface implicit knowledge\n\nOutput your framing, scope assessment, and questions."
+        },
+        {
+          "role": "user",
+          "response": "Let's spec slice 1 — backend sync for a single user first, that makes sense. We'll run a Node server, probably on Railway or Fly.io. Just 2-5 teammates on a project, they have GitHub accounts we can use for auth. Simple last-write-wins per record is fine for now. Record-level granularity is okay for now. Offline support is a must — the app should stay local-first with sync when reconnected."
+        },
+        {
+          "role": "planner",
+          "phase": "3-4",
+          "prompt": "Continue the planning conversation. The user answered your questions (their answers are provided below). Now run Phase 3 (Drafting) and Phase 4 (Stress-Test Review):\n\n1. Synthesize everything into a complete ACD specification with ALL four sections: Intent, User-Facing Behavior (BDD scenarios), Feature Description (Musts/Must Nots/Preferences/Escalation Triggers), Acceptance Criteria (Done Definition + Test Cases)\n2. Include task decomposition if the work exceeds ~2 hours\n3. Stress-test your own draft — look for vague language, missing edge cases, contradictions, unverifiable criteria\n4. Fix issues inline, flag anything needing user input\n\nSave the complete specification to response.md"
+        }
+      ],
+      "expected_output": "A complete ACD specification for backend sync (slice 1), with scope-splitting rationale, testable hypothesis, BDD scenarios covering sync/offline/conflict cases, musts vs preferences, verifiable acceptance criteria, and task decomposition. Should flag that the original request is too large and propose slices.",
+      "files": [],
+      "structural_expectations": [
+        {
+          "id": "S1",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "We believe",
+          "description": "Contains testable hypothesis",
+          "critical": true
+        },
+        {
+          "id": "S2",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "Given",
+          "description": "Contains BDD Given/When/Then scenarios",
+          "critical": true
+        },
+        {
+          "id": "S3",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(### Musts|## Musts|\\*\\*Musts\\*\\*)",
+          "description": "Contains Musts section separating hard constraints",
+          "critical": true
+        },
+        {
+          "id": "S4",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(### Preferences|## Preferences|\\*\\*Preferences\\*\\*)",
+          "description": "Contains Preferences section for soft guidelines",
+          "critical": false
+        },
+        {
+          "id": "S5",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(acceptance criteria|done definition)",
+          "description": "Contains acceptance criteria or done definition section",
+          "critical": true
+        },
+        {
+          "id": "S6",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(task decomposition|sub-tasks|tasks?\\s*\\n)",
+          "description": "Contains task decomposition",
+          "critical": false
+        },
+        {
+          "id": "S7",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(stress.test|self.critique|phase 4|issues? (found|identified)|gaps?)",
+          "description": "Contains stress-test or self-critique section",
+          "critical": false
+        },
+        {
+          "id": "S8",
+          "type": "file_not_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(as needed|handle appropriately|etc\\.|if applicable)",
+          "description": "No vague language in spec sections",
+          "critical": false
+        }
+      ],
+      "quality_rubric": {
+        "dimensions": [
+          {
+            "id": "Q1",
+            "name": "hypothesis_quality",
+            "description": "The testable hypothesis clearly connects a specific change to a measurable outcome with reasoning",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No hypothesis or generic statement without measurable outcome",
+              "3": "Hypothesis present but vague outcome or weak reasoning",
+              "5": "Crisp hypothesis with specific change, measurable outcome, and clear causal reasoning"
+            }
+          },
+          {
+            "id": "Q2",
+            "name": "bdd_scenario_coverage",
+            "description": "BDD scenarios cover happy path, error cases, and edge cases with concrete inputs/outputs",
+            "weight": 2.0,
+            "scoring": {
+              "1": "No scenarios or only happy path",
+              "3": "Happy path and 1-2 error cases, but missing edge cases or vague outcomes",
+              "5": "Comprehensive scenarios covering happy path, errors, edge cases, all with concrete observable outcomes"
+            }
+          },
+          {
+            "id": "Q3",
+            "name": "constraint_architecture",
+            "description": "Feature description clearly separates musts from preferences with escalation triggers",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No constraint separation or all constraints treated equally",
+              "3": "Musts and preferences separated but missing must-nots or escalation triggers",
+              "5": "Full constraint architecture: musts, must-nots, preferences, and escalation triggers all present and well-defined"
+            }
+          },
+          {
+            "id": "Q4",
+            "name": "acceptance_criteria_verifiability",
+            "description": "Acceptance criteria are mechanically verifiable — an independent reviewer can check them without reading code",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Criteria are vague or require subjective judgment",
+              "3": "Most criteria are verifiable but some are ambiguous",
+              "5": "All criteria are concrete, observable, and independently verifiable with specific test cases"
+            }
+          },
+          {
+            "id": "Q5",
+            "name": "scope_awareness",
+            "description": "Recognizes when scope is too large, proposes splitting, and specs a thin vertical slice",
+            "weight": 1.5,
+            "scoring": {
+              "1": "Accepts any scope without question",
+              "3": "Mentions scope but doesn't propose concrete splits",
+              "5": "Explicitly flags oversized scope, proposes named slices, and specs only the chosen slice"
+            }
+          },
+          {
+            "id": "Q6",
+            "name": "self_containment",
+            "description": "The spec is self-contained — an agent receiving only this document can implement without clarification",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Spec references external context or leaves critical details undefined",
+              "3": "Mostly self-contained but a few implicit assumptions",
+              "5": "Fully self-contained with all necessary context, data shapes, and constraints explicit"
+            }
+          },
+          {
+            "id": "Q7",
+            "name": "stress_test_quality",
+            "description": "The self-critique phase identifies real issues and resolves them rather than rubber-stamping",
+            "weight": 1.0,
+            "scoring": {
+              "1": "No self-critique or superficial 'looks good'",
+              "3": "Identifies some issues but doesn't resolve them",
+              "5": "Identifies specific issues (vague language, missing edge cases, contradictions) and fixes them inline"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "search-from-misunderstanding",
+      "name": "New feature from misunderstanding — search",
+      "mode": "guided-conversation",
+      "rounds": [
+        {
+          "role": "planner",
+          "phase": "1-2",
+          "prompt": "You are a planning agent following the ACD Plan skill. The user says:\n\n\"The search is broken — users type a query and get no results even though matching items exist in the database.\"\n\nRun Phase 1 (Initial Framing) and Phase 2 (Deep-Dive Interview):\n1. Investigate the codebase — look for any search functionality\n2. If search doesn't exist, be honest about it and clarify with the user\n3. Frame an appropriate hypothesis based on what you find\n4. Ask clarifying questions\n\nOutput your findings, framing, and questions."
+        },
+        {
+          "role": "user",
+          "response": "Oh right, sorry — I meant I want to ADD search. The app needs it. Let's spec adding search to the structure view. Search tree node names — users need to find files quickly in large projects. A filter input at the top of the structure view, live filtering as you type. Within the nested tree data of a single record — searching node names and paths. Non-matching nodes should be hidden, but keep parent nodes visible if they have matching children. Nothing else is out of scope for now, keep it simple."
+        },
+        {
+          "role": "planner",
+          "phase": "3-4",
+          "prompt": "Continue the planning conversation. The user clarified this is a NEW feature (not a bug fix) and provided details (their answers are below). Now run Phase 3 (Drafting) and Phase 4 (Stress-Test Review):\n\n1. Reframe as a new feature, not a bug fix\n2. Synthesize into a complete ACD specification with ALL four sections: Intent, User-Facing Behavior (BDD scenarios), Feature Description (Musts/Must Nots/Preferences/Escalation Triggers), Acceptance Criteria (Done Definition + Test Cases)\n3. Include task decomposition if needed\n4. Stress-test your draft — fix issues inline, flag what needs user input\n\nSave the complete specification to response.md"
+        }
+      ],
+      "expected_output": "Agent should first investigate codebase and discover there is no search feature, clarify with user, then produce a complete ACD spec for tree node search with BDD scenarios, constraints, and verifiable acceptance criteria.",
+      "files": [],
+      "structural_expectations": [
+        {
+          "id": "S1",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "We believe",
+          "description": "Contains testable hypothesis",
+          "critical": true
+        },
+        {
+          "id": "S2",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "Given",
+          "description": "Contains BDD Given/When/Then scenarios",
+          "critical": true
+        },
+        {
+          "id": "S3",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(### Musts|## Musts|\\*\\*Musts\\*\\*)",
+          "description": "Contains Musts section",
+          "critical": true
+        },
+        {
+          "id": "S4",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(acceptance criteria|done definition)",
+          "description": "Contains acceptance criteria",
+          "critical": true
+        },
+        {
+          "id": "S5",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(no search|does not (have|exist)|not found|no .* feature)",
+          "description": "Agent discovers and reports that search does not exist in the codebase",
+          "critical": false
+        }
+      ],
+      "quality_rubric": {
+        "dimensions": [
+          {
+            "id": "Q1",
+            "name": "hypothesis_quality",
+            "description": "The testable hypothesis clearly connects a specific change to a measurable outcome with reasoning",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No hypothesis or generic statement",
+              "3": "Hypothesis present but vague",
+              "5": "Crisp hypothesis with specific change, measurable outcome, and clear reasoning"
+            }
+          },
+          {
+            "id": "Q2",
+            "name": "bdd_scenario_coverage",
+            "description": "BDD scenarios cover matching, no matches, clearing, case sensitivity, and ancestor visibility",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Only happy path",
+              "3": "Happy path and basic edge cases",
+              "5": "Comprehensive: match, no match, clear, case insensitive, ancestor preservation, empty input"
+            }
+          },
+          {
+            "id": "Q3",
+            "name": "constraint_architecture",
+            "description": "Clear musts vs preferences with escalation triggers",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No separation",
+              "3": "Musts and preferences but missing must-nots or escalation triggers",
+              "5": "Full constraint architecture present"
+            }
+          },
+          {
+            "id": "Q4",
+            "name": "acceptance_criteria_verifiability",
+            "description": "Criteria are mechanically verifiable with specific test cases",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Vague criteria",
+              "3": "Mostly verifiable",
+              "5": "All concrete with specific test cases and expected outputs"
+            }
+          },
+          {
+            "id": "Q5",
+            "name": "codebase_honesty",
+            "description": "Agent honestly reports the search feature doesn't exist rather than fabricating a bug fix",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Fabricates a bug fix for nonexistent code",
+              "3": "Notes the discrepancy but doesn't clearly reframe",
+              "5": "Clearly reports no search exists, asks for clarification, and reframes as new feature"
+            }
+          },
+          {
+            "id": "Q6",
+            "name": "self_containment",
+            "description": "Spec is self-contained and implementable without further questions",
+            "weight": 1.5,
+            "scoring": {
+              "1": "Missing critical details",
+              "3": "Mostly complete",
+              "5": "Fully self-contained with data shapes, component hierarchy, and behavior all explicit"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "dark-mode-toggle",
+      "name": "Medium feature — dark mode toggle",
+      "mode": "guided-conversation",
+      "rounds": [
+        {
+          "role": "planner",
+          "phase": "1-2",
+          "prompt": "You are a planning agent following the ACD Plan skill. The user says:\n\n\"Plan out adding a dark mode toggle to the settings page.\"\n\nRun Phase 1 (Initial Framing) and Phase 2 (Deep-Dive Interview):\n1. Explore the codebase — check if a settings page exists, understand the current color scheme\n2. Frame a testable hypothesis\n3. Ask 3-5 high-signal questions about placement, modes, persistence, scope boundaries\n\nOutput your findings, framing, and questions."
+        },
+        {
+          "role": "user",
+          "response": "Just put the toggle in the kebab menu for now, no need for a full settings page. Three-way: light, dark, system. Default to system. Standalone localStorage key is fine, don't couple it to the config collection. Scope it as toggle infrastructure + reasonable light palette. Doesn't need to be pixel-perfect but should look decent. Out of scope: per-component overrides, custom themes, animated transitions, cross-device sync."
+        },
+        {
+          "role": "planner",
+          "phase": "3-4",
+          "prompt": "Continue the planning conversation. The user answered your questions (their answers are provided below). Now run Phase 3 (Drafting) and Phase 4 (Stress-Test Review):\n\n1. Synthesize into a complete ACD specification with ALL four sections: Intent, User-Facing Behavior (BDD scenarios), Feature Description (Musts/Must Nots/Preferences/Escalation Triggers), Acceptance Criteria (Done Definition + Test Cases)\n2. Include task decomposition if the work exceeds ~2 hours\n3. Stress-test your draft — look for vague language, missing edge cases, contradictions, unverifiable criteria\n4. Fix issues inline, flag anything needing user input\n\nSave the complete specification to response.md"
+        }
+      ],
+      "expected_output": "Complete ACD spec for dark mode toggle in kebab menu with three-way selection, BDD scenarios for each mode, FOUC prevention, persistence, and system preference tracking. Clear musts vs preferences, verifiable criteria.",
+      "files": [],
+      "structural_expectations": [
+        {
+          "id": "S1",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "We believe",
+          "description": "Contains testable hypothesis",
+          "critical": true
+        },
+        {
+          "id": "S2",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match": "Given",
+          "description": "Contains BDD scenarios",
+          "critical": true
+        },
+        {
+          "id": "S3",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(### Musts|## Musts|\\*\\*Musts\\*\\*)",
+          "description": "Contains Musts section",
+          "critical": true
+        },
+        {
+          "id": "S4",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(acceptance criteria|done definition)",
+          "description": "Contains acceptance criteria",
+          "critical": true
+        },
+        {
+          "id": "S5",
+          "type": "file_contains",
+          "pattern": "response.md",
+          "match_regex": "(?i)(no settings page|no .* settings|kebab)",
+          "description": "Agent discovers there is no settings page and adapts",
+          "critical": false
+        }
+      ],
+      "quality_rubric": {
+        "dimensions": [
+          {
+            "id": "Q1",
+            "name": "hypothesis_quality",
+            "description": "Testable hypothesis connecting theme toggle to user outcome",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No hypothesis",
+              "3": "Vague hypothesis",
+              "5": "Crisp hypothesis with measurable outcome"
+            }
+          },
+          {
+            "id": "Q2",
+            "name": "bdd_scenario_coverage",
+            "description": "Scenarios cover light/dark/system modes, persistence, OS change, first visit, FOUC",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Only basic toggle",
+              "3": "Covers modes and persistence",
+              "5": "Comprehensive: all modes, persistence, OS tracking, first visit, FOUC prevention"
+            }
+          },
+          {
+            "id": "Q3",
+            "name": "constraint_architecture",
+            "description": "Clear musts vs preferences, out-of-scope boundaries enforced",
+            "weight": 1.5,
+            "scoring": {
+              "1": "No separation",
+              "3": "Basic separation",
+              "5": "Full architecture with must-nots matching stated out-of-scope items"
+            }
+          },
+          {
+            "id": "Q4",
+            "name": "acceptance_criteria_verifiability",
+            "description": "Criteria are mechanically verifiable",
+            "weight": 2.0,
+            "scoring": {
+              "1": "Vague",
+              "3": "Mostly verifiable",
+              "5": "All concrete with test cases"
+            }
+          },
+          {
+            "id": "Q5",
+            "name": "codebase_awareness",
+            "description": "Spec reflects actual codebase state (dark-only, hardcoded slate classes, no theme infra)",
+            "weight": 1.5,
+            "scoring": {
+              "1": "Ignores codebase reality",
+              "3": "Some awareness",
+              "5": "Deeply informed by actual code — references specific files, classes, and current architecture"
+            }
+          },
+          {
+            "id": "Q6",
+            "name": "stress_test_quality",
+            "description": "Self-critique identifies real issues and resolves them",
+            "weight": 1.0,
+            "scoring": {
+              "1": "No self-critique",
+              "3": "Identifies issues but doesn't fix",
+              "5": "Finds and fixes specific issues (FOUC, localStorage edge cases, etc.)"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
