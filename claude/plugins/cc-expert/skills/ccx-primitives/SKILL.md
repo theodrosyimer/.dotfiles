@@ -59,8 +59,13 @@ freshness check entirely and run Step 2 immediately:
 
 ### 2a — Fetch primitive schemas
 
-Fetch the following pages using `web_fetch` + a `web_search` with `site:code.claude.com` to
-cross-reference (web_fetch alone misses JS-rendered content):
+First, read `references/cc-documentation.md` for **anchor-specific URLs** that point directly to
+each primitive's frontmatter reference section. Use these targeted URLs with `web_fetch` first —
+they land on the exact section instead of requiring you to scan an entire page.
+
+For broader context or if the anchor URL doesn't resolve, fall back to these full-page URLs using
+`web_fetch` + a `web_search` with `site:code.claude.com` to cross-reference (web_fetch alone
+misses JS-rendered content):
 
 | Primitive         | Primary doc URL                                   |
 | ----------------- | ------------------------------------------------- |
@@ -177,9 +182,13 @@ When auditing an existing file, compare field-by-field against the schema and fl
 - Fields used in the wrong primitive (e.g., `context: fork` in a command file)
 
 **If `schemas.md` doesn't cover the question** (topic missing, field unclear, or user asks about
-something not in the reference), fall back to live docs: fetch the relevant URL from the table in
-Step 2a and answer from source. Do NOT guess or infer from training data alone — Claude Code
-changes frequently and training data may be stale.
+something not in the reference), fall back in this order:
+
+1. Read `references/cc-documentation.md` for anchor-specific URLs to the relevant primitive's
+   frontmatter docs — fetch that URL directly
+2. If no matching link exists, use the full-page URLs from the Step 2a table
+3. Do NOT guess or infer from training data alone — Claude Code changes frequently and training
+   data may be stale.
 
 ---
 
@@ -187,6 +196,8 @@ changes frequently and training data may be stale.
 
 - `references/schemas.md` — All frontmatter field tables, extracted from official docs. Read this
   before answering any schema question.
+- `references/cc-documentation.md` — Direct links to official frontmatter schema docs with section
+  anchors. Use these URLs for targeted fetches instead of searching entire pages.
 - `references/last-updated.txt` — Date and version of last knowledge refresh (`date:` + `version:`
   fields). Read at every invocation.
 

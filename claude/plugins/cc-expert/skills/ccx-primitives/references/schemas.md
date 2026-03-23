@@ -1,7 +1,7 @@
 # Claude Code Primitive Schemas
 
-> Source: claude-code-orchestration-guide.md (project knowledge) + session-fetched docs.
-> Last manually verified: 2026-03-16.
+> Source: official docs (code.claude.com) + CHANGELOG.md + session-fetched docs.
+> Last manually verified: 2026-03-23 (v2.1.81).
 
 ---
 
@@ -33,7 +33,7 @@ allowed-tools: Read, Grep, Glob        # optional. restricts tool surface. Comma
 context: fork                          # optional. runs in isolated subagent context (own context window)
 agent: Explore                         # optional. Explore | Plan | general-purpose | <custom-agent-name>
 model: opus                            # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6)
-effortLevel: low                       # optional. 🆕 low | medium | high  (max was removed)
+effort: low                            # optional. 🆕 renamed from effortLevel. low | medium | high | max (Opus 4.6 only). Overrides session effort.
 argument-hint: "<topic>"               # optional. autocomplete hint shown after /skill-name in UI
 hooks:                                 # optional. scoped to skill lifecycle, auto-cleaned when done
   PreToolUse:
@@ -73,6 +73,7 @@ Single `.md` file only — no directories, no supporting files.
 description: "..."                     # REQUIRED. shown in / autocomplete menu
 allowed-tools: Read, Grep, Glob        # optional. same syntax as skills
 model: opus                          # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6)
+effort: low                            # optional. 🆕 low | medium | high | max (Opus 4.6 only). Added in v2.1.80.
 ---
 ```
 
@@ -109,6 +110,7 @@ description: "..."                     # REQUIRED. model reads to decide when to
 tools: Read, Glob, Grep                # optional. comma-sep allowlist. Omit = inherits ALL tools incl. MCP
 disallowedTools: Bash                  # optional. block specific tools
 model: opus                          # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6) | inherit. Default: inherit (uses parent model)
+effort: low                            # optional. 🆕 low | medium | high | max (Opus 4.6 only). Overrides session effort.
 permissionMode: default                # optional. default | acceptEdits | bypassPermissions | plan | dontAsk
 maxTurns: 20                           # optional. limit agentic loop iterations
 skills:                                # optional. inject full skill content at subagent startup
@@ -227,6 +229,7 @@ Hooks live under the `"hooks"` key in any `settings.json` file (user, project, l
 | `PreCompact` | `trigger` (manual/auto) | ❌ No |
 | `PostCompact` | `trigger` (manual/auto) | ❌ No |
 | `WorktreeRemove` | ignored | ❌ No |
+| 🆕 `StopFailure` | `error_type` (rate_limit/authentication_failed/billing_error/invalid_request/server_error/max_output_tokens/unknown) | ❌ No |
 
 ### 4 handler types
 
@@ -312,6 +315,7 @@ Same `{"decision": "approve/block"}` response schema as prompt hooks.
 | `CLAUDE_CODE_REMOTE` | All hooks (`"true"` in remote web environments) |
 | `CLAUDE_ENV_FILE` | `SessionStart` only — write `export VAR=value` lines to persist vars |
 | `CLAUDE_PLUGIN_ROOT` | Plugin hooks only |
+| 🆕 `CLAUDE_PLUGIN_DATA` | Plugin hooks only — persistent state dir that survives plugin updates |
 
 ---
 
@@ -323,9 +327,10 @@ Same `{"decision": "approve/block"}` response schema as prompt hooks.
 ---
 name: My Custom Style          # REQUIRED. Shown in style picker
 description: Brief description # REQUIRED. Shown in style picker
+keep-coding-instructions: false # optional. 🆕 default false. true = keep coding-related system prompt parts.
 ---
 # Custom system prompt content
-# This REPLACES Claude Code's default engineering system prompt entirely.
+# By default, this REPLACES Claude Code's engineering system prompt. Set keep-coding-instructions: true to retain it.
 ```
 
 **Key distinction:** Output styles replace the default system prompt. CLAUDE.md and
@@ -369,6 +374,7 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 | `name` field | optional (defaults to dir name) | ❌ (filename) | ✅ required | ❌ invalid | — |
 | `description` field | recommended (falls back to first paragraph) | ✅ required | ✅ required | ❌ invalid | — |
 | `model` field | ✅ | ✅ | ✅ | ❌ | ✅ (prompt/agent types) |
+| 🆕 `effort` field | ✅ | ✅ | ✅ | ❌ | — |
 | `allowed-tools` / `tools` | ✅ | ✅ | ✅ | ❌ | — |
 | `hooks` in frontmatter | ✅ | ❌ | ✅ | ❌ | N/A |
 | `context: fork` ⭐ | ✅ | ❌ **primary reason to use skill over command** | — | ❌ | — |
@@ -414,6 +420,7 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - `async: true` is **command-type only** — not supported on http, prompt, or agent handlers
 - HTTP hooks are not supported for `SessionStart` events
 - `CLAUDE_ENV_FILE` is `SessionStart`-only — writing env vars elsewhere has no effect
+- 🆕 `StopFailure` fires on API errors (rate limit, auth, billing) — use to log or alert on turn failures. Non-blocking.
 
 ### Slash commands vs Skills
 
