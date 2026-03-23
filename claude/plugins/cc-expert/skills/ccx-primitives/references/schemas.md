@@ -25,15 +25,15 @@
 
 ```yaml
 ---
-name: my-skill                        # optional. lowercase + hyphens, max 64 chars → becomes /my-skill. Defaults to directory name if omitted.
+name: my-skill                         # optional. lowercase + hyphens, max 64 chars → becomes /my-skill. Defaults to directory name if omitted.
 description: "..."                     # recommended. max 1024 chars — primary model discovery mechanism. Falls back to first paragraph if omitted.
 disable-model-invocation: true         # optional. default false. true = only user can invoke via /name
 user-invocable: false                  # optional. default true. false = only model can invoke
 allowed-tools: Read, Grep, Glob        # optional. restricts tool surface. Comma-sep or YAML list.
 context: fork                          # optional. runs in isolated subagent context (own context window)
 agent: Explore                         # optional. Explore | Plan | general-purpose | <custom-agent-name>
-model: opus                          # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6)
-# effortLevel: low                     # optional. 🆕 low | medium | high  (max was removed)
+model: opus                            # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6)
+effortLevel: low                       # optional. 🆕 low | medium | high  (max was removed)
 argument-hint: "<topic>"               # optional. autocomplete hint shown after /skill-name in UI
 hooks:                                 # optional. scoped to skill lifecycle, auto-cleaned when done
   PreToolUse:
