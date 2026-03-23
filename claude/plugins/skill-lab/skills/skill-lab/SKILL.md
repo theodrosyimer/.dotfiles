@@ -38,7 +38,7 @@ Read `references/workspace-conventions.md` before starting.
 Create a workspace directory before starting any phase:
 
 ```bash
-mkdir -p ./skill-lab-workspace/$(date +%Y%m%d-%H%M%S)
+mkdir -p ./.skill-lab-workspace/$(date +%Y%m%d-%H%M%S)
 ```
 
 Store the workspace path — all phases write their outputs here.
@@ -54,9 +54,11 @@ Store the workspace path — all phases write their outputs here.
 Parse `$ARGUMENTS`:
 
 - **YouTube URL detected**: Try auto-extracting transcript:
+
   ```bash
   yt-dlp --write-auto-sub --sub-lang en --skip-download --convert-subs srt -o "<workspace>/transcript" "<url>"
   ```
+
   If `yt-dlp` fails or is unavailable, ask the user to paste the transcript as quoted text.
 
 - **File path detected**: Read the file.
@@ -74,6 +76,7 @@ Save the output to `<workspace>/knowledge.md`.
 ### Step 1.3 — Gate
 
 Confirm with the user:
+
 - Does the knowledge document capture the key concepts?
 - Anything to add or adjust?
 
@@ -92,6 +95,7 @@ Ask the user: _"What skill do you want to create from this knowledge? Describe w
 ### Step 2.2 — Design with cc:architect
 
 Invoke `/cc:architect` with the user's goal description. The architect will:
+
 1. Apply the 7-axis decision tree (rule? external service? repeatable? verbose? distributed? CI? recurring?)
 2. Match against 13 workflow patterns
 3. Detect anti-patterns
@@ -102,6 +106,7 @@ Save the recommendation to `<workspace>/design-recommendation.md`.
 ### Step 2.3 — User approval
 
 Present the architect's recommendation. The user may:
+
 - Approve as-is
 - Request adjustments (different primitive type, different isolation strategy, etc.)
 - Ask for alternative approaches
@@ -111,6 +116,7 @@ Present the architect's recommendation. The user may:
 ### Step 2.4 — Scaffold
 
 After approval, the architect scaffolds the skill files into `<workspace>/skill/`:
+
 - SKILL.md with correct frontmatter (validated against schemas)
 - Directory structure (scripts/, references/, assets/ — only if needed)
 - `# TODO:` markers where the user needs to fill in specifics
@@ -122,6 +128,7 @@ Guide the user to fill `# TODO:` markers using concepts from `<workspace>/knowle
 ### Step 2.6 — Validate with cc:primitives
 
 Invoke `/cc:primitives` to validate the scaffolded files:
+
 - YAML frontmatter correctness
 - Schema compliance
 - Anti-pattern detection
@@ -131,6 +138,7 @@ Fix any errors found.
 ### Step 2.7 — Gate
 
 Confirm with the user:
+
 - Is the skill content complete?
 - Are all `# TODO:` markers resolved?
 - Schema validation passes?
@@ -158,12 +166,14 @@ If stale, sync first: `python scripts/sync-upstream.py --sync --auto-detect`
 Create `<workspace>/eval-results/evals.json` with:
 
 **Structural expectations** (Layer 1 — binary pass/fail):
+
 - SKILL.md exists with valid frontmatter
 - Description includes trigger words
 - No banned patterns (empty dirs, extraneous files)
 - Required references/scripts exist
 
 **Quality rubric** (Layer 2 — LLM judge, 1-5 scale):
+
 - `knowledge_integration`: Does the skill correctly encode concepts from the knowledge document?
 - `instruction_clarity`: Are instructions unambiguous and actionable?
 - `convention_adherence`: Does the skill follow Claude Code conventions?
@@ -189,6 +199,7 @@ python -m scripts.aggregate_benchmark <workspace>/eval-results/<timestamp> --ski
 ### Step 3.5 — Present results
 
 Report to the user:
+
 - **Efficiency score**: `(structural_pass_rate x 0.4) + (rubric_normalized x 0.6)`
 - **Consistency score**: `1 - (stddev / mean)`
 - **Final grade**: `efficiency x consistency`
@@ -197,6 +208,7 @@ Report to the user:
 ### Step 3.6 — Recommendations
 
 Based on results:
+
 - **stddev < 0.1**: Reliable — skill is ready
 - **stddev 0.1-0.3**: Review flagged dimensions — tighten ambiguous instructions
 - **stddev > 0.3**: Major rewrite needed for those dimensions
@@ -206,6 +218,7 @@ Based on results:
 ## Phase 4 — Iterate (if needed)
 
 If the user wants to improve scores:
+
 1. Identify which dimensions need work (from Phase 3 variance analysis)
 2. Return to **Phase 2.5** to refine the skill content
 3. Re-run **Phase 3** to measure improvement
