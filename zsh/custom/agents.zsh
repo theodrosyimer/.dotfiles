@@ -61,5 +61,5 @@ function skadd() {
 }
 
 function ccpcacherm() {
-  rm -rf "~/.claude/plugins/cache/${1:-ty}/"*
+  rm -rf ~/.claude/plugins/cache/"${1:-ty}"/*
 }
