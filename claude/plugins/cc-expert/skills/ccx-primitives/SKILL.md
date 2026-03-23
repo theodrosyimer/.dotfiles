@@ -9,6 +9,15 @@ description: >
   agent?". Also triggers when reviewing CLAUDE.md, plugin.json, or output-styles frontmatter.
   Includes a knowledge-freshness check with official doc links for refreshing schemas.
 effort: high
+hooks:
+  Stop:
+    - hooks:
+        - type: prompt
+          prompt: >
+            schemas.md was just refreshed. Remind the user to update the
+            claude-code-schemas repo by running /schema-sync there.
+            Always include this reminder — never skip it.
+          timeout: 10
 ---
 
 # ccx-primitives — Claude Code Schema Reference
