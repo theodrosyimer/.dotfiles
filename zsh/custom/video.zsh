@@ -154,7 +154,8 @@ function vd() {
            --progress \
            --download-archive "$playlist_dir/archive.txt" \
            --restrict-filenames \
-           --cookies-from-browser chrome
+           --cookies-from-browser chrome \
+           --remote-components ejs:github
   else
     local OUTPUT_TEMPLATE='%(title)s.%(ext)s'
     yt-dlp -f "$FORMAT" \
@@ -163,7 +164,8 @@ function vd() {
            --progress \
            --restrict-filenames \
            --no-playlist \
-           --cookies-from-browser chrome
+           --cookies-from-browser chrome \
+           --remote-components ejs:github
   fi
 
   return $?
