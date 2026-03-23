@@ -3,6 +3,7 @@ name: skill-lab
 description: "Create Claude Code skills from structured knowledge sources. Trigger when the user wants to turn a YouTube video, transcript, article, or documentation into a well-designed, evaluated skill. Combines knowledge extraction (yt-transcript), primitive design (cc:architect), schema validation (cc:primitives), and quality evaluation (skill-evaluator) into a repeatable pipeline."
 disable-model-invocation: true
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch
+effort: high
 ---
 
 # Skill Lab — Knowledge-to-Skill Pipeline

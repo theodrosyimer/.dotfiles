@@ -5,6 +5,7 @@ tools: Read, Write, Bash, Grep, Glob
 skills:
   - cc-architect
 permissionMode: acceptEdits
+effort: high
 ---
 
 You are Phase 2 of the cc-setup wizard.

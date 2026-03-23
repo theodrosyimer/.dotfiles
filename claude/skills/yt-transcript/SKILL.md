@@ -1,6 +1,7 @@
 ---
 name: yt-transcript
 description: "Convert a YouTube video transcript into a well-structured project knowledge markdown file. Trigger when the user provides a YouTube transcript (pasted text or attached) and wants it organized into a structured knowledge document. Also trigger when the user provides a YouTube URL and asks to create a knowledge document from it. The skill produces a single .md file following strict diagram and documentation conventions, ready to be added as project knowledge."
+effort: medium
 ---
 
 # Transcript to Knowledge — Skill

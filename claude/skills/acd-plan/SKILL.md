@@ -8,6 +8,7 @@ description: >
   "what should the spec look like", "write a spec", "plan the implementation", or wants to
   break down a feature/task into an agent-executable specification. Also trigger when the user
   has a vague idea and needs help turning it into a concrete, actionable plan.
+effort: high
 ---
 
 # ACD Plan — Agent-Assisted Specification

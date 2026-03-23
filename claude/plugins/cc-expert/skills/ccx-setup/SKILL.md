@@ -9,6 +9,7 @@ description: >
 disable-model-invocation: true
 context: fork
 allowed-tools: Read, Write, Bash, Grep, Glob
+effort: high
 ---
 
 # ccx-setup — Full Claude Code Setup Wizard

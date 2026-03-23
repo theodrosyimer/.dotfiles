@@ -8,6 +8,7 @@ description: >
   fields does a skill support?" or "how do I write a hook?" or "what's the frontmatter for an
   agent?". Also triggers when reviewing CLAUDE.md, plugin.json, or output-styles frontmatter.
   Includes a knowledge-freshness check with official doc links for refreshing schemas.
+effort: high
 ---
 
 # ccx-primitives — Claude Code Schema Reference

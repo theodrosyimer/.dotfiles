@@ -5,6 +5,7 @@ tools: Read, Write, Bash, Grep, Glob
 skills:
   - context-optimizer
 permissionMode: acceptEdits
+effort: high
 ---
 
 You are Phase 1 of the cc-setup wizard.

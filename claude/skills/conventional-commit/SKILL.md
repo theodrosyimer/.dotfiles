@@ -2,6 +2,7 @@
 name: conventional-commit
 description: Generates clear, conventional commit messages from git diffs. Use when writing commit messages, reviewing staged changes, or preparing releases. Runs git diff --staged to analyze changes and produces commitlint-compliant messages. Stages and commits changes after user confirmation.
 allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*), Read, Grep
+effort: low
 hooks:
   PreToolUse:
     - matcher: "Bash"

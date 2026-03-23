@@ -9,6 +9,7 @@ description: >
   and wants browsable documentation. Produces a ready-to-run Next.js app with sidebar
   navigation, code samples, dark mode, and full visual customization — delivered as a
   directory for placement in a monorepo.
+effort: high
 ---
 
 # API Documentation Site Generator

@@ -20,6 +20,7 @@ description: >-
 
   Prefer this skill whenever documentation accuracy matters or when model
   knowledge may be outdated.
+effort: medium
 ---
 
 # Documentation Lookup

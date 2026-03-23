@@ -9,6 +9,7 @@ description: >
   to capture. Interviews the user, runs the decision tree, recommends the right primitive(s) with
   justification, flags anti-patterns, and writes the scaffold files directly to disk.
 allowed-tools: Read, Write, Bash, Grep, Glob
+effort: high
 ---
 
 # ccx-architect — Claude Code Automation Designer

@@ -5,6 +5,7 @@ tools: Read, Grep, Glob
 skills:
   - cc-primitives
 permissionMode: plan
+effort: high
 ---
 
 You are Phase 3 of the cc-setup wizard.

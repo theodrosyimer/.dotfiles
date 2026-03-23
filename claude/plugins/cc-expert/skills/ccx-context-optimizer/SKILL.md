@@ -7,6 +7,7 @@ description: >
   "restructure my rules", "what should go in my CLAUDE.md", or references context file management.
   This skill applies research-backed principles from ACE (Agentic Context Engineering) and empirical studies
   on AGENTS.md effectiveness to keep context files minimal, non-redundant, and high-signal.
+effort: high
 ---
 
 # Context Optimizer
