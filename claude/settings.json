@@ -5,9 +5,12 @@
     "ENABLE_LSP_TOOL": "1"
   },
   "permissions": {
+    "defaultMode": "plan",
     "allow": [
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:vitest.dev)",
+      "WebSearch",
+      "Glob",
       "Bash(ctx7 *)",
       "Bash(jq *)",
       "Bash(rg *)",
@@ -27,7 +30,6 @@
       "Read(**/.aws/**)",
       "Read(**/.ssh/**)"
     ],
-    "defaultMode": "plan"
   },
   "hooks": {
     "PreToolUse": [
