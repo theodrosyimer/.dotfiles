@@ -7,8 +7,8 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:docs.anthropic.com)",
-      "Bash(npm run lint)",
-      "Bash(npm run test:*)",
+      "WebFetch(domain:vitest.dev)",
+      "Bash(ctx7 *)",
       "Bash(jq *)",
       "Bash(rg *)",
       "Bash(wc -l *)",
