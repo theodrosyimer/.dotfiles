@@ -4,7 +4,7 @@ Each skill-lab session creates a workspace directory in the current working dire
 
 ```
 <cwd>/.skill-lab-workspace/<session-id>/<skill-name>/
-├── knowledge.md              ← Phase 1: yt-transcript output
+├── knowledge.md              ← Phase 1: distill output
 ├── design-recommendation.md  ← Phase 2: cc:architect classification + recommendation
 ├── skill/                    ← Phase 2: scaffolded skill directory
 │   ├── SKILL.md

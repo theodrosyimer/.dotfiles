@@ -217,7 +217,7 @@ CHOSEN: Out-of-Process — because consumer independence is the entire
 
 ---
 
-## 6. Relevance to Our Architecture
+## 6. Relevance to Our Work
 
 This aligns directly with our modular monolith approach and existing project knowledge on Udi Dahan's patterns.
 

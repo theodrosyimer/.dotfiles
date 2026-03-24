@@ -1,6 +1,8 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/theodrosyimer/claude-code-schemas/main/skill.schema.json
+
 ---
 name: skill-lab
-description: "Create Claude Code skills from structured knowledge sources. Trigger when the user wants to turn a YouTube video, transcript, article, or documentation into a well-designed, evaluated skill. Combines knowledge extraction (yt-transcript), primitive design (cc:architect), schema validation (cc:primitives), and quality evaluation (skill-evaluator) into a repeatable pipeline."
+description: "Create Claude Code skills from structured knowledge sources. Trigger when the user wants to turn a YouTube video, transcript, article, or documentation into a well-designed, evaluated skill. Combines knowledge extraction (distill), primitive design (cc:architect), schema validation (cc:primitives), and quality evaluation (skill-evaluator) into a repeatable pipeline."
 disable-model-invocation: true
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, WebFetch
 effort: high
@@ -70,7 +72,7 @@ Parse `$ARGUMENTS`:
 
 ### Step 1.2 — Extract knowledge
 
-Invoke `/yt-transcript` with the resolved transcript and any metadata (URL, title, channel).
+Invoke `/distill` with the resolved transcript and any metadata (URL, title, channel).
 
 Save the output to `<workspace>/knowledge.md`.
 
