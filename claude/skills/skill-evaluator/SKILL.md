@@ -1,6 +1,7 @@
 ---
 name: skill-evaluator
 description: Evaluate skill efficiency by measuring output vs expected output with variance analysis. Use when the user wants to test a skill's quality, benchmark skill performance, create eval suites for skills, run structural assertions + LLM judge evaluation, measure consistency across runs, or compare with-skill vs without-skill baselines. Also use when phrases like "evaluate my skill", "test skill quality", "benchmark skill", "skill efficiency", "does my skill work", or "run evals" appear. Do NOT use for creating new skills (use skill-creator) or optimizing skill descriptions/triggering (use skill-creator's description optimization).
+effort: high
 ---
 
 # Skill Evaluator
