@@ -52,14 +52,14 @@ function yt-transcript() {
                 --skip-download -o "$tmpdir/sub" "$VIDEO_URL" 2>/dev/null; then
       if ! yt-dlp --write-sub --sub-lang en --sub-format vtt \
                   --skip-download -o "$tmpdir/sub" "$VIDEO_URL" 2>/dev/null; then
-        printf "%s\n" "$RED\nNo English subtitles available for this video.$RESET"
+        printf "\n%s\n" "$RED""No English subtitles available for this video.$RESET"
         return 1
       fi
     fi
 
     local vtt_file="$(find "$tmpdir" -name '*.vtt' | head -1)"
     if [[ -z "$vtt_file" ]]; then
-      printf "%s\n" "$RED\nNo subtitle file was downloaded.$RESET"
+      printf "\n%s\n" "$RED""No subtitle file was downloaded.$RESET"
       return 1
     fi
 
@@ -104,7 +104,7 @@ BEGIN { prev = "" }
     if [[ -n "$OUTPUT_PATH" ]]; then
       local dest="${OUTPUT_PATH[-1]}"
       printf '%s\n' "$output" > "$dest"
-      printf "%s\n" "$GREEN\nTranscript written to: $CYAN$dest$RESET" >&2
+      printf "\n%s\n" "$GREEN""Transcript written to: $CYAN$dest$RESET" >&2
     else
       printf '%s\n' "$output" | pbcopy
       printf "\n%s\n" "$GREEN""Transcript copied to clipboard$RESET ($title)" >&2
