@@ -7,8 +7,8 @@ export FNM_COREPACK_ENABLED=false
 # rtk
 export PATH="$HOME/.local/bin:$PATH"
 
-# Homebrew
-# export PATH="/opt/homebrew/opt/*/bin:$PATH"
+# corepack, check https://github.com/nodejs/corepack#environment-variables
+export COREPACK_ENABLE_AUTO_PIN=1
 
 # Remove an annoying warning
 # export NODE_OPTIONS='--disable-warning=ExperimentalWarning'
