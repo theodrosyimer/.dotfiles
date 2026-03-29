@@ -43,7 +43,7 @@ alias sd='fzf_code_projects'
 
 alias d='z $CODE'
 alias w='z $CODE_WORK'
-alias p='z $CODE_PERSONAL'
+alias perso='z $CODE_PERSONAL'
 alias o='z $CODE_PROJECTS/oss'
 alias ref='z $CODE_REFS'
 alias pc='z $CODE_PROJECTS'
@@ -63,14 +63,18 @@ alias ghc='gh repo clone "$(chrome_get_front_window_url)"' # Clone a GitHub repo
 # Package managers + npq (https://github.com/lirantal/npq)
 alias inpq="npm i -g npq"
 # alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
-alias pn='pnpm'
+alias p='pnpm'
+alias pr='pnpm run'
+alias pa='pnpm add'
+alias pad='pnpm add -D'
+alias px='pnpm dlx'
 alias pf='pnpm --filter'
 alias b='bun'
 # alias npm="npq-hero || npm"
 alias n='npm'
+alias nr='npm run'
 # alias yarn="NPQ_PKG_MGR=yarn npq-hero"
 alias y='yarn'
-alias nr='npm run'
 
 # Interactive script selector with fzf and package manager runners
 alias s="cat package.json | jq -r '.scripts | keys[]' | sort -r | fzf"
