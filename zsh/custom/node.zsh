@@ -32,7 +32,7 @@ function node_version_updater() {
 
   # Handle LTS version update
   if [[ -n "$flag_lts" ]]; then
-    printf "%b\n" "$BLUE""Processing LTS version update...$RESET"
+    printf "%b\n\n" "$BLUE""Processing LTS version update...$RESET"
 
     local versions=("${(f)$(fnm list-remote --lts)}")
     local latest_lts_version=${(s: :)versions[-1]% *}
@@ -50,14 +50,14 @@ function node_version_updater() {
     if ! fnm list | grep -q "$latest_lts_version"; then
       printf "%b\n" "$YELLOW""Installing LTS version: $RESET$latest_lts_version"
       fnm install "$latest_lts_version" || error_exit "Failed to install LTS version $latest_lts_version"
-      command npm i -g corepack@latest && corepack enable && corepack enable npm && corepack use pnpm@latest
+      command npm i -g corepack@latest && corepack enable && corepack enable npm && corepack install -g pnpm@latest
       command npm i -g npq
     else
       printf "%b\n" "$GREEN""LTS version $latest_lts_version already installed$RESET"
     fi
 
     # Uninstall previous aliased "lts" version if it exists and is not the latest LTS version
-    printf "%b\n" "$YELLOW""Previous LTS version: $RESET$previous_lts_version"
+    printf "\n%b\n" "$YELLOW""Previous LTS version: $RESET$previous_lts_version"
     if [[ -n "$previous_lts_version" && "$previous_lts_version" != "$latest_lts_version" ]]; then
       printf "%b\n" "$YELLOW""Uninstalling previous LTS version: $RESET$previous_lts_version"
       fnm uninstall "$previous_lts_version" 2>/dev/null || true
@@ -71,7 +71,7 @@ function node_version_updater() {
 
   # Handle latest version update
   if [[ -n "$flag_latest" ]]; then
-    printf "%b\n" "$BLUE""Processing latest version update...$RESET"
+    printf "%b\n\n" "$BLUE""Processing latest version update...$RESET"
 
     local previous_latest_version=$(fnm list | grep "latest" | awk '{print $2}')
     local node_latest_version=$(fnm ls-remote --latest)
@@ -87,7 +87,7 @@ function node_version_updater() {
     if ! fnm list | grep -q "$node_latest_version"; then
       printf "%b\n" "$YELLOW""Installing latest version: $RESET$node_latest_version"
       fnm install "$node_latest_version" || error_exit "Failed to install latest version $node_latest_version"
-      command npm i -g corepack@latest && corepack enable && corepack enable npm && corepack use pnpm@latest
+      command npm i -g corepack@latest && corepack enable && corepack enable npm && corepack install -g pnpm@latest
       command npm i -g npq
     else
       printf "%b\n" "$GREEN""Latest version $node_latest_version already installed$RESET"
