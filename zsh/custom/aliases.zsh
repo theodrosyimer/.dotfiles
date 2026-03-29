@@ -65,10 +65,10 @@ alias inpq="npm i -g npq"
 # alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
 alias p='pnpm'
 alias pr='pnpm run'
+alias pf='pnpm --filter'
 alias pa='pnpm add'
 alias pad='pnpm add -D'
 alias px='pnpm dlx'
-alias pf='pnpm --filter'
 alias b='bun'
 # alias npm="npq-hero || npm"
 alias n='npm'
