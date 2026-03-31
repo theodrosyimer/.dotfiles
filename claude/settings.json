@@ -9,6 +9,7 @@
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:vitest.dev)",
       "WebFetch(domain:zod.dev)",
+      "WebFetch(domain:github.com)",
       "WebSearch",
       "Glob",
       "Bash(ctx7 *)",
