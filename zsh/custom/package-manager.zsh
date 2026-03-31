@@ -33,3 +33,15 @@ function init_package_json() {
 
   cat package.json
 }
+
+function pnpms() {
+  NPM_TOKEN=$(op read "op://Dev Perso/npm/token") pnpm "$@"
+}
+
+function npms() {
+  NPM_TOKEN=$(op read "op://Dev Perso/npm/token") npm "$@"
+}
+
+function buns() {
+  NPM_TOKEN=$(op read "op://Dev Perso/npm/token") bun "$@"
+}
