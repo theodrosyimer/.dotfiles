@@ -28,7 +28,10 @@ Consult the decision matrix whenever you are:
 ## Reference
 
 Read `references/decision-matrix.md` for:
+
 - The full decision matrix with tradeoffs
 - Language-specific anchoring patterns (Python, Node.js CommonJS, Node.js ESM, Bash)
 - Common failure scenarios (cron, Docker, CI/CD, IDEs, imported modules)
 - The mental model: script file vs running process
+
+Read `references/why-relative-paths-break-in-production.md` for real-world examples of how relative paths can break in production and why the correct anchoring strategy prevents these bugs.
