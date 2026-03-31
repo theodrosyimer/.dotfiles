@@ -177,8 +177,8 @@ alias ncu="ncu --configFileName .ncurc.json --configFilePath $DOTFILES/ncu"
 # alias etna="ssh etna_piscine -p 22"
 
 # Python3
-# alias python=python3
-# alias pip=pip3
+alias python=python3
+alias pip=pip3
 alias py='python3'
 
 alias lg='lazygit'
