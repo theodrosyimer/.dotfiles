@@ -18,33 +18,50 @@ Create production-quality Claude Code skills from knowledge sources through a ph
 skill-lab/
 ├── SKILL.md                              ← You are here
 └── references/
-    └── workspace-conventions.md          ← Workspace directory structure
+    └── workspace-conventions.md          ← File layout for skills and workspaces
 ```
 
-Read `references/workspace-conventions.md` before starting.
+Read `references/workspace-conventions.md` before starting — it defines where skills, evals, and session artifacts are created.
 
 ---
 
 ## Input
 
-`$ARGUMENTS` accepts one of:
+`$ARGUMENTS` accepts any source that `/distill` supports. Auto-detect the type:
 
-1. **YouTube URL** — `https://youtube.com/watch?v=...` or `https://youtu.be/...`
-2. **File path** — path to a `.txt` or `.md` transcript file
-3. **Quoted transcript text** — pasted transcript in quotes
-4. **Nothing** — ask the user what knowledge source they want to use
+| Input Pattern | Type | Extraction Method |
+|---|---|---|
+| URL containing `youtube.com` or `youtu.be` | YouTube | `yt-dlp` transcript extraction or WebFetch + ask for transcript |
+| URL starting with `http` (non-YouTube) | Web/Blog | WebFetch tool |
+| File path ending in `.pdf` | PDF | Read tool (PDF support) |
+| URL ending in `.pdf` | PDF (remote) | WebFetch to download, then Read tool |
+| File path ending in `.docx` | DOCX | `pandoc -t markdown <file>` |
+| File path ending in `.md` or `.txt` | Text/Markdown | Direct Read tool |
+| None of the above | Pasted text | Parse structured headers or ask for metadata |
+| **Nothing** | — | Ask the user what knowledge source they want to use |
+
+---
+
+## Configuration
+
+`skills_path` controls where new skills are created. Set it here so it applies to all sessions:
+
+<!-- Change this path to match your skills directory -->
+skills_path: ~/.dotfiles/claude/skills
+
+If the path above doesn't exist or doesn't suit the user, ask them where to create the skill.
 
 ---
 
 ## Setup
 
-Create a workspace directory before starting any phase:
+Determine the skill name (from user input or Phase 2 design), then create the workspace:
 
 ```bash
-mkdir -p ./.skill-lab-workspace/$(date +%Y%m%d-%H%M%S)
+mkdir -p ./.skill-lab-workspace/<skill-name>/$(date +%Y%m%d-%H%M%S)
 ```
 
-Store the workspace path — all phases write their outputs here.
+Store the workspace path — ephemeral session artifacts (design docs, iteration results) go here. The skill itself and its evals are created at `<skills_path>/<skill-name>/`.
 
 ---
 
@@ -54,33 +71,25 @@ Store the workspace path — all phases write their outputs here.
 
 ### Step 1.1 — Resolve input
 
-Parse `$ARGUMENTS`:
+Pass `$ARGUMENTS` directly to `/distill` — it handles all extraction logic (including its own `yt-transcript.zsh` script for YouTube). Do not pre-process or extract content yourself.
 
-- **YouTube URL detected**: Try auto-extracting transcript:
-
-  ```bash
-  yt-dlp --write-auto-sub --sub-lang en --skip-download --convert-subs srt -o "<workspace>/transcript" "<url>"
-  ```
-
-  If `yt-dlp` fails or is unavailable, ask the user to paste the transcript as quoted text.
-
-- **File path detected**: Read the file.
-
-- **Quoted text detected**: Use the text directly.
-
-- **No input**: Ask the user to provide a YouTube URL, file path, or pasted transcript.
+If `$ARGUMENTS` is empty, ask the user what knowledge source they want to use (URL, file, or pasted text), then pass their answer to `/distill`.
 
 ### Step 1.2 — Extract knowledge
 
 Invoke `/distill` with the resolved transcript and any metadata (URL, title, channel).
 
-Save the output to `<workspace>/knowledge.md`.
+Save the output to `<skills_path>/<skill-name>/references/knowledge.md` — this becomes a permanent reference bundled with the skill. Create the directory if it doesn't exist:
+
+```bash
+mkdir -p <skills_path>/<skill-name>/references
+```
 
 ### Step 1.3 — Gate
 
 Confirm with the user:
 
-- Does the knowledge document capture the key concepts?
+- Does the knowledge document at `<skills_path>/<skill-name>/references/knowledge.md` capture the key concepts?
 - Anything to add or adjust?
 
 **Do NOT proceed to Phase 2 until the user confirms.**
@@ -118,15 +127,15 @@ Present the architect's recommendation. The user may:
 
 ### Step 2.4 — Scaffold
 
-After approval, the architect scaffolds the skill files into `<workspace>/skill/`:
+After approval, the architect scaffolds the skill files into `<skills_path>/<skill-name>/`:
 
 - SKILL.md with correct frontmatter (validated against schemas)
-- Directory structure (scripts/, references/, assets/ — only if needed)
+- Directory structure (scripts/, assets/ — only if needed; references/ already exists from Phase 1)
 - `# TODO:` markers where the user needs to fill in specifics
 
 ### Step 2.5 — Incorporate knowledge
 
-Guide the user to fill `# TODO:` markers using concepts from `<workspace>/knowledge.md`. Suggest specific content from the knowledge document that maps to each TODO.
+Guide the user to fill `# TODO:` markers using concepts from `<skills_path>/<skill-name>/references/knowledge.md`. Suggest specific content from the knowledge document that maps to each TODO.
 
 ### Step 2.6 — Validate with cc:primitives
 
@@ -166,7 +175,7 @@ If stale, sync first: `python scripts/sync-upstream.py --sync --auto-detect`
 
 ### Step 3.2 — Create eval suite
 
-Create `<workspace>/eval-results/evals.json` with:
+Create `<skills_path>/<skill-name>/evals/evals.json` with:
 
 **Structural expectations** (Layer 1 — binary pass/fail):
 
@@ -188,15 +197,18 @@ Create `<workspace>/eval-results/evals.json` with:
 
 ```bash
 python scripts/run-eval-suite.py \
-    --eval-suite <workspace>/eval-results/evals.json \
-    --skill-path <workspace>/skill \
+    --eval-suite <skills_path>/<skill-name>/evals/evals.json \
+    --skill-path <skills_path>/<skill-name> \
+    --output-dir <workspace>/iterations/iteration-01 \
     --runs 3 --verbose
 ```
+
+Increment the iteration number (zero-padded: `iteration-01`, `iteration-02`, ...) for each evaluation run.
 
 ### Step 3.4 — Aggregate results
 
 ```bash
-python -m scripts.aggregate_benchmark <workspace>/eval-results/<timestamp> --skill-name <name>
+python -m scripts.aggregate_benchmark <workspace>/iterations/iteration-01 --skill-name <name>
 ```
 
 ### Step 3.5 — Present results
@@ -223,8 +235,8 @@ Based on results:
 If the user wants to improve scores:
 
 1. Identify which dimensions need work (from Phase 3 variance analysis)
-2. Return to **Phase 2.5** to refine the skill content
-3. Re-run **Phase 3** to measure improvement
+2. Return to **Phase 2.5** to refine the skill at `<skills_path>/<skill-name>/`
+3. Re-run **Phase 3** with the next iteration number (`iteration-02`, `iteration-03`, ...)
 4. Repeat until the user is satisfied
 
 ---
@@ -233,6 +245,7 @@ If the user wants to improve scores:
 
 - **Never skip phases** — each phase depends on the previous one
 - **Never proceed past a gate without user confirmation**
-- **Never modify existing skills outside the workspace** unless the user explicitly requests it
-- **Always save intermediate outputs** to the workspace directory
+- **Never overwrite an existing skill at `<skills_path>`** unless the user explicitly confirms
+- **Skill + evals + knowledge live at `<skills_path>/<skill-name>/`** — these are durable artifacts
+- **Session artifacts live in `.skill-lab-workspace/`** — design docs and iteration results are ephemeral
 - **Attribute knowledge sources** — the skill should reference where its knowledge came from
