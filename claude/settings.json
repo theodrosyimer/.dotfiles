@@ -5,10 +5,10 @@
     "ENABLE_LSP_TOOL": "1"
   },
   "permissions": {
-    "defaultMode": "plan",
     "allow": [
       "WebFetch(domain:docs.anthropic.com)",
       "WebFetch(domain:vitest.dev)",
+      "WebFetch(domain:zod.dev)",
       "WebSearch",
       "Glob",
       "Bash(ctx7 *)",
@@ -30,6 +30,7 @@
       "Read(**/.aws/**)",
       "Read(**/.ssh/**)"
     ],
+    "defaultMode": "plan"
   },
   "hooks": {
     "PreToolUse": [
@@ -92,5 +93,6 @@
     }
   },
   "voiceEnabled": true,
-  "autoDreamEnabled": true
+  "autoDreamEnabled": true,
+  "effortLevel": "high"
 }
