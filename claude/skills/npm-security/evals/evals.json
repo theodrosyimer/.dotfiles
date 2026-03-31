@@ -1,0 +1,42 @@
+{
+  "skill_name": "npm-security",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Audit the npm security posture of this project",
+      "expected_output": "A structured checklist covering install hardening (postinstall scripts, cooldown, lockfile integrity, deterministic installs), dependency hygiene (no blind upgrades, scanning tools, tree size), secrets/isolation (.env check, devcontainer), and publishing security if applicable. Each item marked pass/fail with specific fix suggestions for failures.",
+      "files": [],
+      "assertions": [
+        {"id": "has-checklist-format", "text": "Output uses a structured checklist format (checkboxes, pass/fail markers, or similar)", "type": "llm_judge"},
+        {"id": "covers-install-hardening", "text": "Covers at least 3 of: postinstall scripts, release cooldown, lockfile integrity, deterministic installs, lockfile committed", "type": "llm_judge"},
+        {"id": "covers-secrets-check", "text": "Checks for plaintext secrets in .env files or mentions secret management", "type": "llm_judge"},
+        {"id": "provides-fix-commands", "text": "Failed checks include specific fix commands or config snippets", "type": "llm_judge"},
+        {"id": "pnpm-primary", "text": "Uses pnpm-specific config as primary examples (pnpm-workspace.yaml, allowBuilds, --frozen-lockfile)", "type": "llm_judge"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm adding a new dependency to my pnpm project. What should I check before installing it to make sure it's safe?",
+      "expected_output": "Reference-mode guidance covering: check package health on Snyk, verify provenance/signatures, use npq or sfw for pre-install audit, check package age (cooldown), inspect tarball contents, review dependency tree size, look for postinstall scripts. Actionable commands for each step.",
+      "files": [],
+      "assertions": [
+        {"id": "mentions-npq-or-sfw", "text": "Recommends npq or Socket Firewall (sfw) as a pre-install auditing tool", "type": "llm_judge"},
+        {"id": "mentions-package-health", "text": "References Snyk security database or package health signals", "type": "llm_judge"},
+        {"id": "includes-commands", "text": "Provides runnable shell commands (not just prose descriptions)", "type": "llm_judge"},
+        {"id": "mentions-cooldown", "text": "References release age / cooldown concept", "type": "llm_judge"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We just had a security scare with a compromised npm package in our CI. Walk me through hardening our install pipeline and audit what we already have.",
+      "expected_output": "Mixed audit+reference response. First audits the project's current CI security config (frozen lockfile, lockfile-lint, postinstall disabled, provenance). Then provides a hardening guide: deterministic installs, lockfile validation in CI, cooldown periods, Socket Firewall or npq integration, OIDC publishing, dev containers for local dev.",
+      "files": [],
+      "assertions": [
+        {"id": "audits-existing-config", "text": "Reads and reports on actual project config files (not just generic advice)", "type": "llm_judge"},
+        {"id": "covers-frozen-lockfile", "text": "Mentions frozen lockfile / deterministic installs for CI", "type": "llm_judge"},
+        {"id": "covers-lockfile-lint", "text": "Mentions lockfile-lint or lockfile validation for CI pipelines", "type": "llm_judge"},
+        {"id": "provides-action-plan", "text": "Output is structured as an action plan with ordered steps", "type": "llm_judge"}
+      ]
+    }
+  ]
+}

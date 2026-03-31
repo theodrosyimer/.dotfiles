@@ -1,0 +1,82 @@
+[
+  {
+    "query": "audit npm security",
+    "should_trigger": true
+  },
+  {
+    "query": "I just joined a new team and inherited a monorepo with like 400 dependencies. Before I even start coding I want to make sure we're not shipping anything sketchy — can you check our dependency security setup?",
+    "should_trigger": true
+  },
+  {
+    "query": "we're setting up CI for our new pnpm workspace and I want to make sure the install step is hardened against supply chain attacks. lockfile validation, frozen installs, the whole nine yards",
+    "should_trigger": true
+  },
+  {
+    "query": "is there a way to make pnpm refuse to install packages that were published less than a week ago? I keep hearing about these zero-day npm attacks",
+    "should_trigger": true
+  },
+  {
+    "query": "someone on the team just ran npm update without checking what changed and now half our tests are broken. what's the safe way to handle dependency upgrades?",
+    "should_trigger": true
+  },
+  {
+    "query": "I want to add socket firewall or npq to our project so we get warnings before installing sus packages. whats the best approach for a pnpm monorepo?",
+    "should_trigger": true
+  },
+  {
+    "query": "our .env file has DATABASE_URL and STRIPE_SECRET_KEY in plaintext. I know that's bad but what's the actual risk from npm packages and how do we fix it with 1password cli?",
+    "should_trigger": true
+  },
+  {
+    "query": "I'm publishing my first npm package from github actions. How do I set up provenance attestations and OIDC so I don't need long-lived tokens?",
+    "should_trigger": true
+  },
+  {
+    "query": "check if our lockfile could be tampered with in a PR — I read about lockfile injection attacks and want to make sure we're protected",
+    "should_trigger": true
+  },
+  {
+    "query": "harden this project's dependencies",
+    "should_trigger": true
+  },
+  {
+    "query": "can you set up eslint and prettier for this typescript project? I want to enforce consistent code style across the team",
+    "should_trigger": false
+  },
+  {
+    "query": "I need to add authentication to our express API using JWT tokens and refresh token rotation. can you walk me through the implementation?",
+    "should_trigger": false
+  },
+  {
+    "query": "help me write a github action that runs our vitest suite on every PR and posts a coverage report as a comment",
+    "should_trigger": false
+  },
+  {
+    "query": "we're migrating from yarn to pnpm and I need to convert our yarn.lock to pnpm-lock.yaml. what's the cleanest way?",
+    "should_trigger": false
+  },
+  {
+    "query": "I want to set up CSP headers and XSS protection for our next.js app. what security headers should I configure?",
+    "should_trigger": false
+  },
+  {
+    "query": "can you review this SQL query for injection vulnerabilities? we're using drizzle ORM but some of the raw queries look sketchy",
+    "should_trigger": false
+  },
+  {
+    "query": "I need to configure dependabot to auto-merge patch updates for our dev dependencies but require approval for major bumps",
+    "should_trigger": false
+  },
+  {
+    "query": "set up a devcontainer for this project with node 22, pnpm, and the 1password vscode extension",
+    "should_trigger": false
+  },
+  {
+    "query": "our docker build is pulling 2GB of node_modules. help me optimize the dockerfile with multi-stage builds and .dockerignore",
+    "should_trigger": false
+  },
+  {
+    "query": "how do I configure turborepo remote caching with our self-hosted instance? the build times are killing us",
+    "should_trigger": false
+  }
+]
