@@ -21,3 +21,7 @@
 - [skill frontmatter fields](https://code.claude.com/docs/en/skills#frontmatter-reference)
 - [hooks in skills and agents](https://code.claude.com/docs/en/hooks#hooks-in-skills-and-agents)
   (to the end of the page)
+
+## Hooks reference documentation
+
+- [hooks reference](https://code.claude.com/docs/en/hooks)
