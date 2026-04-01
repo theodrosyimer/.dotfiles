@@ -1,7 +1,7 @@
 # Claude Code Primitive Schemas
 
 > Source: official docs (code.claude.com) + CHANGELOG.md + session-fetched docs.
-> Last manually verified: 2026-03-23 (v2.1.81).
+> Last manually verified: 2026-04-01 (v2.1.89).
 
 ---
 
@@ -33,8 +33,11 @@ allowed-tools: Read, Grep, Glob        # optional. restricts tool surface. Comma
 context: fork                          # optional. runs in isolated subagent context (own context window)
 agent: Explore                         # optional. Explore | Plan | general-purpose | <custom-agent-name>
 model: opus                            # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6)
-effort: low                            # optional. 🆕 renamed from effortLevel. low | medium | high | max (Opus 4.6 only). Overrides session effort.
+effort: low                            # optional. low | medium | high | max (Opus 4.6 only). Overrides session effort.
 argument-hint: "<topic>"               # optional. autocomplete hint shown after /skill-name in UI
+paths:                                 # optional. 🆕 glob patterns limiting when skill auto-activates.
+  - "src/api/**/*.ts"                  #   Comma-sep string or YAML list. Same format as rule paths.
+shell: bash                            # optional. 🆕 bash (default) | powershell. Shell for !`cmd` blocks.
 hooks:                                 # optional. scoped to skill lifecycle, auto-cleaned when done
   PreToolUse:
     - matcher: "Bash"
@@ -49,7 +52,8 @@ hooks:                                 # optional. scoped to skill lifecycle, au
 | Variable | Description |
 |---|---|
 | `$ARGUMENTS` | Everything typed after `/skill-name` |
-| `$1`, `$2`, ... | Positional arguments |
+| `$ARGUMENTS[N]` | Access a specific argument by 0-based index |
+| `$N` | Shorthand for `$ARGUMENTS[N]` (`$0` = first arg, `$1` = second) |
 | `${CLAUDE_SESSION_ID}` | Current session ID |
 | `${CLAUDE_SKILL_DIR}` | Directory containing the skill's SKILL.md. For plugin skills, this is the skill subdirectory, not the plugin root. |
 
@@ -73,7 +77,7 @@ Single `.md` file only — no directories, no supporting files.
 description: "..."                     # REQUIRED. shown in / autocomplete menu
 allowed-tools: Read, Grep, Glob        # optional. same syntax as skills
 model: opus                          # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6)
-effort: low                            # optional. 🆕 low | medium | high | max (Opus 4.6 only). Added in v2.1.80.
+effort: low                            # optional. low | medium | high | max (Opus 4.6 only). Added in v2.1.80.
 ---
 ```
 
@@ -85,8 +89,10 @@ effort: low                            # optional. 🆕 low | medium | high | ma
 | `context: fork` | No isolated subagent context |
 | `agent` | No agent selection |
 | `user-invocable` | Always user-invocable by definition |
-| `disable-model-invocation` | 🆕 Cannot be controlled — model CAN now invoke commands via SlashCommand tool |
+| `disable-model-invocation` | Cannot be controlled — model CAN invoke commands via SlashCommand tool |
 | `hooks` | No lifecycle hooks |
+| `paths` | No path-scoped activation (use skills with `paths`) |
+| `shell` | No shell selection (use skills with `shell`) |
 
 **🆕 SlashCommand tool — model-triggered invocation:**
 Claude can now invoke slash commands programmatically via the `SlashCommand` tool, not just users.
@@ -110,9 +116,10 @@ description: "..."                     # REQUIRED. model reads to decide when to
 tools: Read, Glob, Grep                # optional. comma-sep allowlist. Omit = inherits ALL tools incl. MCP
 disallowedTools: Bash                  # optional. block specific tools
 model: opus                          # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6) | inherit. Default: inherit (uses parent model)
-effort: low                            # optional. 🆕 low | medium | high | max (Opus 4.6 only). Overrides session effort.
+effort: low                            # optional. low | medium | high | max (Opus 4.6 only). Overrides session effort.
 permissionMode: default                # optional. default | acceptEdits | bypassPermissions | plan | dontAsk
 maxTurns: 20                           # optional. limit agentic loop iterations
+initialPrompt: "/setup and begin"      # optional. 🆕 auto-submitted as first user turn when used as --agent or `agent` setting. Commands/skills processed.
 skills:                                # optional. inject full skill content at subagent startup
   - api-conventions
   - error-handling-patterns
@@ -204,7 +211,7 @@ Hooks live under the `"hooks"` key in any `settings.json` file (user, project, l
 }
 ```
 
-### All 21 hook events
+### All 25 hook events
 
 | Event | Matcher field | Blocks? |
 |---|---|---|
@@ -215,21 +222,25 @@ Hooks live under the `"hooks"` key in any `settings.json` file (user, project, l
 | `UserPromptSubmit` | ignored | ✅ Yes |
 | `Stop` | ignored | ✅ Yes (block = force continue) |
 | `SubagentStop` | `agent_type` | ✅ Yes |
+| `TaskCreated` | ignored | 🆕 ✅ Yes (exit 2 = rolls back task creation) |
 | `TaskCompleted` | ignored | ✅ Yes (exit code) |
 | `TeammateIdle` | ignored | ✅ Yes (exit 2 = send feedback) |
 | `ConfigChange` | `source` (user_settings/project_settings/local_settings/policy_settings/skills) | ✅ Yes (except policy) |
 | `WorktreeCreate` | ignored | ✅ Yes (non-zero = fail) |
 | `Elicitation` | ignored | ✅ Yes (exit 2 or `action: "decline"`) |
 | `ElicitationResult` | ignored | ✅ Yes (exit 2 or `action: "decline"`) |
+| `PermissionDenied` | `tool_name` | 🆕 ❌ No (return `{retry: true}` to retry) |
 | `SessionStart` | `source` (startup/resume/clear/compact) | ❌ No |
-| `SessionEnd` | `reason` (clear/logout/prompt_input_exit/bypass_permissions_disabled/other) | ❌ No |
+| `SessionEnd` | `reason` (clear/resume/logout/prompt_input_exit/bypass_permissions_disabled/other) | ❌ No |
 | `InstructionsLoaded` | ignored | ❌ No (observability only) |
 | `Notification` | `notification_type` (permission_prompt/idle_prompt/auth_success/elicitation_dialog) | ❌ No |
 | `SubagentStart` | `agent_type` | ❌ No |
+| 🆕 `CwdChanged` | ignored | ❌ No (`CLAUDE_ENV_FILE` available) |
+| 🆕 `FileChanged` | `filename` (basename, e.g. `.env`, `package.json`) | ❌ No (`CLAUDE_ENV_FILE` available) |
 | `PreCompact` | `trigger` (manual/auto) | ❌ No |
 | `PostCompact` | `trigger` (manual/auto) | ❌ No |
 | `WorktreeRemove` | ignored | ❌ No |
-| 🆕 `StopFailure` | `error_type` (rate_limit/authentication_failed/billing_error/invalid_request/server_error/max_output_tokens/unknown) | ❌ No |
+| `StopFailure` | `error` (rate_limit/authentication_failed/billing_error/invalid_request/server_error/max_output_tokens/unknown) | ❌ No |
 
 ### 4 handler types
 
@@ -238,6 +249,7 @@ Hooks live under the `"hooks"` key in any `settings.json` file (user, project, l
 | Field | Description |
 |---|---|
 | `type` | **Required.** `"command"` \| `"http"` \| `"prompt"` \| `"agent"` |
+| `if` | 🆕 Optional. Permission rule syntax for conditional filtering (e.g. `"Bash(git *)"`, `"Edit(*.ts)"`). More granular than `matcher`. |
 | `timeout` | Seconds before cancellation (defaults vary by type) |
 | `statusMessage` | Custom spinner text shown while running |
 | `once` | Boolean. Fire once per session then remove (skills/slash commands only) |
@@ -249,7 +261,8 @@ Hooks live under the `"hooks"` key in any `settings.json` file (user, project, l
   "type": "command",
   "command": "./scripts/lint.sh",    // REQUIRED. Receives event JSON on stdin.
   "timeout": 30,                     // default: 600s
-  "async": false                     // optional. Run in background, non-blocking. Command-type only.
+  "async": false,                    // optional. Run in background, non-blocking. Command-type only.
+  "shell": "bash"                    // 🆕 optional. "bash" (default) | "powershell". Command-type only.
 }
 ```
 
@@ -313,9 +326,11 @@ Same `{"decision": "approve/block"}` response schema as prompt hooks.
 | `CLAUDE_PROJECT_DIR` | All hooks |
 | `CLAUDE_SESSION_ID` | All hooks (v2.1.9+) |
 | `CLAUDE_CODE_REMOTE` | All hooks (`"true"` in remote web environments) |
-| `CLAUDE_ENV_FILE` | `SessionStart` only — write `export VAR=value` lines to persist vars |
+| `CLAUDE_ENV_FILE` | `SessionStart`, `CwdChanged`, `FileChanged` — write `export VAR=value` lines to persist vars |
 | `CLAUDE_PLUGIN_ROOT` | Plugin hooks only |
-| 🆕 `CLAUDE_PLUGIN_DATA` | Plugin hooks only — persistent state dir that survives plugin updates |
+| `CLAUDE_PLUGIN_DATA` | Plugin hooks only — persistent state dir that survives plugin updates |
+| 🆕 `CLAUDE_CODE_MCP_SERVER_NAME` | MCP-related hook contexts |
+| 🆕 `CLAUDE_CODE_MCP_SERVER_URL` | MCP-related hook contexts |
 
 ---
 
@@ -377,10 +392,11 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 | 🆕 `effort` field | ✅ | ✅ | ✅ | ❌ | — |
 | `allowed-tools` / `tools` | ✅ | ✅ | ✅ | ❌ | — |
 | `hooks` in frontmatter | ✅ | ❌ | ✅ | ❌ | N/A |
+| `paths` (auto-activation scope) | 🆕 ✅ | ❌ | ❌ | ✅ only field | — |
 | `context: fork` ⭐ | ✅ | ❌ **primary reason to use skill over command** | — | ❌ | — |
 | `permissionMode` | ❌ | ❌ | ✅ | ❌ | — |
 | `memory` | ❌ | ❌ | ✅ | ❌ | — |
-| `paths` (scoping) | ❌ | ❌ | ❌ | ✅ only field | — |
+| `shell` | 🆕 ✅ | ❌ | ❌ | ❌ | ✅ (command handlers) |
 | `disable-model-invocation` | ✅ | ❌ | — | ❌ | — |
 | User can invoke | ✅ | ✅ always | via delegation | — | — |
 | Model can invoke | ✅ (unless disabled) | 🆕 ✅ via SlashCommand tool (uncontrollable) | ✅ | — | auto |
@@ -401,10 +417,17 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - `disable-model-invocation: true` is **mandatory** for anything with side effects (deploy, send, delete)
 - `context: fork` means only the summary returns to the main session — the full investigation log stays isolated
 - `allowed-tools` on a skill restricts that invocation only; it does not restrict MCP unless explicitly listed
+- 🆕 `paths` on skills works like `paths` on rules — scopes auto-activation to matching files
+- 🆕 Skill descriptions are truncated at 250 characters in the skill listing. Front-load the key use case
+- 🆕 Description budget scales at 1% of context window (fallback 8K chars). Override with `SLASH_COMMAND_TOOL_CHAR_BUDGET`
 
 ### Subagents
 - Omitting `tools` gives the subagent **all tools including MCP** — always be explicit
 - `permissionMode: bypassPermissions` on the parent silently cascades — you cannot override it per-subagent
+- 🆕 If parent uses **auto mode**, subagent inherits it — `permissionMode` in frontmatter is ignored; classifier evaluates subagent tool calls
+- 🆕 `initialPrompt` only takes effect when running as `--agent` or via `agent` setting — ignored when spawned as a subagent
+- 🆕 `Agent(worker, researcher)` in `tools` field restricts which subagent types can be spawned (only for `--agent` main thread agents)
+- 🆕 Plugin subagents do NOT support `hooks`, `mcpServers`, or `permissionMode` — those fields are silently ignored
 - Two separate memory systems exist — don't confuse them:
 
 | System | Purpose | Paths |
@@ -419,8 +442,16 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - `Stop` and `SubagentStop` hooks receive `last_assistant_message` field — final response text without needing to parse transcript files
 - `async: true` is **command-type only** — not supported on http, prompt, or agent handlers
 - HTTP hooks are not supported for `SessionStart` events
-- `CLAUDE_ENV_FILE` is `SessionStart`-only — writing env vars elsewhere has no effect
-- 🆕 `StopFailure` fires on API errors (rate limit, auth, billing) — use to log or alert on turn failures. Non-blocking.
+- `CLAUDE_ENV_FILE` available in `SessionStart`, `CwdChanged`, and `FileChanged` — writing env vars in other hooks has no effect
+- `StopFailure` fires on API errors (rate limit, auth, billing) — use to log or alert on turn failures. Non-blocking.
+- 🆕 `if` field uses permission rule syntax (e.g. `"Bash(git *)"`) for granular filtering beyond `matcher` — available on all handler types
+- 🆕 `"defer"` permission decision in `PreToolUse` hooks — headless sessions pause at tool call, resume with `-p --resume`
+- 🆕 `PermissionDenied` fires after auto mode classifier denials — return `{retry: true}` to let model retry
+- 🆕 `CwdChanged` fires when working directory changes — useful for re-loading env vars via `CLAUDE_ENV_FILE`
+- 🆕 `FileChanged` fires when watched files change on disk — matcher is `filename` (basename, e.g. `.env`, `package.json`)
+- 🆕 `TaskCreated` fires when task created via `TaskCreate` — exit 2 rolls back creation
+- 🆕 PreToolUse/PostToolUse hooks now receive `file_path` as absolute path for Write/Edit/Read tools
+- 🆕 `if` condition filtering now correctly matches compound commands (`ls && git push`) and env-var-prefixed commands (`FOO=bar git push`)
 
 ### Slash commands vs Skills
 
@@ -437,64 +468,111 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 
 A thin orchestration body that just sequences steps and delegates to subagents? That's a command — unless those subagents return verbose output that would bloat your session, in which case `context: fork` on a skill is the right call.
 
-### 🆕 Bash permission rules — redirect matching
+### Bash permission rules — redirect matching
 - `Bash(python:*)` now also matches `python script.py > output.txt` — output redirections are covered by the rule
 - Previously, redirect variants could bypass pattern-based allow/deny rules — this is now fixed
 - Update any existing deny rules that were written with workarounds for this gap
 
-### 🆕 Settings — autoMemoryDirectory
+### Settings — autoMemoryDirectory
 - `"autoMemoryDirectory": "/path/to/dir"` — configure a custom directory for auto-memory storage
 - Useful when you want memory files stored outside the default location (e.g., a synced drive, a shared team directory)
 
-### 🆕 /context command — actionable optimization suggestions
+### /context command — actionable optimization suggestions
 - `/context` now identifies context-heavy tools, memory bloat, and capacity warnings
 - Includes specific optimization tips (e.g., "use context: fork for this skill", "this rule is loading too early")
 - Use it proactively when sessions feel slow or context is filling up
 
-### 🆕 Read tool — PDF pages parameter
+### Read tool — PDF pages parameter
 - `pages: "1-5"` reads specific page ranges from PDFs instead of the full document
 - Large PDFs (>10 pages) now return a lightweight reference when @-mentioned instead of being inlined
 - Update `allowed-tools` guidance: PDF-heavy skills benefit from scoped page reads
 
-### 🆕 Skills — hot-reload
+### Skills — hot-reload
 - Skills created or modified in `~/.claude/skills/` or `.claude/skills/` are now immediately available without restarting the session
 - No restart needed after installing or editing a skill during development
 
-### 🆕 Agent tool — model parameter restored
+### Agent tool — model parameter restored
 - `model` parameter on the Agent tool works again for per-invocation model overrides
 - Subagent `model` field in frontmatter sets the default; Agent tool `model` overrides it per-call
 
-### 🆕 Hook events — InstructionsLoaded (observability)
+### Hook events — InstructionsLoaded (observability)
 - Fires when CLAUDE.md or `.claude/rules/*.md` files are loaded
 - Input fields: `file_path`, `memory_type` (User/Project/Local/Managed), `load_reason` (session_start/nested_traversal/path_glob_match/include), `globs`, `trigger_file_path`, `parent_file_path`
 - Non-blocking, no output schema — useful for logging/auditing which context files load and why
 
-### 🆕 Hook events — PostCompact
+### Hook events — PostCompact
 - Fires after context compaction completes (manual or auto)
 - Input fields: `trigger` (manual/auto), `compact_summary` (the generated conversation summary)
 - Non-blocking — useful for logging compaction events or persisting summaries
 
-### 🆕 Hook events — Elicitation & ElicitationResult
+### Hook events — Elicitation & ElicitationResult
 - `Elicitation`: fires when an MCP server requests user input (form or auth URL)
 - `ElicitationResult`: fires after user responds to the elicitation
 - Input fields: `mcp_server_name`, `message`, `mode` (form/url), `url`, `elicitation_id`, `requested_schema`, `action` (accept/decline/cancel), `content`
 - Both can block: exit 2 or `hookSpecificOutput.action: "decline"` to reject
 - Use case: auto-approve known MCP servers, log auth flows, enforce MCP interaction policies
 
-### 🆕 Hook events — Setup deprecated
+### Hook events — Setup deprecated
 - The `Setup` event no longer appears in official docs as of March 2026
 - Likely replaced by `InstructionsLoaded` for observability and `SessionStart` for initialization
 - Existing `Setup` hooks should be migrated
 
-### 🆕 PostToolUse/PostToolUseFailure — additional output fields
+### PostToolUse/PostToolUseFailure — additional output fields
 - `updatedMCPToolOutput`: in PostToolUse `hookSpecificOutput`, allows rewriting MCP tool output before Claude sees it
 - `is_interrupt`: boolean field in PostToolUseFailure input, indicates whether failure was due to user interrupt
 
-### 🆕 Skills — `--add-dir` skill loading
+### Skills — `--add-dir` skill loading
 - Skills in `.claude/skills/` within directories added via `--add-dir` are auto-loaded with live change detection
 - CLAUDE.md files from `--add-dir` are NOT loaded by default — set `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1` to enable
 
-### 🆕 Environment variables — additional
-- `SLASH_COMMAND_TOOL_CHAR_BUDGET`: override skill description budget (default: 2% of context window, fallback 16K chars)
+### Environment variables — additional
+- `SLASH_COMMAND_TOOL_CHAR_BUDGET`: override skill description budget (default: 1% of context window, fallback 8K chars)
 - `CLAUDE_CODE_SESSIONEND_HOOKS_TIMEOUT_MS`: timeout for SessionEnd hooks (default 1500ms)
 - `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD=1`: enable loading CLAUDE.md from `--add-dir` directories
+
+### 🆕 Managed settings — drop-in directory (v2.1.83)
+- `managed-settings.d/` directory for policy fragments — allows splitting managed policy across multiple files
+- Located alongside the managed settings file
+
+### 🆕 Hook `if` field — conditional filtering (v2.1.85)
+- `"if": "Bash(git *)"` uses permission rule syntax for granular filtering
+- More precise than `matcher` alone — e.g., match only `rm` commands within all Bash, or only `.ts` files within all Edit calls
+- Available on all four handler types (command, http, prompt, agent)
+
+### 🆕 Hook `"defer"` decision — headless pause/resume (v2.1.89)
+- `PreToolUse` hooks can return `{"permissionDecision": "defer"}` to pause headless sessions
+- Session pauses at the tool call and can be resumed with `-p --resume`
+- Useful for human-in-the-loop approval in CI/CD pipelines
+
+### 🆕 `PermissionDenied` hook event (v2.1.89)
+- Fires after auto mode classifier denies a tool call
+- Return `{retry: true}` from the hook to tell the model it can retry
+- Non-blocking — informational + retry signal
+
+### 🆕 `CwdChanged` and `FileChanged` hook events (v2.1.83)
+- `CwdChanged`: fires when working directory changes. No matcher. Non-blocking. `CLAUDE_ENV_FILE` available.
+- `FileChanged`: fires when watched files change on disk. Matcher: `filename` (basename). Non-blocking. `CLAUDE_ENV_FILE` available.
+- Both support writing env vars via `CLAUDE_ENV_FILE` — useful for reactive environment configuration
+
+### 🆕 `TaskCreated` hook event (v2.1.83)
+- Fires when task created via `TaskCreate` tool
+- Blocking: exit 2 rolls back task creation
+- Use for validation or logging of task creation
+
+### 🆕 Subagent `initialPrompt` field (v2.1.83)
+- Auto-submitted as the first user turn when agent runs as main session agent (`--agent` or `agent` setting)
+- Commands and skills in the prompt are processed (e.g., `/setup`)
+- Prepended to any user-provided prompt
+- Ignored when spawned as a subagent
+
+### 🆕 `sandbox.failIfUnavailable` setting (v2.1.83)
+- Set to `true` to exit Claude Code if sandbox isolation is unavailable
+- Useful for security-critical environments
+
+### 🆕 `TaskOutput` tool deprecated (v2.1.83)
+- Use `Read` on the output file path instead
+- `TaskOutput` still works but is no longer recommended
+
+### 🆕 Keybinding change (v2.1.83)
+- `Ctrl+F` (stop all agents) moved to `Ctrl+X Ctrl+K`
+- `Ctrl+X Ctrl+E` added as alias for external editor (`Ctrl+G` still works)
