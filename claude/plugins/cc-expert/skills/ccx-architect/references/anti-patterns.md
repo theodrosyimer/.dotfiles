@@ -1,6 +1,6 @@
 # Anti-Patterns — Detection & Fix Reference
 
-9 anti-patterns from the Claude Code Orchestration Guide (Part 5, March 2026).
+14 anti-patterns. Updated April 2026 (v2.1.89).
 For each: detection signals to watch for in user descriptions, and the correct fix.
 
 ---
@@ -145,3 +145,119 @@ tradeoffs, and shortcuts — so it won't catch its own mistakes.
 - Subagent reviewer (automatic isolation)
 - Skill with `context: fork` for the evaluation phase
 - Separate `claude -p` invocation for CI pipelines
+
+---
+
+## 🆕 Anti-pattern 10 — Catch-all hooks without `if` filtering
+
+**Detection signals:**
+- Hook with `matcher: "Bash"` runs a validation script on every single Bash command
+- Script internally checks for specific patterns (e.g., `grep -q 'git push'`) and exits 0 for non-matches
+- Multiple hooks all matching on `"Bash"` each running separate scripts
+
+**Why it's wrong:** Every Bash command spawns a subprocess to run the script, even when the
+command is clearly irrelevant (e.g., running `ls` triggers a git-push blocker). Wastes time
+and adds latency to every tool call.
+
+**Fix:** Add `if` field for pattern-level pre-filtering:
+```json
+{
+  "matcher": "Bash",
+  "hooks": [{
+    "type": "command",
+    "if": "Bash(git push*)",
+    "command": "./scripts/block-force-push.sh"
+  }]
+}
+```
+
+The `if` field filters before the script runs — no subprocess spawned for non-matching commands.
+
+**When catch-all is correct:** Scripts that genuinely inspect ALL commands (e.g., a CLI modernizer
+that suggests `fd` over `find`, `rg` over `grep`). If you can't express the target as a single
+`Bash(pattern)`, keep the catch-all.
+
+---
+
+## 🆕 Anti-pattern 11 — Long skill descriptions losing discoverability
+
+**Detection signals:**
+- Skill description is >250 characters
+- Key use case is buried after boilerplate
+- Skill doesn't trigger when it should — Claude can't match it to the user's request
+- User says "Claude doesn't use my skill"
+
+**Why it's wrong:** Skill descriptions are truncated at 250 characters in the skill listing.
+If the key trigger words are after the cutoff, Claude never sees them. The total description
+budget is 1% of the context window (fallback 8K chars) — many long descriptions crowd each
+other out.
+
+**Fix:** Front-load the key use case in the first sentence. Keep total description under 250 chars.
+Move detailed context into the skill body or supporting files.
+
+**Bad:** `"A comprehensive tool for analyzing, reviewing, and optimizing database queries across
+multiple SQL dialects including PostgreSQL, MySQL, and SQLite, with support for query plan
+analysis and index recommendations"`
+
+**Good:** `"Optimize SQL queries. Use when reviewing slow queries, missing indexes, or query plans."`
+
+---
+
+## 🆕 Anti-pattern 12 — Setting `permissionMode` on subagents under auto mode
+
+**Detection signals:**
+- Parent session uses auto mode (user enabled via `/permissions` or `--permission-mode auto`)
+- Subagent frontmatter has `permissionMode: plan` or `permissionMode: dontAsk`
+- User frustrated that subagent ignores its permission restrictions
+
+**Why it's wrong:** When the parent uses auto mode, all subagents inherit it. The `permissionMode`
+field in subagent frontmatter is silently ignored. The auto mode classifier evaluates the
+subagent's tool calls with the same block/allow rules as the parent session.
+
+**Fix:** If you need to restrict a subagent under auto mode, use `tools` or `disallowedTools` to
+limit what it can access. Tool restrictions are always enforced regardless of permission mode.
+For read-only subagents: `tools: Read, Grep, Glob` — this prevents writes even under auto mode.
+
+---
+
+## 🆕 Anti-pattern 13 — Plugin subagents with unsupported fields
+
+**Detection signals:**
+- Plugin subagent definition includes `hooks`, `mcpServers`, or `permissionMode` fields
+- User reports that hooks aren't firing or MCP servers aren't connecting for plugin subagents
+- No errors — fields are silently ignored
+
+**Why it's wrong:** For security, plugin subagents do NOT support `hooks`, `mcpServers`, or
+`permissionMode`. These fields are silently dropped when loading agents from a plugin.
+
+**Fix:** If the subagent needs these fields, copy the agent file from the plugin into
+`.claude/agents/` or `~/.claude/agents/`. Project/user-level agents support all fields. The
+higher-priority location wins over the plugin version.
+
+---
+
+## 🆕 Anti-pattern 14 — File-type guidance in CLAUDE.md instead of path-scoped primitives
+
+**Detection signals:**
+- CLAUDE.md has sections like "When working with TypeScript files...", "For React components..."
+- Large CLAUDE.md with conditional guidance that only applies to specific file types
+- User asks why context fills up or Claude is slow
+
+**Why it's wrong:** All CLAUDE.md content loads every session, every turn. File-type-specific
+guidance pays full context cost even when working on unrelated files.
+
+**Fix:** Move file-type-specific guidance to scoped primitives:
+- Short constraints → `.claude/rules/` with `paths` field (loads on demand when matching files opened)
+- Detailed workflow guidance → Skill with `paths` field (loads only when relevant files touched)
+- Universal conventions (apply to everything) → keep in CLAUDE.md
+
+```yaml
+# .claude/rules/react-patterns.md
+---
+paths:
+  - "src/components/**/*.tsx"
+  - "src/hooks/**/*.ts"
+---
+Use function components, never class components.
+Prefer composition over prop drilling.
+```

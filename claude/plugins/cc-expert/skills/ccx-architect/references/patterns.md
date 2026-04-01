@@ -1,6 +1,6 @@
 # Workflow Patterns — Match Reference
 
-13 concrete patterns from the Claude Code Orchestration Guide (Part 3, March 2026).
+18 concrete patterns. Updated April 2026 (v2.1.89).
 Use these to match a user's described automation to the closest existing pattern.
 
 ---
@@ -51,9 +51,12 @@ edit", "make sure tasks are complete before stopping".
 - PostToolUse on Write|Edit: auto-format changed files
 - Stop hook (prompt type): verify completeness before Claude declares done
 - Stop hook MUST check `stop_hook_active` to avoid infinite loop
-- 🆕 **SlashCommand opportunity:** PostToolUse hooks can now invoke a slash command for
-  richer post-edit checks (e.g., a `/lint-summary` command that reads the changed file and
-  returns a structured report) — previously required a full external script or subagent
+- 🆕 **`if` field for targeted enforcement:** use `"if": "Bash(git push*)"` to scope hooks to
+  specific command patterns — avoids running validation scripts on every Bash command when you
+  only care about specific ones. The `if` field handles compound commands (`ls && git push`)
+  and env-prefixed commands (`FOO=bar git push`) correctly since v2.1.89.
+- **SlashCommand opportunity:** PostToolUse hooks can invoke a slash command for
+  richer post-edit checks — previously required a full external script or subagent
 
 ---
 
@@ -88,6 +91,9 @@ answers architecture questions without re-discovering things every session.
 - `permissionMode: plan` — pure investigation, never modifies code
 - `maxTurns: 50` — room for deep exploration
 - System prompt instructs agent to update memory after each investigation
+- 🆕 **Self-starting variant:** add `initialPrompt: "/setup and explore the codebase"` + use with
+  `claude --agent <name>` for zero-interaction bootstrap. The initial prompt is auto-submitted
+  as the first user turn, so the agent starts working immediately without waiting for input.
 
 ---
 
@@ -105,9 +111,13 @@ no interactive terminal.
 - `--permission-mode acceptEdits` for write steps
 - `--allowedTools` scopes permissions per step
 - `xargs -P N` for parallel file processing
-- 🆕 **SlashCommand opportunity:** discrete pipeline steps that don't need isolation can be
-  slash commands invoked within a headless session — e.g., a `/format-review-comment` command
-  that takes findings and outputs a structured PR comment, reusable across CI pipelines
+- 🆕 **Human-in-the-loop via `defer`:** PreToolUse hook returns `{"permissionDecision": "defer"}`
+  to pause the headless session at a specific tool call. Resume with `claude -p --resume` after
+  human review. Use for deployment approval gates, sensitive data access, or production changes.
+- 🆕 **`sandbox.failIfUnavailable: true`** — exit immediately if sandbox isn't available rather
+  than running unsandboxed. Critical for CI environments that require isolation.
+- **SlashCommand opportunity:** discrete pipeline steps that don't need isolation can be
+  slash commands invoked within a headless session — reusable across CI pipelines
 
 ---
 
@@ -227,6 +237,178 @@ autonomously — but doesn't need isolation, hooks, lifecycle control, or side-e
 
 ---
 
+## 🆕 Pattern 14 — Reactive Environment Hooks
+
+**Trigger signals:** User wants env vars reloaded when `.env` changes, config refreshed when
+files change, validation triggered when working directory changes.
+
+**Primitives:** `CwdChanged` + `FileChanged` hooks with `CLAUDE_ENV_FILE`
+
+**Key design decisions:**
+- `FileChanged` matcher is `filename` (basename) — e.g., `.env`, `package.json`, `tsconfig.json`
+- Both events support `CLAUDE_ENV_FILE` — write `export VAR=value` lines to persist env vars
+- Non-blocking — environment updates happen silently
+- Use `CwdChanged` for directory-aware setup (e.g., switching Node versions based on `.nvmrc`)
+- Use `FileChanged` for file-aware reactions (e.g., re-run `pnpm install` when `package.json` changes)
+
+**Example — auto-reload .env:**
+```json
+{
+  "hooks": {
+    "FileChanged": [
+      {
+        "matcher": ".env",
+        "hooks": [
+          { "type": "command", "command": "./scripts/reload-env.sh" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**When NOT to use:** For enforcing rules (use PreToolUse hooks instead). `FileChanged` is
+observational — it reacts to changes, it doesn't gate them.
+
+---
+
+## 🆕 Pattern 15 — Conditional Hook Enforcement
+
+**Trigger signals:** User wants to validate only specific commands within a broad matcher —
+"block git push but allow git status", "lint only .ts files after edit", "validate only rm commands".
+
+**Primitives:** Hook with `if` field for pattern-level pre-filtering
+
+**Key design decisions:**
+- `matcher` selects the tool (e.g., `"Bash"`), `if` narrows to specific patterns (e.g., `"Bash(git push*)"`)
+- `if` uses permission rule syntax — same format as `permissions.allow`/`permissions.deny`
+- Avoids running validation scripts unnecessarily — pre-filter before script invocation
+- Handles compound commands (`ls && git push`) and env-prefixed commands (`FOO=bar git push`) since v2.1.89
+- Cannot use OR syntax — one `if` per handler. For multiple patterns, use multiple handler entries.
+
+**Example — block only force push, allow other git commands:**
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git push*)",
+            "command": "./scripts/block-force-push.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**When NOT to use:** When you need to inspect ALL commands of a type (e.g., a modern-CLI
+preference checker that suggests `fd` over `find`, `rg` over `grep` for any command).
+
+---
+
+## 🆕 Pattern 16 — Headless Approval Gates
+
+**Trigger signals:** User wants CI pipeline with human approval at critical steps — "pause before
+deploying", "wait for review before merging", "human-in-the-loop for production changes".
+
+**Primitives:** PreToolUse hook returning `{"permissionDecision": "defer"}` + `claude -p --resume`
+
+**Key design decisions:**
+- Hook returns `"defer"` on the tool call that needs approval (e.g., a Bash deploy command)
+- Session pauses — no further tool calls until resumed
+- Human reviews the pending action, then runs `claude -p --resume` to continue
+- Combines with `if` field to only defer specific commands (e.g., `"if": "Bash(deploy *)"`)
+- The deferred tool input is preserved — `--resume` re-evaluates the hook
+
+**Example CI workflow:**
+```bash
+# Step 1: implement and test (autonomous)
+SESSION=$(claude -p "Fix bug #123 and run tests" --output-format json | jq -r '.session_id')
+
+# Step 2: hook defers on git push → session pauses
+# Human reviews changes, then:
+claude -p --resume "$SESSION"   # hook re-evaluates, allows push
+```
+
+**When NOT to use:** Interactive sessions (use permission prompts). Fully autonomous CI
+(use `dontAsk` + allow rules).
+
+---
+
+## 🆕 Pattern 17 — Self-Starting Agent
+
+**Trigger signals:** User wants an agent that bootstraps itself without user input — "zero-touch
+setup", "agent starts working immediately", "run skills on startup".
+
+**Primitives:** Subagent with `initialPrompt` + `--agent` flag or `agent` setting
+
+**Key design decisions:**
+- `initialPrompt` is auto-submitted as the first user turn when agent runs as main session agent
+- Commands and skills in the prompt are processed (e.g., `/setup`, `/init`)
+- Prepended to any user-provided prompt — both run in sequence
+- Only takes effect with `--agent <name>` or `agent` setting — ignored when spawned as subagent
+- Combine with `memory: project` for agents that build up knowledge across sessions
+
+**Example — self-bootstrapping codebase expert:**
+```yaml
+---
+name: codebase-expert
+description: Expert on this codebase, bootstraps on first run
+initialPrompt: "Read CLAUDE.md, explore the directory structure, and save key findings to your memory."
+memory: project
+permissionMode: plan
+model: sonnet
+tools: Read, Grep, Glob
+---
+You are a codebase expert. Use your agent memory to accumulate knowledge.
+```
+
+**When NOT to use:** Subagents spawned by other agents (initialPrompt is ignored). Skills
+(use `!` command blocks for pre-execution instead).
+
+---
+
+## 🆕 Pattern 18 — Context-Scoped Skills
+
+**Trigger signals:** User has guidance that only applies to specific file types — "API conventions
+for .ts files", "React patterns for .tsx", "testing rules for .test.ts files".
+
+**Primitives:** Skill with `paths` field for auto-activation scoping
+
+**Key design decisions:**
+- `paths` accepts comma-separated string or YAML list of glob patterns
+- Skill auto-activates only when Claude works with files matching the patterns
+- Reduces context bloat — description still listed (capped at 250 chars), but full content only
+  loads when relevant files are touched
+- Same glob syntax as `.claude/rules/` `paths` field
+- Combine with rules: use rules for short constraints, skills for detailed workflow guidance
+
+**Example — API-specific conventions:**
+```yaml
+---
+name: api-conventions
+description: API design patterns for REST endpoints. Use when writing or reviewing API handlers.
+paths:
+  - "src/api/**/*.ts"
+  - "src/handlers/**/*.ts"
+---
+When writing API endpoints:
+- Use RESTful naming conventions
+- Return consistent error formats using ProblemDetails
+- Include request validation with Zod schemas at the boundary
+```
+
+**When NOT to use:** Universal conventions that apply to all files (use CLAUDE.md or unconditional
+rules). Workflows triggered by user command (use `disable-model-invocation: true` instead of
+path scoping).
+
+---
+
 ## Pattern 11 — Locked-Down CI Runner (Defense-in-Depth Headless Execution)
 
 **Trigger signals:** User is running Claude in CI with no human present, needs full autonomy AND
@@ -240,5 +422,10 @@ maximum security, worried about prompt injection from malicious PRs.
 - `mcp__*` fully blocked — CI shouldn't hit external services through Claude
 - Sandbox: `allowUnsandboxedCommands: false` disables escape hatch
 - `allowUnixSockets: false` blocks Docker socket exploitation
+- 🆕 `sandbox.failIfUnavailable: true` — exit immediately if sandbox unavailable
 - Hook: validate command semantics (not just patterns), check file contents post-edit
+- 🆕 Use `if` field on hooks for precise command filtering (e.g., `"if": "Bash(rm *)"`) —
+  avoids running heavyweight validation scripts on every Bash command
+- 🆕 `PermissionDenied` hook: log or alert when auto mode denies operations in CI — useful for
+  post-run audit of what was blocked and why
 - Stop hook verifies completeness before Claude declares done
