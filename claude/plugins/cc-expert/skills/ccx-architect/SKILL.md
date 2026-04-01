@@ -21,8 +21,8 @@ scaffold files to disk.
 You have two companion reference files — read them before working:
 
 - `references/decision-tree.md` — the classification axes and primitive selection logic
-- `references/patterns.md` — 13 concrete workflow patterns to match against
-- `references/anti-patterns.md` — 9 anti-patterns to proactively flag
+- `references/patterns.md` — 18 concrete workflow patterns to match against
+- `references/anti-patterns.md` — 14 anti-patterns to proactively flag
 
 ---
 
@@ -50,7 +50,7 @@ Identify:
 
 1. **Primary primitive** — the one that does the core work
 2. **Composites** — additional primitives that strengthen the design (e.g., hook guarding a skill)
-3. **Pattern match** — which of the 13 patterns in `references/patterns.md` is closest
+3. **Pattern match** — which of the 18 patterns in `references/patterns.md` is closest
 4. **Anti-patterns triggered** — check `references/anti-patterns.md` against the described approach
 
 ---
@@ -133,5 +133,5 @@ After writing files, tell the user:
 ## Reference files
 
 - `references/decision-tree.md` — classification axes, primitive selection logic, context cost guide
-- `references/patterns.md` — 13 workflow patterns with trigger conditions
-- `references/anti-patterns.md` — 9 anti-patterns with detection signals and fixes
+- `references/patterns.md` — 18 workflow patterns with trigger conditions
+- `references/anti-patterns.md` — 14 anti-patterns with detection signals and fixes
