@@ -5,6 +5,7 @@
 ### Hooks reference documentation
 
 - [hooks reference](https://code.claude.com/docs/en/hooks)
+- [hooks guide](https://code.claude.com/docs/en/hooks-guide)
 
 ### Agent frontmatter schema documentation
 
@@ -28,7 +29,7 @@
 - [hooks in skills and agents](https://code.claude.com/docs/en/hooks#hooks-in-skills-and-agents)
   (to the end of the page)
 
-## Documentation references
+## Full page Documentation references
 
 - [Claude Code documentation](https://code.claude.com/docs/en/)
 - [Claude Code documentation for memory](https://code.claude.com/docs/en/memory)
