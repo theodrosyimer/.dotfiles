@@ -7,7 +7,7 @@ Status: brainstorming — to be refined and promoted to patterns.md after valida
 
 ## A. Codebase Immune System
 
-**Primitives:** `PreToolUse` (`if`) + `PostToolUse` (agent handler) + `PermissionDenied` + `memory: project`
+**Primitives:** `PreToolUse` (`if`) + `PostToolUse` (⚠️ use `type: "prompt"` — `type: "agent"` broken on PostToolUse as of v2.1.89, re-test after upgrades) + `PermissionDenied` + `memory: project`
 
 Multi-layered defense that **learns** over time:
 
@@ -124,7 +124,7 @@ assistance".
 
 ## F. Living Architecture Guardian
 
-**Primitives:** `PostToolUse` (agent handler) + `memory: project` + `FileChanged` + subagent with `skills`
+**Primitives:** `PostToolUse` (⚠️ use `type: "prompt"` — `type: "agent"` broken on PostToolUse as of v2.1.89, re-test after upgrades) + `memory: project` + `FileChanged` + subagent with `skills`
 
 Automatic architectural drift detection and documentation:
 
@@ -173,7 +173,7 @@ approval gate", "AI-assisted code review with human oversight", "draft reviews f
 
 ## H. GDPR PII Sentinel
 
-**Primitives:** `PostToolUse` (agent handler) + `PreToolUse` (`if`) + `memory: project` + rule `paths`
+**Primitives:** `PostToolUse` (⚠️ use `type: "prompt"` — `type: "agent"` broken on PostToolUse as of v2.1.89, re-test after upgrades) + `PreToolUse` (`if`) + `memory: project` + rule `paths`
 
 Enforce "PII out of event payloads from day one" mechanically:
 
@@ -219,7 +219,7 @@ regressions", "projection baseline testing", "event schema migration safety".
 
 ## J. Module Boundary Enforcer (Real-Time)
 
-**Primitives:** `PostToolUse` (agent handler) + `memory: project` + `FileChanged` on `tsconfig.json`
+**Primitives:** `PostToolUse` (⚠️ use `type: "prompt"` — `type: "agent"` broken on PostToolUse as of v2.1.89, re-test after upgrades) + `memory: project` + `FileChanged` on `tsconfig.json`
 
 Goes beyond ArchUnitTS tests — catches violations **before** you run tests:
 
@@ -357,7 +357,7 @@ faster than the last.
 
 ## X5. Architecture Guardian + Boundary Enforcer (F + J)
 
-Single PostToolUse agent handler does **both**: detects architectural novelty (new patterns,
+Single PostToolUse prompt handler (⚠️ `type: "agent"` broken on PostToolUse as of v2.1.89) does **both**: detects architectural novelty (new patterns,
 new dependency directions) AND validates module boundaries. The memory serves dual purpose —
 living dependency map + ADR repository. One hook invocation, two enforcement layers, one
 coherent architectural knowledge base that grows over time.
@@ -405,7 +405,7 @@ a generator critical of its own work.
 
 | Pattern | Generator | Evaluator | Gap / Enhancement |
 |---|---|---|---|
-| A. Immune System | Claude's main editing loop | PostToolUse agent handler | Add calibrated rubric to memory |
+| A. Immune System | Claude's main editing loop | PostToolUse prompt handler (⚠️ `type: "agent"` broken on PostToolUse as of v2.1.89) | Add calibrated rubric to memory |
 | B. Competitive Impl | N worker agents | Tests only | **Gap**: needs tuned evaluator beyond pass/fail — grade TPP compliance, code quality with calibrated rubric + hard thresholds |
 | D. Migration Convoy | Worker agents | Validator agent | Validator needs **calibrated criteria**: migration completeness, pattern adherence, edge case handling — not just "tests pass" |
 | F. Architecture Guardian | Edit/Write operations | PostToolUse agent | Add few-shot examples of what counts as "architectural novelty worth documenting" |
@@ -415,7 +415,7 @@ a generator critical of its own work.
 | J. Boundary Enforcer | Import/code changes | PostToolUse agent | Add calibrated examples of allowed vs disallowed imports |
 | X7. Competitive + TDD | N workers | tpp-reviewer prompt | Strengthen with calibrated TPP rubric + hard thresholds per transformation level |
 
-**Takeaway:** Every PostToolUse agent handler in our patterns IS a separate evaluator. Formalize
+**Takeaway:** Every PostToolUse prompt handler (⚠️ `type: "agent"` broken on PostToolUse as of v2.1.89) in our patterns IS a separate evaluator. Formalize
 this — all evaluator handlers should have: calibrated criteria, few-shot examples in memory,
 hard thresholds per criterion.
 
@@ -560,7 +560,7 @@ and survive context resets.
 **Core insight:** Out-of-the-box, Claude is a poor QA agent. Calibration requires: reading
 evaluator logs → finding judgment divergences → updating prompts. Several rounds needed.
 
-**Biggest gap in our current patterns.** Most PostToolUse agent handlers have a prompt but no
+**Biggest gap in our current patterns.** Most PostToolUse prompt handler (⚠️ `type: "agent"` broken on PostToolUse as of v2.1.89)s have a prompt but no
 calibration, no few-shot examples, no hard thresholds.
 
 **Enhancement for every evaluator-type pattern:** Memory should store **calibration sets**:
@@ -711,7 +711,7 @@ Every evaluator-type pattern gets a calibration loop:
 4. Next invocation: evaluator reads calibration entries from memory before judging
 5. Over time: evaluator aligns with user's judgment on domain-specific nuances
 
-**Claude Code primitives:** PostToolUse agent handler + `memory: project` + calibration file
+**Claude Code primitives:** PostToolUse prompt handler (⚠️ `type: "agent"` broken on PostToolUse as of v2.1.89) + `memory: project` + calibration file
 format in memory directory.
 
 **Applied to specific patterns:**
