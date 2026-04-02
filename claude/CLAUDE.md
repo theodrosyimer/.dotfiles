@@ -66,8 +66,6 @@ packages/modules/src/{module}/
 └── shared/          # (optional) module-internal
 ```
 
-NOT `features/`, NOT `api/`.
-
 ### Core vs Shared
 
 - `src/core/` — deleting breaks every module (entity.ts, executable.ts,
@@ -87,8 +85,8 @@ NOT `features/`, NOT `api/`.
 - Frontend-first: UI drives data discovery, infrastructure decisions come last
 - Framework-agnostic domain layer — switching UI framework rewrites only UI
   layer
-- Trunk-based development, feature flags (dark launches), rollback-capable
-  releases
+- Trunk-based development, branch by abstraction, dark launches, feature flags,
+  rollback-capable releases
 - SDD: Gherkin acceptance criteria + `prd.json` as starting point; TDD
   RED-GREEN-REFACTOR drives implementation
 
@@ -155,7 +153,7 @@ TDD non-negotiable. Every production line responds to a failing test.
 
 ## Tech Stack
 
-- Node.js ≥22.18, TypeScript strict mode, NestJS
+- Node.js ≥24, TypeScript strict mode, NestJS
 - Drizzle ORM + postgres driver (never Prisma)
 - better-auth (@better-auth/expo)
 - Vitest, Testing Library, supertest, testcontainers
