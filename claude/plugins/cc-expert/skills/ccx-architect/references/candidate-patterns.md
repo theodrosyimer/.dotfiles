@@ -1,6 +1,6 @@
 # Candidate Patterns — Brainstorm (April 2026)
 
-13 novel patterns + 7 cross-pollinations combining Claude Code v2.1.89 capabilities.
+13 novel patterns + 11 cross-pollinations + combining Claude Code v2.1.89 capabilities AND harness design principles.
 Status: brainstorming — to be refined and promoted to patterns.md after validation.
 
 ---
@@ -186,7 +186,7 @@ Enforce "PII out of event payloads from day one" mechanically:
 - PreToolUse blocks committing if PII detected in event schemas
 
 **Key insight:** You have Forgettable Payloads and Crypto Shredding patterns. An agent that knows
-*which* fields are PII per module catches mistakes that regex can't — it understands domain
+_which_ fields are PII per module catches mistakes that regex can't — it understands domain
 context. The memory accumulates your PII catalog automatically.
 
 **Trigger signals:** "Enforce GDPR in event payloads", "catch PII leaks at edit-time",
@@ -341,7 +341,7 @@ BookingRequested v1→v2, the `period` field split needs a default handler for v
 As you `cd` between modules, not only do path-scoped skills shift (DDD in domain, perf in infra),
 but the `CwdChanged` hook also loads that module's **dependency allowlist** into env vars via
 `CLAUDE_ENV_FILE`. The boundary enforcer's PostToolUse agent reads these vars and knows which
-cross-module imports are legal for *this specific module* — dynamic boundaries that follow you.
+cross-module imports are legal for _this specific module_ — dynamic boundaries that follow you.
 
 ---
 
@@ -381,3 +381,346 @@ implement independently in worktrees. Stop hooks validate both test passage AND 
 (using the tpp-reviewer agent prompt that reads tpp-rules from disk). The winning implementation
 is the one that follows TPP most faithfully while passing all tests — selection pressure for
 clean, incremental code.
+
+---
+
+---
+
+# Harness Design Principles — Applied to Candidate Patterns
+
+Derived from Anthropic's "Harness Design for Long-Running Agentic Applications" (Prithvi
+Rajasekaran). These principles cut across ALL candidate patterns and inform how to build,
+calibrate, and evolve them.
+
+Source: `docs/claude-code/harness-design-for-long-running-agentic-applications.md`
+
+---
+
+## HP1. Separate Generation from Evaluation (GAN-Inspired)
+
+**Core insight:** Tuning a standalone evaluator to be skeptical is far more tractable than making
+a generator critical of its own work.
+
+**How it maps to our patterns:**
+
+| Pattern | Generator | Evaluator | Gap / Enhancement |
+|---|---|---|---|
+| A. Immune System | Claude's main editing loop | PostToolUse agent handler | Add calibrated rubric to memory |
+| B. Competitive Impl | N worker agents | Tests only | **Gap**: needs tuned evaluator beyond pass/fail — grade TPP compliance, code quality with calibrated rubric + hard thresholds |
+| D. Migration Convoy | Worker agents | Validator agent | Validator needs **calibrated criteria**: migration completeness, pattern adherence, edge case handling — not just "tests pass" |
+| F. Architecture Guardian | Edit/Write operations | PostToolUse agent | Add few-shot examples of what counts as "architectural novelty worth documenting" |
+| G. Headless Review | Claude's analysis | Human via `defer` | Already separated — human IS the evaluator |
+| H. GDPR Sentinel | Event/command authoring | PostToolUse agent | Add calibrated PII examples per module |
+| I. Replay Guard | evolve/project modifications | Stop hook + tests | **Enhancement**: if replay fails, send structured feedback — not just block, but WHY and WHERE the regression occurred |
+| J. Boundary Enforcer | Import/code changes | PostToolUse agent | Add calibrated examples of allowed vs disallowed imports |
+| X7. Competitive + TDD | N workers | tpp-reviewer prompt | Strengthen with calibrated TPP rubric + hard thresholds per transformation level |
+
+**Takeaway:** Every PostToolUse agent handler in our patterns IS a separate evaluator. Formalize
+this — all evaluator handlers should have: calibrated criteria, few-shot examples in memory,
+hard thresholds per criterion.
+
+---
+
+## HP2. Context Degradation + Resets with Structured Handoff
+
+**Core insight:** Context fills → coherence drops → "context anxiety" (premature wrap-up).
+Compaction alone doesn't eliminate anxiety. Context resets with structured handoff artifacts do.
+
+**How it maps to our patterns:**
+
+| Pattern | Natural context isolation | Handoff artifact |
+|---|---|---|
+| B. Competitive Impl | Each worker in worktree = fresh context | Spec/tests = handoff |
+| C. Telemetry Loop | `context: fork` subagent = fresh per investigation | Memory baselines = handoff |
+| D. Migration Convoy | Each worker in worktree = fresh context | Scout's migration guide = handoff artifact |
+| M. Incident Investigator | `context: fork` = fresh per investigation | Memory stores past investigations = handoff |
+
+**Patterns that need this but don't have it:**
+- Any long-running TDD session — after many RED-GREEN-REFACTOR cycles, context degrades.
+  Solution: chain subagents with file-based handoff between cycles.
+- Complex multi-module implementations — context fills with cross-module exploration.
+  Solution: use `context: fork` for each module's implementation phase.
+
+---
+
+## HP3. Self-Evaluation Bias (Three Failure Modes)
+
+**Core insight:** Even a SEPARATE evaluator starts lenient. Three specific failure patterns:
+
+1. **Self-talk rationalization**: Finds issue → talks itself out of blocking
+2. **Superficial testing**: Happy paths only, misses edge cases
+3. **Leniency toward LLM-generated output**: Biased even when separated
+
+**Enhancement for ALL evaluator-type hooks (A, F, H, I, J):**
+
+- **Hard thresholds** per criterion — fail ANY one = block. No "overall it's fine" escape.
+- **Adversarial prompting**: "Your job is to find problems. You fail at YOUR job if you approve
+  work that has issues. Look for edge cases, not happy paths."
+- **Few-shot anti-calibration**: Include examples where the evaluator SHOULD have blocked but
+  didn't. Memory stores these "missed catches" as negative calibration.
+- **Iterative tuning loop**: Read evaluator logs → find judgment divergences from human
+  judgment → update evaluator prompt. This is the article's core QA tuning methodology.
+
+---
+
+## HP4. Sprint Contracts (What "Done" Looks Like)
+
+**Core insight:** Before building, agree on testable criteria for completion. Bridges the gap
+between high-level user stories and testable implementation.
+
+**How it maps to our patterns:**
+
+| Pattern | Sprint contract equivalent | Enhancement |
+|---|---|---|
+| B. Competitive Impl | Spec/tests = contract | Add explicit "what done looks like" file BEFORE workers start |
+| D. Migration Convoy | Scout's migration guide | Already a contract — add hard thresholds per criterion |
+| I. Replay Guard | Memory-stored projection baselines | Baselines ARE the contract — "this event sequence must produce this exact state" |
+| L. Contract Sync | Zod schema = contract between frontend/backend | Add impact checklist: required fields rendered, optional fields graceful, error states handled |
+| Existing TDD agent | .claude/tdd-phase file | Extend: write `.claude/tdd-contract.md` with acceptance criteria before RED phase starts |
+
+**Application to your existing workflow:**
+- Your `feature-plan` skill outputs a PRD = sprint contract
+- Your `implement-feature` skill = generator that works against the contract
+- The Stop hook = evaluator that grades against the contract
+- The `tpp-reviewer` = specialized evaluator for transformation quality
+
+---
+
+## HP5. Constrain Deliverables, Not Implementation Paths
+
+**Core insight:** Planners should specify WHAT to build, not HOW. Granular technical specs from
+a planner cascade errors downstream. Let the builder figure out the path.
+
+**Validation of our existing patterns:**
+- `feature-plan` specifies deliverables + acceptance criteria → correct
+- `implement-feature` owns architecture decisions → correct
+- K. Scaffolder constrains output structure (four functions + types + tests), not internal
+  logic → correct
+- D. Migration Convoy: scout specifies target pattern, workers choose path → correct
+
+**Anti-pattern this creates:**
+- A planner skill that specifies "use Gateway pattern X" or "implement with Drizzle query Y"
+  is over-constraining. The planner should say "booking module must access space availability"
+  and let the implementer choose the Gateway/ACL design.
+
+---
+
+## HP6. Every Component Is an Assumption — Stress Test Them
+
+**Core insight:** Every harness component encodes an assumption about what the model can't do
+on its own. Those assumptions go stale as models improve. The right move is methodical
+simplification: remove one component at a time, review impact.
+
+**Application to our .claude/ setup:**
+
+| Component | Assumption it encodes | When to re-evaluate |
+|---|---|---|
+| TDD guard hook | Model won't respect RED/GREEN/REFACTOR phases on its own | When models improve at following multi-step workflows |
+| PostToolUse lint/tsc hooks | Model produces code that doesn't compile or lint | When models improve at producing correct code first-pass |
+| tpp-reviewer Stop hook | Model doesn't naturally follow TPP transformation order | When models internalize TPP from training data |
+| Module boundary enforcer (J) | Model doesn't naturally respect import boundaries | When models improve at architectural awareness |
+| GDPR sentinel (H) | Model doesn't naturally avoid PII in event payloads | When models internalize GDPR-by-design patterns |
+| PreToolUse `if` filters | Model tries dangerous operations | When auto mode classifier catches everything |
+
+**Methodology when new Claude version ships:**
+1. List all hooks, skills, rules, subagents
+2. For each: "What assumption does this encode?"
+3. Remove ONE component, run representative tasks, compare output quality
+4. If quality unchanged → component was no longer load-bearing → strip it
+5. Reinvest freed complexity budget (HP9)
+
+**What NOT to do:** Radical cuts that remove multiple components at once — obscures which pieces
+were actually load-bearing.
+
+---
+
+## HP7. Communication via Files (Structured Handoff Artifacts)
+
+**Core insight:** Agents communicate through files — one writes, another reads. Keeps work
+faithful to spec without over-specifying.
+
+**How it maps to our patterns:**
+
+| Pattern | Handoff artifact | Location |
+|---|---|---|
+| D. Migration Convoy | Scout's migration guide | Memory or `.claude/migration-guide.md` |
+| X8. Context Reset Chaining | Handoff artifact between subagents | `.claude/handoff.md` |
+| X9. Sprint Contract | Contract file defining "done" | `.claude/contract.md` |
+| I. Replay Guard | Projection baselines | `.claude/baselines/` directory |
+| Existing TDD agent | Phase file | `.claude/tdd-phase` (already implemented) |
+
+**General principle for our patterns:** When two agents need to coordinate, use a **file** — not
+prompt injection, not memory, not conversation history. Files are inspectable, versionable,
+and survive context resets.
+
+---
+
+## HP8. Evaluator Calibration (Few-Shot + Hard Thresholds)
+
+**Core insight:** Out-of-the-box, Claude is a poor QA agent. Calibration requires: reading
+evaluator logs → finding judgment divergences → updating prompts. Several rounds needed.
+
+**Biggest gap in our current patterns.** Most PostToolUse agent handlers have a prompt but no
+calibration, no few-shot examples, no hard thresholds.
+
+**Enhancement for every evaluator-type pattern:** Memory should store **calibration sets**:
+
+```
+CALIBRATION ENTRY FORMAT:
+  input: "Added `guestEmail: string` to BookingRequestedEvent payload"
+  expected_score: 0/5 (PII violation — BLOCK)
+  reasoning: "Email is PII — must use Forgettable Payload pattern"
+
+  input: "Added `bookingId: BookingId` to BookingConfirmedEvent payload"
+  expected_score: 5/5 (safe — APPROVE)
+  reasoning: "BookingId is a branded UUID, not PII"
+```
+
+**Self-correcting calibration loop:**
+1. Evaluator makes a judgment
+2. User overrides ("you should have blocked this" or "false positive")
+3. Memory stores the correction as a new calibration entry
+4. Next invocation, evaluator reads updated calibration
+5. Over time, evaluator aligns with user's judgment
+
+This maps directly to the article's iterative QA tuning methodology.
+
+---
+
+## HP9. Complexity Budget Reallocation
+
+**Core insight:** When you simplify the harness (remove a component), don't just enjoy the
+savings — reinvest the freed complexity budget into pushing the capability frontier.
+
+**Examples for our setup:**
+
+| Simplification | Freed budget | Reinvestment |
+|---|---|---|
+| Drop sprint-style TDD guard | Hook overhead per phase | Better TPP rubric calibration in Stop hook |
+| Drop redundant ArchUnit PostToolUse hook | Script execution per edit | Domain-aware boundary memory (J) |
+| Drop simple lint PostToolUse | tsc/lint on every edit | Architectural drift detection (F) |
+| Drop per-sprint QA (model improved) | Evaluator invocations | Single end-of-run comprehensive evaluation |
+
+**The interesting harness space doesn't shrink as models improve — it moves.** The frontier of
+what's achievable shifts outward, and the work is to keep finding the next novel combination.
+
+---
+
+## HP10. Evaluator Value at the Capability Boundary
+
+**Core insight:** Evaluators add high value for tasks AT THE EDGE of model capability, but add
+overhead with little value for tasks well within the model's solo ability.
+
+**Application to pattern selection:**
+
+```
+EVALUATOR VALUE MATRIX
+
+  Task clearly within model capability:
+    → Skip evaluator, save tokens
+    → Example: simple CRUD handler, rename refactor
+
+  Task AT THE EDGE:
+    → Evaluator catches real gaps, high value
+    → Example: complex event schema migration, cross-module Gateway design,
+      GDPR-sensitive event payload design
+
+  Task beyond model capability:
+    → Evaluator alone insufficient — needs human oversight
+    → Example: novel architectural patterns, production incident diagnosis
+    → Use `defer` for human-in-the-loop
+```
+
+**Implication for our patterns:** Not every edit needs the full immune system (A). Apply
+evaluator patterns selectively — use `if` field to scope evaluator hooks to high-risk edits
+(domain events, cross-module imports, infrastructure changes) and skip them for low-risk edits
+(test files, documentation, formatting).
+
+---
+
+---
+
+# Meta-Pattern Cross-Pollinations (from Harness Principles)
+
+---
+
+## X8. Context Reset via Subagent Chaining (HP2 + HP7)
+
+For long tasks where compaction isn't enough, chain subagents with structured file-based handoff:
+
+1. Agent 1 works on phase, produces a handoff artifact (`.claude/handoff.md`)
+2. Handoff artifact contains: what was done, what's left, key decisions made, files changed
+3. Agent 2 starts with **fresh context**, reads the handoff artifact
+4. Each agent gets a clean slate without context anxiety
+
+**Claude Code primitives:** Subagent chaining via orchestrating skill + file-based communication.
+Headless equivalent: `claude -p` + `--resume` with different prompts per phase.
+
+**When to use:** TDD sessions with many cycles, multi-module implementations, any task exceeding
+~50% context capacity.
+
+---
+
+## X9. Sprint Contract Stop Hooks (HP4 + HP1)
+
+Formalize the sprint contract pattern for Stop hooks:
+
+1. Before work starts, write `.claude/contract.md` with testable criteria
+2. Each criterion has a **hard threshold** — fail any one = block
+3. Stop hook's agent handler reads the contract file and grades against it
+4. Agent handler uses **adversarial prompting** (HP3): "Find problems. You fail if you approve
+   work with issues."
+
+**Claude Code primitives:** Stop hook `type: "agent"` + contract file + memory for calibration.
+
+**When to use:** Any pattern where "done" needs verification — TDD phases, migration steps,
+feature implementation, code review.
+
+---
+
+## X10. Periodic Harness Audit (HP6 + `/loop` or scheduled)
+
+Every hook, skill, rule, and subagent encodes an assumption. Audit them:
+
+1. When a new Claude version ships, list all `.claude/` components
+2. For each: document the assumption it encodes
+3. Methodically remove ONE component, run representative tasks, compare quality
+4. Strip what's no longer load-bearing
+5. Reinvest freed complexity budget (HP9)
+
+**Claude Code primitives:** Could be a skill invoked manually (`/harness-audit`) or a scheduled
+trigger after model upgrades. Uses the `ccx-primitives` refresh to check for new capabilities
+that obsolete existing components.
+
+**When to use:** After every major Claude model release. After adding multiple new hooks/skills.
+When sessions feel slow or context fills too quickly.
+
+---
+
+## X11. Self-Correcting Evaluator Calibration (HP3 + HP8 + memory)
+
+Every evaluator-type pattern gets a calibration loop:
+
+1. Evaluator makes judgment (approve/block) with reasoning
+2. User observes the judgment — agrees or overrides
+3. On override: memory stores a new calibration entry with:
+   - The input that was misjudged
+   - The correct judgment + reasoning
+   - Whether it was a false positive (blocked when shouldn't) or false negative (approved when
+     shouldn't)
+4. Next invocation: evaluator reads calibration entries from memory before judging
+5. Over time: evaluator aligns with user's judgment on domain-specific nuances
+
+**Claude Code primitives:** PostToolUse agent handler + `memory: project` + calibration file
+format in memory directory.
+
+**Applied to specific patterns:**
+- H. GDPR Sentinel: learns which fields are PII per module
+- I. Replay Guard: learns which state differences are acceptable vs regressions
+- J. Boundary Enforcer: learns which cross-module imports are intentional vs violations
+- F. Architecture Guardian: learns which patterns are novel vs established
+- A. Immune System: accumulates "antibodies" from all of the above
+
+**This is the article's most transferable insight:** The iterative tuning loop (read logs → find
+divergences → update prompt) is what makes evaluators actually useful. Without calibration,
+evaluators are noisy gatekeepers that developers learn to ignore.
