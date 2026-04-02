@@ -1,6 +1,6 @@
 # Candidate Patterns — Brainstorm (April 2026)
 
-7 novel patterns combining Claude Code v2.1.89 capabilities in non-obvious ways.
+13 novel patterns + 7 cross-pollinations combining Claude Code v2.1.89 capabilities.
 Status: brainstorming — to be refined and promoted to patterns.md after validation.
 
 ---
@@ -168,3 +168,216 @@ AI with accountability of a human.
 
 **Trigger signals:** "Automated PR review but I want final say", "CI review pipeline with
 approval gate", "AI-assisted code review with human oversight", "draft reviews for me to approve".
+
+---
+
+## H. GDPR PII Sentinel
+
+**Primitives:** `PostToolUse` (agent handler) + `PreToolUse` (`if`) + `memory: project` + rule `paths`
+
+Enforce "PII out of event payloads from day one" mechanically:
+
+- `PostToolUse` on Edit/Write, scoped with `if: "Edit(**/events/**)"` or
+  `if: "Edit(**/commands/**)"` — agent handler scans the changed file for fields that look
+  like PII (email, name, phone, address, IP) appearing directly in event payloads
+- Memory stores the **PII field catalog** per module ("booking module: guest email is PII,
+  booking ID is not")
+- Path-scoped rule in `.claude/rules/` loads GDPR guidance only when editing domain events
+- PreToolUse blocks committing if PII detected in event schemas
+
+**Key insight:** You have Forgettable Payloads and Crypto Shredding patterns. An agent that knows
+*which* fields are PII per module catches mistakes that regex can't — it understands domain
+context. The memory accumulates your PII catalog automatically.
+
+**Trigger signals:** "Enforce GDPR in event payloads", "catch PII leaks at edit-time",
+"automate privacy-by-design checks", "build a PII catalog".
+
+---
+
+## I. Event Replay Regression Guard
+
+**Primitives:** `PostToolUse` (command handler) + `Stop` hook + `memory: project` + skill `paths`
+
+When you modify `evolve`, `project`, or `react` functions, automatically validate backward
+compatibility:
+
+- `PostToolUse` on Edit/Write, path-scoped to `**/domain/**` — runs the module's event replay
+  tests
+- `Stop` hook spawns agent that checks: "Did the evolve function change? If yes, do old events
+  still produce the same state?"
+- Memory stores **projection baselines** — known-good read model outputs for key event sequences
+- Path-scoped skill with the replay testing workflow only loads when editing domain pure functions
+
+**Key insight:** Your four pure functions (decide/evolve/project/react) are the contract. Changing
+`evolve` can silently break replay of historical events. This catches it at edit-time, not after
+deployment.
+
+**Trigger signals:** "Validate event replay backward compatibility", "catch evolve function
+regressions", "projection baseline testing", "event schema migration safety".
+
+---
+
+## J. Module Boundary Enforcer (Real-Time)
+
+**Primitives:** `PostToolUse` (agent handler) + `memory: project` + `FileChanged` on `tsconfig.json`
+
+Goes beyond ArchUnitTS tests — catches violations **before** you run tests:
+
+- `PostToolUse` on Edit/Write spawns agent that reads the import graph of the changed file
+- Checks: does this file import from another module without going through `contracts/`?
+  Does it bypass the Gateway/ACL?
+- Memory stores the **allowed dependency map** per module (booking → space via
+  SpaceAvailabilityGateway, not direct import)
+- `FileChanged` on `tsconfig.json` triggers re-analysis of path mappings
+
+**Key insight:** Your modular monolith uses Gateway/ACL for inter-module communication. ArchUnitTS
+catches violations in CI, but this catches them **at edit-time** with domain-aware explanations
+("booking module must access space availability through SpaceAvailabilityGateway, not by
+importing space domain directly").
+
+**Trigger signals:** "Catch module boundary violations at edit-time", "enforce Gateway/ACL usage",
+"real-time architecture validation", "prevent cross-module coupling".
+
+---
+
+## K. Decide/Evolve/Project/React Scaffolder
+
+**Primitives:** Skill with `paths` + `context: fork` + `disable-model-invocation: true`
+
+When building a new aggregate in a bounded context:
+
+- Path-scoped to `packages/modules/src/*/domain/` directories
+- Scaffolds all four pure functions + state type + event types + command types + discriminated
+  unions with `_tag`
+- Generates matching test file with fixture factory (`createXxxFixture()`) + fake
+  (`XxxEventStoreFake`)
+- Follows your naming: `{module}Decide()`, `{module}Evolve()`, state-level dispatch with outer
+  switch on `state._tag`, inner switch on `command._tag` or `event._tag`
+- `context: fork` because scaffolding output is verbose
+- Uses `satisfies` over type annotation to preserve literal types for `_tag` fields
+
+**Key insight:** Very specific conventions (state-level dispatch, `_tag` discriminated unions,
+`satisfies` over `: Type`, `type` not `interface` for data shapes). A scaffolder that knows ALL
+of them saves setup time per aggregate and prevents convention drift.
+
+**Trigger signals:** "New aggregate", "new bounded context", "scaffold event-sourced entity",
+"set up decide/evolve/project/react".
+
+---
+
+## L. Frontend-Backend Contract Sync Checker
+
+**Primitives:** `FileChanged` + subagent + `memory: project`
+
+Your "UI is fully independent of backend" philosophy means contracts are the seam:
+
+- `FileChanged` on files in `contracts/dtos/` triggers a subagent
+- Subagent reads the changed Zod schema, then scans Expo frontend for components that consume
+  this DTO type via `z.infer<typeof Schema>`
+- Checks: does the frontend still handle all fields? Are there new required fields the UI
+  doesn't render?
+- Memory stores **which React components consume which DTOs**
+
+**Key insight:** With ports + fakes enabling independent UI development, the contract layer is the
+only coupling. When a DTO schema changes, you need to know which screens break — before someone
+reports it.
+
+**Trigger signals:** "DTO changed, what breaks?", "contract sync between backend and frontend",
+"Zod schema impact analysis", "which screens use this DTO?".
+
+---
+
+## M. Observability-Driven Incident Investigator
+
+**Primitives:** MCP (Sentry + Grafana) + subagent + `context: fork` + `memory: project` + `/loop`
+
+Your full Pino → OTel → Sentry → Grafana stack becomes a debugging pipeline:
+
+- MCP connects to Sentry (errors) and Grafana (R.E.D metrics from spanmetrics connector)
+- `/loop 15m` polls for new Sentry issues above threshold
+- On anomaly: subagent with `context: fork` pulls the Sentry error + OTel trace (traceId from
+  `PinoInstrumentation` auto-injection) + reads the relevant handler code
+- Memory stores **past investigations**: "this error pattern in booking module was caused by
+  race condition in concurrent evolve calls"
+- Generates report: error → trace → code path → likely cause → suggested fix
+
+**Key insight:** Your observability stack is already set up for this. `PinoInstrumentation`
+auto-injects traceId/spanId, the spanmetrics connector derives R.E.D metrics — all the data is
+there. This pattern closes the loop: observability data → code investigation → fix suggestion.
+
+**Trigger signals:** "Correlate Sentry errors with code changes", "automated incident
+investigation", "production debugging pipeline", "close the observability loop".
+
+---
+
+---
+
+# Cross-Pollinations
+
+Combinations across candidates A-M that are more than the sum of parts.
+
+---
+
+## X1. Immune System + GDPR Sentinel (A + H)
+
+The immune system's memory layer includes GDPR-specific "antibodies." `PermissionDenied` logs
+blocked PII access attempts. Over time, the PostToolUse agent learns which fields in which
+modules are PII — not from a static catalog but from **incidents it caught and incidents auto
+mode blocked**. The adaptive layer evolves to include privacy compliance, not just code quality.
+
+---
+
+## X2. Migration Convoy + Event Replay Guard (D + I)
+
+When migrating event schemas (e.g., adding a field, splitting an event), convoy workers run
+replay validation as part of their Stop hooks. The validator agent checks: old events replay
+correctly through new evolve functions. Memory records migration edge cases ("when migrating
+BookingRequested v1→v2, the `period` field split needs a default handler for v1 events").
+
+---
+
+## X3. Chameleon + Boundary Enforcer (E + J)
+
+As you `cd` between modules, not only do path-scoped skills shift (DDD in domain, perf in infra),
+but the `CwdChanged` hook also loads that module's **dependency allowlist** into env vars via
+`CLAUDE_ENV_FILE`. The boundary enforcer's PostToolUse agent reads these vars and knows which
+cross-module imports are legal for *this specific module* — dynamic boundaries that follow you.
+
+---
+
+## X4. Telemetry Loop + Incident Investigator (C + M)
+
+The `/loop` pulls BOTH Grafana metrics AND Sentry errors in one cycle. When p99 spikes, the
+forked subagent correlates: recent git commits + R.E.D metric changes + Sentry exceptions +
+OTel traces. Memory stores baselines AND past incidents — "last time booking endpoint p99 spiked,
+it was the N+1 query in SpaceAvailabilityChecker." Historical context makes each investigation
+faster than the last.
+
+---
+
+## X5. Architecture Guardian + Boundary Enforcer (F + J)
+
+Single PostToolUse agent handler does **both**: detects architectural novelty (new patterns,
+new dependency directions) AND validates module boundaries. The memory serves dual purpose —
+living dependency map + ADR repository. One hook invocation, two enforcement layers, one
+coherent architectural knowledge base that grows over time.
+
+---
+
+## X6. Headless Review Pipeline + GDPR Sentinel (G + H)
+
+The automated PR review includes GDPR scanning before posting. Claude reviews the diff, and
+`defer` pauses before posting the review comment. But before the defer, a hook scans: "Does this
+PR introduce PII in any event payload?" If yes, the review draft includes a GDPR violation flag
+with specific field/file references. Human sees both code review + privacy assessment in one
+deferred output.
+
+---
+
+## X7. Competitive Implementation + TDD/TPP (B + existing TDD agent)
+
+The spec writer creates **TPP-ordered** tests (simplest transformation first). N workers
+implement independently in worktrees. Stop hooks validate both test passage AND TPP compliance
+(using the tpp-reviewer agent prompt that reads tpp-rules from disk). The winning implementation
+is the one that follows TPP most faithfully while passing all tests — selection pressure for
+clean, incremental code.
