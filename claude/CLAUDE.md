@@ -15,6 +15,10 @@ expensive rework.
 - If you don't know, say so — never fabricate
 - Verify uncertain technical claims before presenting as fact
 - Include version context for technology-specific answers
+- When editing files, NEVER delete existing comments, annotations, or
+  user-written notes unless explicitly asked
+- When told to scope changes to a specific target (per-route, single file, one
+  module), do NOT apply changes globally — ask before expanding scope
 
 ## Dotfiles & Skills
 
@@ -39,6 +43,10 @@ expensive rework.
 - Concise variable names — long name = scope too big, refactor
 - `rg`/`fd` over `grep`/`find` for file-searching (not for pipe operations)
 - All code comments in English
+- Always read relevant docs/code before proposing solutions — never guess at
+  APIs, CLI flags, or tool capabilities
+- Follow established conventions for file types and patterns — check existing
+  files before creating new ones
 
 ### Type-Driven Domain Modeling + Zod at Boundaries
 
@@ -153,17 +161,19 @@ TDD non-negotiable. Every production line responds to a failing test.
 
 ## Tech Stack
 
-- Node.js ≥24, TypeScript strict mode, NestJS
+- TypeScript v6
+- Node.js ≥24.14.1
+- NestJS
 - Drizzle ORM + postgres driver (never Prisma)
 - better-auth (@better-auth/expo)
-- Vitest, Testing Library, supertest, testcontainers
+- Vitest, Testing Library, light-my-request or supertest, testcontainers
 - Expo React Native (mobile + web), TanStack Query, UniWind (never NativeWind),
-  Tailwind v4
+- Tanstack Start for web only
 - Turborepo + pnpm (never npm/yarn)
 - uuid v7, date-fns (migrate to Temporal when stable), native fetch (never
   Axios)
 - BullMQ for async jobs
-- React Hook Form (considering TanStack Form migration)
+- TanStack Form
 - Swagger for API docs
 
 ### Observability
@@ -193,4 +203,6 @@ Jest, Axios, Prisma, Moment.js, NativeWind, npm/yarn, `@nestjs/cqrs`
 - TypeScript LSP for all code navigation (type lookups, definitions, references)
   — never Read/Glob for these
 - Context7 CLI for targeted API/library docs
+- Never direct to web UIs (claude.ai, marketplace, dashboards) for tasks
+  achievable via CLI — assume CLI-first workflow
 - @RTK.md
