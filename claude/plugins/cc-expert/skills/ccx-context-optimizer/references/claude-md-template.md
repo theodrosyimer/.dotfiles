@@ -22,8 +22,8 @@
 - [Add any non-obvious tool usage instructions]
 
 # Key Skills
-- New feature → .claude/skills/development/feature-plan/
-- Implementation patterns → .claude/skills/development/feature-implement/
+- New feature → .claude/skills/dev__plan-feature/
+- Implementation patterns → .claude/skills/dev__implement-feature/
 - [Only add routing for non-obvious skill-to-task mappings]
 
 # Context Maintenance
