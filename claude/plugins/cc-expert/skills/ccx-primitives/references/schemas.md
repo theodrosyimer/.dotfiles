@@ -252,7 +252,7 @@ Hooks live under the `"hooks"` key in any `settings.json` file (user, project, l
 | `if` | 🆕 Optional. Permission rule syntax for conditional filtering (e.g. `"Bash(git *)"`, `"Edit(*.ts)"`). More granular than `matcher`. |
 | `timeout` | Seconds before cancellation (defaults vary by type) |
 | `statusMessage` | Custom spinner text shown while running |
-| `once` | Boolean. Fire once per session then remove (skills/slash commands only) |
+| `once` | Boolean. Fire once per session then remove. **Skills only** — not supported on agents. |
 
 #### `type: "command"`
 
@@ -314,6 +314,79 @@ Same `{"ok": true/false}` response schema as prompt hooks.
 > `type: "prompt"` for PostToolUse LLM-based evaluation, `type: "agent"` for `Stop`/`PreToolUse`
 > where it's been confirmed to work. This may be fixed in a future release — re-test after
 > upgrades.
+
+### Hook response formats by event (command/http hooks)
+
+Each event uses a different JSON structure for its response. Prompt/agent hooks use `{"ok": true/false}` uniformly.
+
+#### PreToolUse — `hookSpecificOutput.permissionDecision`
+
+```jsonc
+{
+  "hookSpecificOutput": {
+    "hookEventName": "PreToolUse",
+    "permissionDecision": "allow",     // "allow" | "deny" | "ask" | "defer"
+    "permissionDecisionReason": "...", // shown to user (allow/ask) or Claude (deny)
+    "updatedInput": { "command": "modified" },  // optional: rewrite tool args
+    "additionalContext": "..."         // optional: added to Claude's context
+  }
+}
+```
+
+Top-level `decision`/`reason` deprecated for PreToolUse. Old `"approve"`→`"allow"`, `"block"`→`"deny"`.
+
+#### PostToolUse / Stop / SubagentStop — top-level `decision`
+
+```jsonc
+{
+  "decision": "block",                // "block" only — omit to allow
+  "reason": "shown to Claude",
+  "hookSpecificOutput": {
+    "hookEventName": "PostToolUse",
+    "additionalContext": "...",        // optional: context for Claude
+    "updatedMCPToolOutput": "..."      // optional: rewrite MCP tool output (PostToolUse only)
+  }
+}
+```
+
+#### PermissionRequest — `hookSpecificOutput.decision.behavior`
+
+```jsonc
+{
+  "hookSpecificOutput": {
+    "hookEventName": "PermissionRequest",
+    "decision": {
+      "behavior": "allow",            // "allow" | "deny"
+      "updatedInput": { "command": "modified" },  // optional (allow only)
+      "updatedPermissions": [...],     // optional: add/remove rules, set mode
+      "message": "reason for deny"     // optional (deny only)
+    }
+  }
+}
+```
+
+#### PermissionDenied — `hookSpecificOutput.retry`
+
+```jsonc
+{ "hookSpecificOutput": { "hookEventName": "PermissionDenied", "retry": true } }
+```
+
+#### UserPromptSubmit — top-level `decision`
+
+```jsonc
+{ "decision": "block", "reason": "...", "hookSpecificOutput": { "additionalContext": "..." } }
+```
+
+#### Universal fields (all events)
+
+```jsonc
+{
+  "continue": false,         // stops Claude entirely (overrides event-specific decisions)
+  "stopReason": "message",   // shown to user when continue: false
+  "suppressOutput": false,   // hide stdout from verbose mode
+  "systemMessage": "warning" // warning shown to user
+}
+```
 
 ### Hook security settings
 
@@ -441,26 +514,46 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 | **Agent memory** (subagent `memory:` field) | Per-subagent, persists across conversations | `user` → `~/.claude/agent-memory/<name>/`<br>`project` → `.claude/agent-memory/<name>/`<br>`local` → `.claude/agent-memory-local/<name>/` |
 | **Auto memory** (session-level) | Per-project, written by Claude during sessions | `~/.claude/projects/<project>/memory/` — relocatable via `autoMemoryDirectory` setting |
 
-### Hooks
-- Exit 0 + JSON on stdout OR exit 2 + plain text on stderr — **never both**. Exit 2 ignores stdout entirely.
-- `PostToolUse` and `Stop` command hooks: `decision`/`reason` at **top level** (not inside `hookSpecificOutput`). `hookSpecificOutput` is for `additionalContext` and `updatedMCPToolOutput` only.
-- `PreToolUse` command hooks: use `hookSpecificOutput.permissionDecision` and `hookSpecificOutput.permissionDecisionReason` (top-level `decision`/`reason` deprecated for PreToolUse).
-- `type: "prompt"` and `type: "agent"` hooks: use `{"ok": true}` or `{"ok": false, "reason": "..."}` — different format from command hooks.
-- `Stop` hook: always check `stop_hook_active` field — if true, approve unconditionally to avoid infinite loop
-- `Stop` and `SubagentStop` hooks receive `last_assistant_message` field — final response text without needing to parse transcript files
+### Hooks — response formats
+- **Command hooks**: exit 0 + JSON on stdout OR exit 2 + stderr. Exit 2 ignores stdout entirely. JSON only parsed on exit 0.
+- **Prompt/agent hooks**: return `{"ok": true}` or `{"ok": false, "reason": "..."}` — different format from command/http hooks
+- **PreToolUse** (command/http): `hookSpecificOutput.permissionDecision` (`allow`|`deny`|`ask`|`defer`) + `permissionDecisionReason`. Top-level `decision`/`reason` deprecated.
+- **PostToolUse / Stop / SubagentStop** (command/http): top-level `decision: "block"` + `reason`. `hookSpecificOutput` for `additionalContext` and `updatedMCPToolOutput` only.
+- **PermissionRequest** (command/http): `hookSpecificOutput.decision.behavior` (`allow`|`deny`) + `updatedPermissions`
+- **PermissionDenied**: `hookSpecificOutput.retry: true` only
+- **Multiple PreToolUse decisions**: precedence is `deny` > `defer` > `ask` > `allow`
+- **Universal fields** (all events): `continue: false` stops Claude entirely, `stopReason`, `suppressOutput`, `systemMessage`
+
+### Hooks — handler type restrictions
+- **`SessionStart`**: only `type: "command"` supported — no http, prompt, or agent
+- **`StopFailure`**: output and exit code ignored entirely
+- **`InstructionsLoaded`**: no decision control — observability only, runs asynchronously
+- **`Notification`, `SubagentStart`, `CwdChanged`, `FileChanged`, `PreCompact`, `PostCompact`, `SessionEnd`, `WorktreeRemove`**: cannot block
 - `async: true` is **command-type only** — not supported on http, prompt, or agent handlers
-- HTTP hooks are not supported for `SessionStart` events
-- `CLAUDE_ENV_FILE` available in `SessionStart`, `CwdChanged`, and `FileChanged` — writing env vars in other hooks has no effect
-- `StopFailure` fires on API errors (rate limit, auth, billing) — use to log or alert on turn failures. Non-blocking.
-- 🆕 `if` field uses permission rule syntax (e.g. `"Bash(git *)"`) for granular filtering beyond `matcher` — available on all handler types
-- 🆕 `"defer"` permission decision in `PreToolUse` hooks — headless sessions pause at tool call, resume with `-p --resume`
-- 🆕 `PermissionDenied` fires after auto mode classifier denials — return `{retry: true}` to let model retry
-- 🆕 `CwdChanged` fires when working directory changes — useful for re-loading env vars via `CLAUDE_ENV_FILE`
-- 🆕 `FileChanged` fires when watched files change on disk — matcher is `filename` (basename, e.g. `.env`, `package.json`)
-- 🆕 `TaskCreated` fires when task created via `TaskCreate` — exit 2 rolls back creation
-- 🆕 PreToolUse/PostToolUse hooks now receive `file_path` as absolute path for Write/Edit/Read tools
-- ⚠️ `type: "agent"` errors on `PostToolUse` events (v2.1.89) — use `type: "prompt"` instead for PostToolUse LLM evaluation. `type: "agent"` works on `Stop` and `PreToolUse`.
-- 🆕 `if` condition filtering now correctly matches compound commands (`ls && git push`) and env-var-prefixed commands (`FOO=bar git push`)
+- ⚠️ `type: "agent"` errors on `PostToolUse` events (v2.1.89) — use `type: "prompt"` instead. `type: "agent"` works on `Stop` and `PreToolUse`. Re-test after upgrades.
+
+### Hooks — execution behavior
+- All matching hooks run **in parallel** — no sequential guarantee
+- Deduplication: command hooks by command string, HTTP hooks by URL
+- Hook stdout output capped at **10,000 characters** — exceeding saves to file with path + preview
+- `Stop` hook: always check `stop_hook_active` field — if true, approve unconditionally to avoid infinite loop
+- `Stop` and `SubagentStop` hooks receive `last_assistant_message` field
+- `"defer"` only works when Claude makes a **single tool call** in the turn — ignored with warning if multiple
+- `CLAUDE_ENV_FILE` available in `SessionStart`, `CwdChanged`, and `FileChanged` only
+- `PermissionDenied` only fires in **auto mode** — not on manual deny, PreToolUse block, or deny rule match
+
+### Hooks — field gotchas
+- `if` field: tool events only (`PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`, `PermissionDenied`). On other events, hook with `if` set **never runs**.
+- `if` field: one pattern per handler, no OR syntax. Use separate handlers for multiple patterns.
+- `if` condition filtering handles compound commands (`ls && git push`) and env-prefixed commands (`FOO=bar git push`)
+- `once` field: **skills only**, not agents
+- `matcher`: regex against event-specific field. Events without matcher support (`UserPromptSubmit`, `Stop`, `TeammateIdle`, `TaskCreated`, `TaskCompleted`, `WorktreeCreate`, `WorktreeRemove`, `CwdChanged`) — always fire.
+- `$CLAUDE_PROJECT_DIR` expands in `type: "command"` commands but NOT in `type: "prompt"`/`type: "agent"` prompts (those are LLM text, not shell). Use relative paths in prompt/agent hooks.
+- PreToolUse/PostToolUse hooks receive `file_path` as absolute path for Write/Edit/Read tools
+- `StopFailure` fires on API errors — output and exit code ignored. Non-blocking.
+- `TaskCreated` exit 2 rolls back task creation
+- `CwdChanged` fires on directory change — useful for env var reload via `CLAUDE_ENV_FILE`
+- `FileChanged` matcher is `filename` (basename, e.g. `.env`, `package.json`)
 
 ### Slash commands vs Skills
 
