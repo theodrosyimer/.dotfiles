@@ -294,7 +294,7 @@ Not supported for `SessionStart` events.
 }
 ```
 
-Returns `{"decision": "approve"}` or `{"decision": "block", "reason": "..."}`.
+Returns `{"ok": true}` or `{"ok": false, "reason": "..."}`.
 
 #### `type: "agent"`
 
@@ -307,7 +307,13 @@ Returns `{"decision": "approve"}` or `{"decision": "block", "reason": "..."}`.
 }
 ```
 
-Same `{"decision": "approve/block"}` response schema as prompt hooks.
+Same `{"ok": true/false}` response schema as prompt hooks.
+
+> **Known issue (v2.1.89):** `type: "agent"` consistently errors on `PostToolUse` events despite
+> docs listing it as supported. `type: "prompt"` works correctly on `PostToolUse`. Use
+> `type: "prompt"` for PostToolUse LLM-based evaluation, `type: "agent"` for `Stop`/`PreToolUse`
+> where it's been confirmed to work. This may be fixed in a future release — re-test after
+> upgrades.
 
 ### Hook security settings
 
@@ -437,7 +443,9 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 
 ### Hooks
 - Exit 0 + JSON on stdout OR exit 2 + plain text on stderr — **never both**. Exit 2 ignores stdout entirely.
-- `PostToolUse` JSON fields `decision`/`reason` belong inside `hookSpecificOutput`, not at top level
+- `PostToolUse` and `Stop` command hooks: `decision`/`reason` at **top level** (not inside `hookSpecificOutput`). `hookSpecificOutput` is for `additionalContext` and `updatedMCPToolOutput` only.
+- `PreToolUse` command hooks: use `hookSpecificOutput.permissionDecision` and `hookSpecificOutput.permissionDecisionReason` (top-level `decision`/`reason` deprecated for PreToolUse).
+- `type: "prompt"` and `type: "agent"` hooks: use `{"ok": true}` or `{"ok": false, "reason": "..."}` — different format from command hooks.
 - `Stop` hook: always check `stop_hook_active` field — if true, approve unconditionally to avoid infinite loop
 - `Stop` and `SubagentStop` hooks receive `last_assistant_message` field — final response text without needing to parse transcript files
 - `async: true` is **command-type only** — not supported on http, prompt, or agent handlers
@@ -451,6 +459,7 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - 🆕 `FileChanged` fires when watched files change on disk — matcher is `filename` (basename, e.g. `.env`, `package.json`)
 - 🆕 `TaskCreated` fires when task created via `TaskCreate` — exit 2 rolls back creation
 - 🆕 PreToolUse/PostToolUse hooks now receive `file_path` as absolute path for Write/Edit/Read tools
+- ⚠️ `type: "agent"` errors on `PostToolUse` events (v2.1.89) — use `type: "prompt"` instead for PostToolUse LLM evaluation. `type: "agent"` works on `Stop` and `PreToolUse`.
 - 🆕 `if` condition filtering now correctly matches compound commands (`ls && git push`) and env-var-prefixed commands (`FOO=bar git push`)
 
 ### Slash commands vs Skills
