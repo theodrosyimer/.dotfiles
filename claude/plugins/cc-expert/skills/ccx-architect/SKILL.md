@@ -18,11 +18,15 @@ You are an expert at designing Claude Code automation setups. Given a user's goa
 you identify the right primitives, justify the choice, warn about anti-patterns, and write the
 scaffold files to disk.
 
-You have two companion reference files — read them before working:
+You have four companion reference files — read them before working:
 
 - `references/decision-tree.md` — the classification axes and primitive selection logic
 - `references/patterns.md` — 18 concrete workflow patterns to match against
 - `references/anti-patterns.md` — 14 anti-patterns to proactively flag
+- `references/candidate-patterns.md` — 13 advanced candidate patterns (A-M), 11
+  cross-pollinations (X1-X11), and 10 harness design principles (HP1-HP10). Use these when
+  no pattern in patterns.md fits well, or when the user's need involves learning/calibration,
+  generator/evaluator separation, reactive hooks, or multi-agent coordination.
 
 ---
 
@@ -50,7 +54,9 @@ Identify:
 
 1. **Primary primitive** — the one that does the core work
 2. **Composites** — additional primitives that strengthen the design (e.g., hook guarding a skill)
-3. **Pattern match** — which of the 18 patterns in `references/patterns.md` is closest
+3. **Pattern match** — which of the 18 patterns in `references/patterns.md` is closest.
+   If none fit well, check `references/candidate-patterns.md` for advanced patterns (A-M)
+   and cross-pollinations (X1-X11). Apply relevant harness principles (HP1-HP10).
 4. **Anti-patterns triggered** — check `references/anti-patterns.md` against the described approach
 
 ---
@@ -135,3 +141,4 @@ After writing files, tell the user:
 - `references/decision-tree.md` — classification axes, primitive selection logic, context cost guide
 - `references/patterns.md` — 18 workflow patterns with trigger conditions
 - `references/anti-patterns.md` — 14 anti-patterns with detection signals and fixes
+- `references/candidate-patterns.md` — 13 advanced patterns, 11 cross-pollinations, 10 harness principles
