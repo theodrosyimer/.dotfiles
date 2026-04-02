@@ -1,5 +1,3 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/theodrosyimer/claude-code-schemas/main/skill.schema.json
-
 ---
 name: skill-lab
 description: "Create Claude Code skills from structured knowledge sources. Trigger when the user wants to turn a YouTube video, transcript, article, or documentation into a well-designed, evaluated skill. Combines knowledge extraction (distill), primitive design (cc:architect), schema validation (cc:primitives), and quality evaluation (skill-evaluator) into a repeatable pipeline."
@@ -29,16 +27,16 @@ Read `references/workspace-conventions.md` before starting — it defines where 
 
 `$ARGUMENTS` accepts any source that `/distill` supports. Auto-detect the type:
 
-| Input Pattern | Type | Extraction Method |
-|---|---|---|
-| URL containing `youtube.com` or `youtu.be` | YouTube | `yt-dlp` transcript extraction or WebFetch + ask for transcript |
-| URL starting with `http` (non-YouTube) | Web/Blog | WebFetch tool |
-| File path ending in `.pdf` | PDF | Read tool (PDF support) |
-| URL ending in `.pdf` | PDF (remote) | WebFetch to download, then Read tool |
-| File path ending in `.docx` | DOCX | `pandoc -t markdown <file>` |
-| File path ending in `.md` or `.txt` | Text/Markdown | Direct Read tool |
-| None of the above | Pasted text | Parse structured headers or ask for metadata |
-| **Nothing** | — | Ask the user what knowledge source they want to use |
+| Input Pattern                              | Type          | Extraction Method                                               |
+| ------------------------------------------ | ------------- | --------------------------------------------------------------- |
+| URL containing `youtube.com` or `youtu.be` | YouTube       | `yt-dlp` transcript extraction or WebFetch + ask for transcript |
+| URL starting with `http` (non-YouTube)     | Web/Blog      | WebFetch tool                                                   |
+| File path ending in `.pdf`                 | PDF           | Read tool (PDF support)                                         |
+| URL ending in `.pdf`                       | PDF (remote)  | WebFetch to download, then Read tool                            |
+| File path ending in `.docx`                | DOCX          | `pandoc -t markdown <file>`                                     |
+| File path ending in `.md` or `.txt`        | Text/Markdown | Direct Read tool                                                |
+| None of the above                          | Pasted text   | Parse structured headers or ask for metadata                    |
+| **Nothing**                                | —             | Ask the user what knowledge source they want to use             |
 
 ---
 
@@ -47,6 +45,7 @@ Read `references/workspace-conventions.md` before starting — it defines where 
 `skills_path` controls where new skills are created. Set it here so it applies to all sessions:
 
 <!-- Change this path to match your skills directory -->
+
 skills_path: ~/.dotfiles/claude/skills
 
 If the path above doesn't exist or doesn't suit the user, ask them where to create the skill.
