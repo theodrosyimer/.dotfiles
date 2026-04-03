@@ -152,6 +152,8 @@ TDD non-negotiable. Every production line responds to a failing test.
 - **Fixtures are contracts**: `createXxxFixture()` factories, no floating
   literals. `FailingStub` always suffixed. `ExpectedErrors` maps co-located with
   port
+- **Tests are colocated** with the code they test — like for `slices/{feature}/`
+  with handler, command, driver, fixture, test all together
 - **Fakes alongside concrete siblings** — `infrastructure/repositories/` holds
   both `drizzle-*.ts` and `in-memory-*.ts`
 - **80/15/5** — 80% handler tests, 15% component contract tests (RNTL,
