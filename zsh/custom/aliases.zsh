@@ -61,27 +61,39 @@ alias ghc='gh repo clone "$(chrome_get_front_window_url)"' # Clone a GitHub repo
 # alias gbdm="git branch --merged origin/main | grep -v 'main' | xargs git branch -d" # Delete a Git branch that is merged to main (using fzf to select the branch interactively)
 
 # Package managers + npq (https://github.com/lirantal/npq)
-alias inpq="npms i -g npq"
-# alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
-alias p='pnpms'
-alias pr='pnpms run'
-alias pf='pnpms --filter'
-alias pa='pnpms add'
-alias pad='pnpms add -D'
-alias px='pnpms dlx'
-alias b='buns'
-# alias npm="npq-hero || npms"
-alias n='npms'
-alias nr='npms run'
+alias inpq="npm i -g npq"
+alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
+alias p='pnpm 2>/dev/null'
+alias pi='pnpm install'
+alias pa='pnpm add'
+alias pad='pnpm add -D'
+alias pf='pnpm --filter'
+alias pfa='pnpm --filter add'
+alias pfad='pnpm --filter add -D'
+alias pp='pnpms publish'
+# alias pr='pnpm run'
+alias px='pnpm dlx'
+alias b='bun'
+alias bi='bun install'
+alias ba='bun add'
+alias bad='bun add -D'
+alias bp='buns publish'
+alias npm="npq-hero"
+alias n='npm'
+alias ni='npm install'
+alias na='npm add'
+alias nad='npm add -D'
+alias np='npms publish'
+alias nr='npm run'
 # alias yarn="NPQ_PKG_MGR=yarn npq-hero"
-alias y='yarn'
+# alias y='yarn'
 
 # Interactive script selector with fzf and package manager runners
 alias s="cat package.json | jq -r '.scripts | keys[]' | sort -r | fzf"
-alias pm="cat package.json | jq -r '.packageManager // \"pnpms\"' | cut -d '@' -f1"
+alias pm="cat package.json | jq -r '.packageManager // \"pnpm\"' | cut -d '@' -f1"
 alias sr="s | xargs \$(pm) run"
-alias pns="s | xargs pnpms run"
-alias ns="s | xargs npms run"
+alias pns="s | xargs pnpm run"
+alias ns="s | xargs npm run"
 alias ys="s | xargs yarn run"
 
 # Watch scripts
@@ -123,7 +135,7 @@ alias statdock='defaults write com.apple.dock static-only -bool true; killall Do
 alias fixdock='defaults write com.apple.dock static-only -bool false; killall Dock'
 
 # NPM
-alias npmlg='npms ls -g --depth 0' # Get NPM modules' list used globally
+alias npmlg='npm ls -g --depth 0' # Get NPM modules' list used globally
 
 # Custom scripts
 alias mmdc='~/bin/mmd2cheatset.rb'

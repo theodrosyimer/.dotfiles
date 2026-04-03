@@ -34,6 +34,7 @@ function init_package_json() {
   cat package.json
 }
 
+# The following are only needed for publishing packages to npm and to install private packages.
 function pnpms() {
   NPM_TOKEN=$(op read "op://Dev Perso/npm/token") pnpm "$@"
 }
