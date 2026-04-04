@@ -12,13 +12,13 @@
       "WebFetch(domain:github.com)",
       "WebSearch",
       "Glob",
+      "Read",
       "Bash(ctx7 *)",
       "Bash(jq *)",
       "Bash(rg *)",
       "Bash(wc -l *)",
       "Bash(npx tsc*)",
-      "Bash(pnpm test*)",
-      "Read(~/.zshrc)"
+      "Bash(pnpm test*)"
     ],
     "deny": [
       "Bash(curl:*)",
