@@ -1,0 +1,135 @@
+{
+  "product": "Guardly Space Listing Platform",
+  "version": "1.0.0",
+  "features": [
+    {
+      "id": "parking-reservation",
+      "name": "Parking Space Reservation",
+      "description": "Allow customers to reserve available parking spaces",
+      "priority": "P0",
+      "status": "planned",
+      "complexity": "CQRS",
+      "domain": "reservation",
+      "boundedContext": "booking",
+      "nonFunctionalRequirements": [
+        { "category": "performance", "requirement": "Availability check responds within 200ms" },
+        { "category": "accessibility", "requirement": "Booking form meets WCAG 2.1 AA" },
+        { "category": "security", "requirement": "All user inputs sanitized against XSS" }
+      ],
+      "userStories": [
+        {
+          "id": "PR-001",
+          "title": "Reserve available parking space",
+          "type": "CORE",
+          "asA": "customer",
+          "iWant": "to reserve an available parking space",
+          "soThat": "I have guaranteed parking when I need it",
+          "acceptanceCriteria": [
+            {
+              "scenario": "Parking spot is available",
+              "given": "A parking space is available for my requested time period",
+              "when": "I submit a reservation request with valid dates",
+              "then": "The parking spot is successfully reserved",
+              "and": [
+                "Reservation status is set to 'confirmed'",
+                "Space status changes to 'reserved'",
+                "Reservation has a unique ID",
+                "Start and end times are stored correctly"
+              ]
+            },
+            {
+              "scenario": "Parking spot is not available",
+              "given": "A parking space is already reserved for my requested time",
+              "when": "I attempt to reserve it",
+              "then": "An error is thrown with message 'Parking spot is not available'",
+              "and": ["No reservation is created", "Space status remains unchanged"]
+            },
+            {
+              "scenario": "Invalid reservation dates",
+              "given": "I provide an end time before start time",
+              "when": "I attempt to create a reservation",
+              "then": "An error is thrown with message 'End time must be after start time'",
+              "and": ["No reservation is created"]
+            }
+          ],
+          "businessRules": [
+            "End time must be after start time",
+            "Space must be available for entire requested period",
+            "Bookings only allowed within business hours (8 AM - 10 PM)",
+            "Minimum booking duration: 1 hour",
+            "Total price considers space rate, duration, and customer discounts"
+          ],
+          "minimalDataSchema": {
+            "spaceId": "string().uuid()",
+            "startTime": "coerce.date()",
+            "endTime": "coerce.date()",
+            "customerId": "string().uuid()"
+          },
+          "dependencies": []
+        },
+        {
+          "id": "PR-002",
+          "title": "Cancel existing reservation",
+          "type": "CORE",
+          "asA": "customer",
+          "iWant": "to cancel my existing reservation",
+          "soThat": "I can free up the space if my plans change",
+          "acceptanceCriteria": [
+            {
+              "scenario": "Cancel reservation with sufficient notice",
+              "given": "I have a confirmed reservation more than 48 hours away",
+              "when": "I request to cancel the reservation",
+              "then": "The reservation is cancelled with full refund",
+              "and": [
+                "Reservation status changes to 'cancelled'",
+                "Space status returns to 'available'"
+              ]
+            },
+            {
+              "scenario": "Cancel reservation with partial notice",
+              "given": "I have a confirmed reservation 24-48 hours away",
+              "when": "I request to cancel the reservation",
+              "then": "The reservation is cancelled with 80% refund"
+            },
+            {
+              "scenario": "Cancel reservation with insufficient notice",
+              "given": "I have a confirmed reservation less than 24 hours away",
+              "when": "I request to cancel the reservation",
+              "then": "The reservation is cancelled with no refund"
+            }
+          ],
+          "businessRules": [
+            "Full refund if cancelled 48+ hours before start",
+            "80% refund if cancelled 24-48 hours before start",
+            "No refund if cancelled less than 24 hours before start",
+            "Only confirmed reservations can be cancelled"
+          ],
+          "minimalDataSchema": {
+            "reservationId": "string().uuid()"
+          },
+          "dependencies": ["PR-001"]
+        }
+      ]
+    }
+  ],
+  "implementationOrder": [
+    {
+      "phase": 1,
+      "name": "Core Reservation",
+      "stories": ["PR-001"]
+    },
+    {
+      "phase": 2,
+      "name": "Cancellation",
+      "stories": ["PR-002"]
+    }
+  ],
+  "sharedConcepts": {
+    "businessHours": { "start": "08:00", "end": "22:00", "timezone": "UTC" },
+    "refundPolicy": {
+      "fullRefundHours": 48,
+      "partialRefundHours": 24,
+      "partialRefundPercentage": 80
+    }
+  }
+}

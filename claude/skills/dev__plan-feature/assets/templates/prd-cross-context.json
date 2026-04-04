@@ -1,0 +1,141 @@
+{
+  "product": "[Product Name]",
+  "version": "1.0.0",
+  "features": [
+    {
+      "id": "[context1-feature]",
+      "name": "[Context1 Feature]",
+      "description": "[Description]",
+      "priority": "P0",
+      "status": "planned",
+      "complexity": "CROSS_CONTEXT",
+      "domain": "[domain1]",
+      "boundedContext": "[context1]",
+      "nonFunctionalRequirements": [
+        { "category": "performance", "requirement": "[e.g., Cross-context call < 500ms]" }
+      ],
+      "userStories": [
+        {
+          "id": "PREFIX-001",
+          "title": "[Primary Context1 Action]",
+          "type": "CORE",
+          "asA": "[user type]",
+          "iWant": "[action]",
+          "soThat": "[benefit]",
+          "acceptanceCriteria": [
+            {
+              "scenario": "Happy path",
+              "given": "[precondition]",
+              "when": "[action]",
+              "then": "[outcome]",
+              "and": ["[additional 1]"]
+            }
+          ],
+          "businessRules": [
+            "Rule 1",
+            "Rule 2"
+          ],
+          "dependencies": []
+        }
+      ]
+    },
+    {
+      "id": "[context2-feature]",
+      "name": "[Context2 Feature]",
+      "description": "[Description]",
+      "priority": "P0",
+      "status": "planned",
+      "complexity": "CROSS_CONTEXT",
+      "domain": "[domain2]",
+      "boundedContext": "[context2]",
+      "userStories": [
+        {
+          "id": "PREFIX-003",
+          "title": "[Primary Context2 Action]",
+          "type": "CORE",
+          "asA": "[user type]",
+          "iWant": "[action]",
+          "soThat": "[benefit]",
+          "acceptanceCriteria": [
+            {
+              "scenario": "Happy path",
+              "given": "[precondition]",
+              "when": "[action]",
+              "then": "[outcome]"
+            }
+          ],
+          "businessRules": [],
+          "dependencies": []
+        }
+      ]
+    },
+    {
+      "id": "[integration-feature]",
+      "name": "Cross-Context Integration",
+      "description": "End-to-end workflow across contexts",
+      "priority": "P0",
+      "status": "planned",
+      "complexity": "CROSS_CONTEXT",
+      "domain": "cross-domain",
+      "boundedContext": "integration",
+      "userStories": [
+        {
+          "id": "PREFIX-005",
+          "title": "Cross-context workflow",
+          "type": "INTEGRATION",
+          "asA": "[user type]",
+          "iWant": "[cross-domain action]",
+          "soThat": "[end-to-end value]",
+          "acceptanceCriteria": [
+            {
+              "scenario": "Complete cross-context workflow",
+              "given": "[Context1 state] and [Context2 state]",
+              "when": "[trigger action]",
+              "then": "[end-to-end outcome]"
+            }
+          ],
+          "businessRules": [],
+          "dependencies": ["PREFIX-001", "PREFIX-003"]
+        }
+      ]
+    }
+  ],
+  "implementationOrder": [
+    {
+      "phase": 1,
+      "name": "Context 1 Core",
+      "stories": ["PREFIX-001", "PREFIX-002"]
+    },
+    {
+      "phase": 2,
+      "name": "Context 2 Core",
+      "stories": ["PREFIX-003", "PREFIX-004"]
+    },
+    {
+      "phase": 3,
+      "name": "Integration",
+      "stories": ["PREFIX-005", "PREFIX-006"]
+    }
+  ],
+  "crossContextDependencies": {
+    "contexts": [
+      {
+        "name": "[context1]",
+        "entities": ["[Entity1]", "[Entity2]"],
+        "responsibility": "[what this context does]"
+      },
+      {
+        "name": "[context2]",
+        "entities": ["[Entity3]", "[Entity4]"],
+        "responsibility": "[what this context does]"
+      }
+    ],
+    "dependencies": [
+      {
+        "from": "[context2]",
+        "to": "[context1]",
+        "reason": "[why context2 depends on context1]"
+      }
+    ]
+  }
+}

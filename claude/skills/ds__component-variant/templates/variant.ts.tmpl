@@ -1,0 +1,35 @@
+// Variant definition template
+// File: packages/ui/src/variants/{name}.ts
+
+import { tv } from 'tailwind-variants'
+
+export const __COMPONENT_NAME__ = tv({
+  // Base classes applied to all variants
+  base: '',
+
+  // Variant dimensions
+  variants: {
+    intent: {
+      primary: '',
+      secondary: '',
+    },
+    size: {
+      sm: '',
+      md: '',
+      lg: '',
+    },
+  },
+
+  // Styling for specific variant combinations
+  compoundVariants: [
+    // { intent: 'primary', size: 'sm', class: '' },
+  ],
+
+  // Default variant values
+  defaultVariants: {
+    intent: 'primary',
+    size: 'md',
+  },
+})
+
+export type __COMPONENT_NAME_PASCAL__Variants = Parameters<typeof __COMPONENT_NAME__>[0]
