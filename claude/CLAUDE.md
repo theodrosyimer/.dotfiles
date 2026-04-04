@@ -31,6 +31,7 @@ expensive rework.
 
 - `type` for data shapes — `interface` only for `implements` or `extends` (never
   `&`; `extends` has significantly better TS perf)
+- No type assertions (`as Type`) except for third-party library interop
 - `satisfies` over `: Type` for const declarations — preserves literal types
   (`_tag` fields)
 - `substring` over `slice` for string utilities
