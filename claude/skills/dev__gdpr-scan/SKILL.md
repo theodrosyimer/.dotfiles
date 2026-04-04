@@ -1,20 +1,22 @@
 ---
 name: gdpr-scan
-description: Full project scan of all event payloads for GDPR PII violations. Updates calibration catalog.
+description: GDPR PII scanning methodology — classification rules, scanning patterns, risk levels. State managed by gdpr-scan agent.
 context: fork
 disable-model-invocation: true
-allowed-tools: Read, Grep, Glob, Edit
+allowed-tools: Read, Grep, Glob
 ---
 
-# GDPR PII Deep Audit
+# GDPR PII Scanning Methodology
 
-Scan every domain event, command, and value object type definition in the project for PII
-that should not be in immutable event payloads. Update the calibration catalog with findings.
+Classification rules and scanning patterns for detecting PII in immutable event payloads.
+Calibration state is managed by the gdpr-scan agent (`memory: project`) — this skill is
+pure methodology.
 
-## Step 1 — Load calibration
+## Step 1 — Calibration (provided by agent)
 
-Read `${CLAUDE_SKILL_DIR}/calibration.md` for the current PII catalog, safe fields, watch list,
-and location granularity guide.
+The calling agent provides calibration data (known PII fields, safe fields, watch list,
+location granularity guide). If invoked standalone, read `${CLAUDE_SKILL_DIR}/calibration.md`
+as seed.
 
 ## Step 2 — Discover all domain types
 
@@ -67,12 +69,7 @@ Output a structured report:
 - New fields cataloged: N
 ```
 
-## Step 5 — Update calibration
+## Step 5 — Report new fields for calibration
 
-Write newly discovered fields back to `${CLAUDE_SKILL_DIR}/calibration.md`:
-- New PII fields → add to PII table
-- New safe fields → add to Safe table
-- New ambiguous fields → add to Watch List table
-
-Preserve existing entries. Append new ones. Do not remove entries — only the user should
-remove calibration entries (to correct false positives).
+List all newly discovered fields in the report output (Step 4 "New Fields Discovered" section).
+The calling agent is responsible for persisting these to calibration storage.
