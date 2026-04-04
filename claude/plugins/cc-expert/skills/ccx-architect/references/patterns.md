@@ -429,3 +429,38 @@ maximum security, worried about prompt injection from malicious PRs.
 - 🆕 `PermissionDenied` hook: log or alert when auto mode denies operations in CI — useful for
   post-run audit of what was blocked and why
 - Stop hook verifies completeness before Claude declares done
+
+---
+
+## 🆕 Pattern 19 — Skill + Agent Composition (Methodology vs State)
+
+**Trigger signals:** A skill needs project-specific persistent state — calibration data, learned
+patterns, accumulated findings that grow over time and differ per project.
+
+**Primitives:** Skill (dotfiles, pure methodology) + Subagent (`memory: project`, orchestration + state)
+
+**Key design decisions:**
+- `memory` field is subagent-only — skills cannot have persistent state directly
+- Skill stays in dotfiles (portable methodology): classification rules, scanning patterns, decision
+  frameworks. No state read/write. Same skill works across all projects
+- Agent stays in project (orchestration + state): reads calibration from agent memory, invokes the
+  skill, writes findings back to agent memory
+- Seed file in skill's directory = starting template for new projects. Agent copies seed to its
+  memory on first run, then project calibration diverges from seed over time
+- Skill works standalone (fallback to seed) but is enriched when called through the agent
+
+**Example — GDPR PII scanning:**
+```
+~/.dotfiles/claude/skills/dev__gdpr-scan/     # Methodology
+  SKILL.md                                     # Pure rules — what PII looks like, how to classify
+  calibration.md                               # Seed template (known PII patterns)
+
+.claude/agents/gdpr-scan.md                    # Orchestration + state
+  memory: project                              # → .claude/agent-memory/gdpr-scan/
+  skills: [gdpr-scan]                          # Loads methodology at startup
+```
+
+**When NOT to use this pattern:**
+- Skill state is trivial or ephemeral — just use `${CLAUDE_SKILL_DIR}` directly
+- State doesn't vary per project — keep it in the skill (dotfiles)
+- The skill is never invoked repeatedly with accumulating knowledge
