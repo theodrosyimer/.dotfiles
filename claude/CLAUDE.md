@@ -162,6 +162,26 @@ TDD non-negotiable. Every production line responds to a failing test.
 - **ArchUnitTS** in Vitest — LCOM96b: domain < 0.5, infrastructure < 0.7, shared
   < 0.4
 
+### Cross-Package Live Types (Monorepo)
+
+- `moduleResolution: "bundler"` + `customConditions` + `package.json` `exports`
+  with custom condition (e.g. `"@repo/source": "./src/*.ts"`) for cross-package
+  `.ts` source resolution[^1]
+- Packages consumed cross-package: `#src/*` subpath imports (`package.json`
+  `imports` field), never `@/*` tsconfig paths — tsconfig paths are
+  per-compilation-context, `imports` resolves per-package
+- Never `#/*` subpath imports — only `#src/*` (or `#<word>/*`). `#/` was
+  historically invalid per Node.js spec; `unrs-resolver` (ESLint) still rejects
+  it
+- Never add cross-package `paths` entries to tsconfig (e.g.
+  `"@repo/pkg/*": ["../../packages/pkg/src/*"]`) — blocks auto-import discovery
+  from `exports` wildcard
+- VS Code: `"typescript.preferences.includePackageJsonAutoImports": "on"` —
+  required for auto-import from wildcard `exports` patterns
+- Leaf apps (never imported by others) can keep `@/*` tsconfig paths
+
+[^1]: https://colinhacks.com/essays/live-types-typescript-monorepo
+
 ## Tech Stack
 
 - TypeScript v6
