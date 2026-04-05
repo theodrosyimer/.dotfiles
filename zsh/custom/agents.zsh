@@ -1,12 +1,3 @@
-# agents.zsh — Claude Code agent utilities
-#
-# Manages symlinks for CLAUDE.md, skills, hooks, and rules between dotfiles
-# and Claude/agent config directories. Includes skill installation
-# and plugin cache management.
-#
-# Dependencies: npx (for skadd)
-# Provided by oh-my-zsh auto-sourcing $ZSH_CUSTOM/*.zsh
-
 function _cc_sync_link() {
   local src="$1" dest="$2" force="$3"
 
@@ -17,7 +8,7 @@ function _cc_sync_link() {
     elif [[ "$force" == true ]]; then
       rm "$dest" && ln -s "$src" "$dest"
       ((++updated))
-      echo "  ��� ${dest:t} (retargeted)"
+      echo "  ↻ ${dest:t} (retargeted)"
     else
       conflicts+=("$dest → $(readlink "$dest") (expected $src)")
     fi
@@ -28,6 +19,29 @@ function _cc_sync_link() {
   fi
 }
 
+function _cc_sync_claude_md() {
+  local force="$1"
+  local src=~/.dotfiles/claude/CLAUDE.md dest=~/.claude/CLAUDE.md
+
+  if [[ -L "$dest" ]]; then
+    if [[ "$(readlink "$dest")" != "$src" ]]; then
+      if $force; then
+        rm "$dest" && ln -s "$src" "$dest" && ((++updated))
+        echo "CLAUDE.md: updated"
+      else
+        conflicts+=("$dest → $(readlink "$dest") (expected $src)")
+      fi
+    else
+      ((skipped++))
+    fi
+  elif [[ -e "$dest" ]]; then
+    conflicts+=("$dest (not a symlink, won't overwrite)")
+  else
+    ln -s "$src" "$dest" && ((++created))
+    echo "CLAUDE.md: linked"
+  fi
+}
+
 function ccsync() {
   local force=false
   [[ "$1" == "--force" || "$1" == "-f" ]] && force=true
@@ -35,11 +49,9 @@ function ccsync() {
   local created=0 skipped=0 updated=0
   local conflicts=()
 
-  # --- 1. CLAUDE.md ---
   mkdir -p ~/.claude
-  _cc_sync_link ~/.dotfiles/claude/CLAUDE.md ~/.claude/CLAUDE.md $force
+  _cc_sync_claude_md $force
 
-  # --- 2. Directory pairs: skills, hooks, rules ---
   local pairs=(
     ~/.dotfiles/claude/skills ~/.claude/skills
     ~/.dotfiles/claude/hooks  ~/.claude/hooks
@@ -65,7 +77,6 @@ function ccsync() {
     done
   done
 
-  # --- summary ---
   echo "\n── summary ──"
   echo "created: $created  unchanged: $skipped  updated: $updated"
   if (( ${#conflicts[@]} )); then
@@ -73,10 +84,6 @@ function ccsync() {
     printf '  - %s\n' "${conflicts[@]}"
     echo "run 'ccsync --force' to retarget wrong symlinks"
   fi
-}
-
-function skadd() {
-	npx skills add https://github.com/theodrosyimer/dotfiles/skills --skill "${1}"
 }
 
 function _cc_rm_plugin_cache() {
@@ -93,7 +100,6 @@ function ccpsync() {
   fi
 
   if (( $# )); then
-    # sync named plugins only
     for name in "$@"; do
       if [[ -d "$src_dir/$name" ]]; then
         _cc_rm_plugin_cache "ty/$name"
@@ -103,7 +109,6 @@ function ccpsync() {
       fi
     done
   else
-    # sync all plugins
     for dir in "$src_dir"/*(N/); do
       _cc_rm_plugin_cache "ty/${dir:t}"
       cleared+=("${dir:t}")
@@ -116,4 +121,8 @@ function ccpsync() {
   else
     echo "no plugins to sync"
   fi
+}
+
+function skadd() {
+	npx skills add https://github.com/theodrosyimer/dotfiles/skills --skill "${1}"
 }
