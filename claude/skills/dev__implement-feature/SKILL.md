@@ -61,7 +61,7 @@ The TPP reviewer agent will validate your choices when you finish.
 2. Read existing code to understand the architecture and patterns in use
 3. For the first failing test, identify the simplest TPP transformation needed
 4. Apply ONLY that transformation — resist the urge to implement the "final" solution
-5. Run tests + eslint + type-checking (use `--filter <package>` when in a monorepo): `pnpm [--filter <package>] test <test-file> --reporter=verbose && pnpm [--filter <package>] lint && pnpm [--filter <package>] ts:check`
+5. Run tests + eslint + type-checking (use `--filter <package>` when in a monorepo): `pnpm [--filter <package>] test[:watch|:integration|:e2e|:all] <test-file> --reporter=verbose && pnpm [--filter <package>] lint[:check] && pnpm [--filter <package>] ts:check[:watch]`
 6. If the first test passes, move to the next failing test and repeat from step 3
 7. Repeat until ALL tests pass (GREEN state)
 8. Report: which files were created/modified, test results showing all green, and the transformation path taken (e.g., "Test 1: nil→constant, Test 2: constant→scalar, Test 3: unconditional→if")
