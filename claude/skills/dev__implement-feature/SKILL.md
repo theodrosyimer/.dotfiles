@@ -64,7 +64,7 @@ The TPP reviewer agent will validate your choices when you finish.
 5. Run tests + eslint + type-checking (use `--filter <package>` when in a monorepo): `pnpm [--filter <package>] test[:watch|:integration|:e2e|:all] <test-file> --reporter=verbose && pnpm [--filter <package>] lint[:check] && pnpm [--filter <package>] ts:check[:watch]`
 6. If the first test passes, move to the next failing test and repeat from step 3
 7. Repeat until ALL tests pass (GREEN state)
-8. Once green, run /conventional-commit skill to generate a commit message describing the step `test: {description of behavior tested} — {TPP transformation applied}`
+8. Once green, run /conventional-commit skill to generate a commit message describing the step `feat: {description of behavior tested} — {TPP transformation applied}`
 9. Report: which files were created/modified, test results showing all green, and the transformation path taken (e.g., "Test 1: nil→constant, Test 2: constant→scalar, Test 3: unconditional→if")
 
 ## Implementation references (all in this skill's references/)
