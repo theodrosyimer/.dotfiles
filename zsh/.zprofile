@@ -47,6 +47,9 @@ export PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 
+# Added by Obsidian
+export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
+
 # export PATH="/usr/local/opt/grep/libexec/gnubin:$PATH"
 # export PATH="/usr/local/opt/icu4c/sbin:$PATH"
 # export PATH="/usr/local/opt/icu4c/bin:$PATH"
@@ -117,4 +120,5 @@ export VIDEOS_INBOX="$HOME/Movies/@inbox"
 export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PROJECTS"/oss "$CODE_PROJECTS"/oss/@theodrosyimer/ "$CODE_PROJECTS"/oss/@theodrosyimer/cli "$CODE_PERSONAL" "$CODE_WORK"/** "$JS_SANDBOX" "$JS_SANDBOX"/* "$CODE_REFS" "$CODE_TEMPLATES" "$CODE_TEMPLATES"/* "$CODE_TEMPLATES"/dev/* "$CODE_COURSES" "$DOTFILES" "$CODE/design" "$HOME")
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
+
 
