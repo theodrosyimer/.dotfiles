@@ -67,7 +67,7 @@ autoload zmv
 eval "$(starship init zsh)"
 eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
 eval "$(rbenv init -)"
-eval "$(pyenv init -)"
+eval "$(pyenv init - zsh)"
 eval "$(zoxide init zsh)"
 
 # 1Password completion
