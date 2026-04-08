@@ -95,7 +95,8 @@
     "skill-creator@claude-plugins-official": true,
     "ccx@ty": true,
     "skill-lab@ty": true,
-    "typescript-lsp@claude-plugins-official": true
+    "typescript-lsp@claude-plugins-official": true,
+    "expo@expo-plugins": true
   },
   "extraKnownMarketplaces": {
     "ty": {
@@ -103,9 +104,15 @@
         "source": "directory",
         "path": "/Users/ty/.dotfiles/claude"
       }
+    },
+    "expo-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "expo/skills"
+      }
     }
   },
+  "effortLevel": "high",
   "voiceEnabled": true,
-  "autoDreamEnabled": true,
-  "effortLevel": "high"
+  "autoDreamEnabled": true
 }
