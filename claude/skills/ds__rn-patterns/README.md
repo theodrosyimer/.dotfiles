@@ -488,13 +488,23 @@ These patterns have no web counterpart and are unique to React Native:
 ### Libraries
 - [FlashList v2 Migration](https://shopify.github.io/flash-list/docs/v2-migration/)
 - [FlashList v2 Changes](https://shopify.github.io/flash-list/docs/v2-changes/)
-- [react-native-ease](https://github.com/AppAndFlow/react-native-ease)
 - [Galeria](https://github.com/nandorojo/galeria)
 
-### react-native-keyboard-controller
+<details>
+<summary>react-native-ease (EaseView) docs</summary>
+
+- [GitHub / README](https://github.com/AppAndFlow/react-native-ease) — full API reference (animate, initialAnimate, transition, loop, transformOrigin, onTransitionEnd)
+
+No separate docs site — the README is the single source of truth.
+</details>
+
+<details>
+<summary>react-native-keyboard-controller docs</summary>
+
 - [GitHub](https://github.com/kirillzyusko/react-native-keyboard-controller)
 - [Docs Home](https://kirillzyusko.github.io/react-native-keyboard-controller/)
-- [Guides](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/category/guides)
-- [Recipes](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/category/recipes)
-- [API Reference](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/category/api-reference)
-- [Troubleshooting](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/troubleshooting)
+- [Guides](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/category/guides) — installation, tutorials
+- [Recipes](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/category/recipes) — chat UI, sticky input, form navigation
+- [API Reference](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/category/api-reference) — 9 components, 7 hooks, KeyboardController static API, KeyboardEvents
+- [Troubleshooting](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/troubleshooting) — Kotlin, Swift, Sentry, Android new arch
+</details>
