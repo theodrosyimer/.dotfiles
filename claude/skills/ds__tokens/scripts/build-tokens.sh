@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build design tokens using Style Dictionary v5
-# Run from packages/design-system/
+# Run from packages/design-system/ or wherever the design tokens package is located
 
 set -euo pipefail
 
