@@ -65,6 +65,7 @@ alias inpq="npm i -g npq"
 alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
 alias p='pnpm 2>/dev/null'
 alias pi='pnpm install'
+alias pif='pnpm install --frozen-lockfile'
 alias pa='pnpm add'
 alias pad='pnpm add -D'
 alias pf='pnpm --filter'
@@ -81,6 +82,7 @@ alias bp='buns publish'
 alias npm="npq-hero"
 alias n='npm'
 alias ni='npm install'
+alias nci='npm ci'
 alias na='npm add'
 alias nad='npm add -D'
 alias np='npms publish'
