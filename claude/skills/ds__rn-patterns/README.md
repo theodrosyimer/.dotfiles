@@ -195,7 +195,7 @@ Tailwind v4 eliminated the implementation tax on custom names. `@theme` tokens a
 | Library                          | Version | Why Chosen                                                                                                                                                                                                                                                                                                     |
 | -------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | @shopify/flash-list              | v2      | Auto-sizing (`estimatedItemSize` removed), `masonry` prop, new hooks (`useMappingHelper`, `useLayoutState`, `useRecyclingState`). New Architecture only.                                                                                                                                                       |
-| react-native-keyboard-controller | v1.21+  | 7 components for every keyboard scenario (`KeyboardAwareScrollView`, `KeyboardAvoidingView`, `KeyboardChatScrollView`, `KeyboardStickyView`, `KeyboardToolbar`, `OverKeyboardView`, `KeyboardExtender`). Cross-platform consistent. Used by Discord, Bluesky, MetaMask, Expo.                                  |
+| react-native-keyboard-controller | v1.21+  | 9 components (`KeyboardAwareScrollView`, `KeyboardAvoidingView`, `KeyboardChatScrollView`, `KeyboardStickyView`, `KeyboardToolbar`, `OverKeyboardView`, `KeyboardExtender`, `KeyboardBackgroundView`, `KeyboardGestureArea`), 7 hooks. Cross-platform. Used by Discord, Bluesky, MetaMask, Expo.                |
 | react-native-ease                | latest  | Zero JS overhead animations via native platform APIs (Core Animation iOS, Animator Android). Declarative `EaseView` component. Uniwind support via `react-native-ease/uniwind`. Fabric only.                                                                                                                   |
 | expo-image                       | v55+    | Blurhash placeholders, caching, priority, `recyclingKey` for lists, SF Symbols via `source="sf:name"`. Requires `withUniwind(ExpoImage)` wrapper for className support: `import { withUniwind } from 'uniwind'; import { Image as ExpoImage } from 'expo-image'; export const Image = withUniwind(ExpoImage)`. |
 | react-native-reanimated          | v4      | Gesture-driven animations, entering/exiting presets, layout animations, shared element transitions.                                                                                                                                                                                                            |
@@ -205,6 +205,8 @@ Tailwind v4 eliminated the implementation tax on custom names. `@theme` tokens a
 | expo-glass-effect                | latest  | Liquid glass backdrops (iOS 26+).                                                                                                                                                                                                                                                                              |
 | expo-blur                        | v55+    | `BlurView` for visual effects.                                                                                                                                                                                                                                                                                 |
 | react-native-safe-area-context   | v5.7+   | `useSafeAreaInsets` for numeric values/calculations. Prefer Uniwind's `pt-safe`/`pb-safe`/`px-safe` utilities for className-driven safe area padding.                                                                                                                                                          |
+| expo-symbols                     | v55+    | `SymbolView` for animated SF Symbols (bounce, pulse, variableColor, scale), weights (ultraLight→black), multicolor. Use expo-image for static SF Symbols.                                                                                                                                                     |
+| @nandorojo/galeria               | latest  | Image lightbox with native shared element transitions, pinch-to-zoom, double-tap zoom, pan-to-close. Works with expo-image and FlashList.                                                                                                                                                                     |
 
 ## 6. Accessibility: Link vs Pressable
 
@@ -309,19 +311,32 @@ Three-tier system with clear boundaries:
 ### EaseView Details
 
 - `animate` prop -- target values (e.g., `{ opacity: 1, translateY: 0 }`)
+- `initialAnimate` prop -- starting values for enter animations (view mounts at these, then animates to `animate`)
 - `transition` prop -- timing or spring config applied to all properties
 - Per-property transitions for mixed timing (e.g., fast opacity, slow translateY)
-- Loop modes: `'repeat'` (restart from beginning) or `'reverse'` (ping-pong)
+- Loop modes: `loop: 'repeat'` or `loop: 'reverse'` on timing transition config (requires `initialAnimate`)
+- `transformOrigin: { x, y }` -- 0-1 fractions for scale/rotation pivot (`{ x: 0.5, y: 0.5 }` = center default)
 - `onTransitionEnd` callback for sequencing
 - Uniwind import: `import { EaseView } from 'react-native-ease/uniwind'`
 - Fabric (new architecture) only
 
-### When NOT to Use EaseView
+### When to Use EaseView vs Reanimated
 
-- Gesture-driven animations (pan, pinch, swipe) -- use Reanimated + GestureDetector
-- Layout animations (width/height changes) -- use Reanimated layout animations
-- Shared element transitions -- use Reanimated shared element transitions
-- Complex interpolation chains -- use Reanimated `interpolate` / `useDerivedValue`
+**EaseView** — state-driven enter/exit, fade, slide, scale on a single element:
+- Enter animation: `initialAnimate={{ opacity: 0 }}` + `animate={{ opacity: 1 }}`
+- State toggle: `animate={{ opacity: visible ? 1 : 0 }}`
+- Skeleton pulse: `initialAnimate` + `loop: 'reverse'` on timing transition
+
+**Reanimated** — everything EaseView cannot do:
+- Gesture-driven (pan, pinch, swipe) -- `GestureDetector` + shared values
+- Staggered list entrance -- `FadeInUp.delay(index * 50)` needs per-item delay
+- Layout animations -- `layout={LinearTransition}` for sibling repositioning
+- Shared element transitions
+- Scroll-driven animations -- `useScrollViewOffset` + `useAnimatedStyle`
+- Complex interpolation chains -- `interpolate` / `useDerivedValue`
+- Animated press with custom scale/opacity -- `Gesture.Tap` + shared values
+
+See references/interaction-patterns.md for Reanimated patterns with code examples.
 
 ## 9. Critical Rules
 
@@ -424,35 +439,62 @@ These patterns have no web counterpart and are unique to React Native:
 ├── SKILL.md                           # Main skill document (<500 lines), loaded on skill trigger
 ├── references/
 │   ├── layout-patterns.md             # Screen containers, ScrollView, SafeArea, adaptive, modals
-│   ├── list-patterns.md               # FlashList v2, grids, memoization, performance
-│   ├── form-patterns.md               # keyboard-controller (7 components), TextInput, validation
-│   ├── interaction-patterns.md        # Link vs Pressable, EaseView, Reanimated, haptics
-│   ├── typography-patterns.md         # Text rules, font loading, scaling, platform fonts
-│   └── image-patterns.md             # expo-image, blurhash, caching, SF Symbols
-└── templates/
-    ├── screen.tmpl.tsx                # Basic scrollable screen template
-    ├── list-screen.tmpl.tsx           # FlashList v2 screen template
-    └── form-screen.tmpl.tsx           # Form with KeyboardAwareScrollView template
+│   ├── list-patterns.md               # FlashList v2, grids, memoization, stable refs, performance
+│   ├── form-patterns.md               # keyboard-controller (9 components, 7 hooks), TextInput, validation, chat advanced props
+│   ├── interaction-patterns.md        # Link.Trigger, EaseView, Reanimated presets/layout/stagger, Gesture.Tap, haptics, scroll
+│   ├── typography-patterns.md         # Text rules, font loading, scaling, platform fonts, emphasis
+│   ├── image-patterns.md             # expo-image, SymbolView, Galeria lightbox, blurhash, SF Symbols, withUniwind
+│   └── error-loading-patterns.md     # Loading (ActivityIndicator, skeleton), empty states, error states, status tokens
+└── templates/                         # 13 templates (*.tmpl.tsx)
+    ├── screen.tmpl.tsx                # Basic scrollable screen
+    ├── list-screen.tmpl.tsx           # FlashList v2 screen
+    ├── form-screen.tmpl.tsx           # Form with KeyboardAwareScrollView
+    ├── chat-screen.tmpl.tsx           # KeyboardChatScrollView + KeyboardStickyView
+    ├── modal-sheet.tmpl.tsx           # formSheet with detents
+    ├── animated-list.tmpl.tsx         # EaseView + Reanimated swipe-to-delete
+    ├── detail-screen.tmpl.tsx         # Hero image, blurhash, gradient, Link.Menu
+    ├── settings-screen.tmpl.tsx       # Link vs Pressable, Switch, discriminated union
+    ├── tab-screen.tmpl.tsx            # NativeTabs
+    ├── adaptive-grid.tmpl.tsx         # Dynamic numColumns, breakpoints
+    ├── keyboard-toolbar-form.tmpl.tsx # KeyboardToolbar Prev/Next/Done
+    ├── search-screen.tmpl.tsx         # headerSearchBarOptions, useSearch, FlashList, 3 states
+    └── error-empty-state.tmpl.tsx     # EmptyState + ErrorState, FadeIn, SymbolView
 ```
 
 ## 14. Sources
 
+### Accessibility
 - [WAI-ARIA APG: Link Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/link/)
 - [WAI-ARIA APG: Button Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/button/)
+- [Link vs Button: Choosing the Right Element -- Vispero](https://vispero.com/resources/link-vs-button-choosing-the-right-element-for-the-right-job/)
+- [React Native Accessibility](https://reactnative.dev/docs/accessibility)
+
+### Expo & Navigation
 - [Expo Router: Link API Reference](https://docs.expo.dev/versions/latest/sdk/router/link/)
 - [Expo Router: Navigation](https://docs.expo.dev/router/basics/navigation/)
+- [expo-symbols](https://docs.expo.dev/versions/latest/sdk/symbols/)
+
+### Styling & Tokens
 - [Tailwind CSS v4 Theme](https://tailwindcss.com/docs/theme)
+- [Uniwind docs](https://docs.uniwind.dev/)
 - [shadcn/ui Theming](https://ui.shadcn.com/docs/theming)
 - [Nathan Curtis: Naming Tokens in Design Systems](https://medium.com/eightshapes-llc/naming-tokens-in-design-systems-9e86c7444676)
 - [Brad Frost: Design Tokens Course](https://designtokenscourse.com)
 - [DTCG Stable Specification](https://www.w3.org/community/design-tokens/)
 - [HeroUI v3 Theming](https://heroui.com/docs/handbook/theming)
-- [Uniwind docs](https://docs.uniwind.dev/)
-- [FlashList v2 Migration](https://shopify.github.io/flash-list/docs/v2-migration/)
-- [FlashList v2 Changes](https://shopify.github.io/flash-list/docs/v2-changes/)
-- [react-native-keyboard-controller](https://kirillzyusko.github.io/react-native-keyboard-controller/)
-- [react-native-ease](https://github.com/AppAndFlow/react-native-ease)
-- [React Native Accessibility](https://reactnative.dev/docs/accessibility)
-- [Link vs Button: Choosing the Right Element -- Vispero](https://vispero.com/resources/link-vs-button-choosing-the-right-element-for-the-right-job/)
 - [Fluent UI Tailwind CSS](https://github.com/dmytrokirpa/fluentui-tailwindcss)
 - [GitLab Pajamas Design Tokens](https://design.gitlab.com/product-foundations/design-tokens/)
+
+### Libraries
+- [FlashList v2 Migration](https://shopify.github.io/flash-list/docs/v2-migration/)
+- [FlashList v2 Changes](https://shopify.github.io/flash-list/docs/v2-changes/)
+- [react-native-ease](https://github.com/AppAndFlow/react-native-ease)
+- [Galeria](https://github.com/nandorojo/galeria)
+
+### react-native-keyboard-controller
+- [GitHub](https://github.com/kirillzyusko/react-native-keyboard-controller)
+- [Docs Home](https://kirillzyusko.github.io/react-native-keyboard-controller/)
+- [Guides](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/category/guides)
+- [Recipes](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/category/recipes)
+- [API Reference](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/category/api-reference)
+- [Troubleshooting](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/troubleshooting)
