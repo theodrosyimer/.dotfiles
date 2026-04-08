@@ -22,6 +22,7 @@ This skill covers **layout, composition, and screen patterns**. For individual c
 | Shadows              | `boxShadow` CSS prop                                     | Never legacy RN shadow/elevation props. Per building-native-ui best practices.                                                                                                                                                                                                                                                               |
 | Rounded corners      | `border-continuous` className utility (Uniwind built-in) | Per Apple HIG. Applied via className on all rounded views.                                                                                                                                                                                                                                                                                   |
 | Platform detection   | `process.env.EXPO_OS`                                    | Not `Platform.OS`. Per building-native-ui and Expo conventions.                                                                                                                                                                                                                                                                              |
+| Native UI            | @expo/ui with file-based platform resolution             | SwiftUI (iOS) and Jetpack Compose (Android) render true native views. File extensions (.ios.tsx/.android.tsx + .tsx fallback) for platform branching — Metro tree-shakes unused platform code. process.env.EXPO_OS for minor tweaks within a single platform file only. |
 
 ## 3. Token Vocabulary
 
@@ -207,6 +208,7 @@ Tailwind v4 eliminated the implementation tax on custom names. `@theme` tokens a
 | react-native-safe-area-context   | v5.7+   | `useSafeAreaInsets` for numeric values/calculations. Prefer Uniwind's `pt-safe`/`pb-safe`/`px-safe` utilities for className-driven safe area padding.                                                                                                                                                          |
 | expo-symbols                     | v55+    | `SymbolView` for animated SF Symbols (bounce, pulse, variableColor, scale), weights (ultraLight→black), multicolor. Use expo-image for static SF Symbols.                                                                                                                                                     |
 | @nandorojo/galeria               | latest  | Image lightbox with native shared element transitions, pinch-to-zoom, double-tap zoom, pan-to-close. Works with expo-image and FlashList.                                                                                                                                                                     |
+| @expo/ui                         | v55+ (beta) | True native SwiftUI (iOS) and Jetpack Compose/M3 (Android) components from JS. Host wrapper for native trees, RNHostView for embedding RN in native, modifier system for both platforms. File-based platform resolution (.ios.tsx/.android.tsx). |
 
 ## 6. Accessibility: Link vs Pressable
 
@@ -359,6 +361,10 @@ See references/interaction-patterns.md for Reanimated patterns with code example
 | Interactive states    | `active:`, `focus:`, `disabled:` on core RN components (Pressable, TextInput, Switch) | `active:`/`focus:` on RNGH Pressable or `withUniwind`-wrapped components (not supported) |
 | Navigation            | `Link` (Expo Router)                                                                  | `Pressable` with `router.push` for nav                                                   |
 | Actions               | `Pressable` with `accessibilityRole="button"`                                         | `Link` for non-navigation actions                                                        |
+| Native component trees | Wrap in `<Host>` (matchContents for inline, style={{ flex: 1 }} for full) | Nest `<Host>` inside `<Host>` |
+| RN in native trees | `<RNHostView matchContents>` wrapping RN views inside Host | Direct RN components inside Host without RNHostView |
+| Platform file resolution | `.ios.tsx`/`.android.tsx` + `.tsx` fallback (always required) | Inline `process.env.EXPO_OS` to switch entire component trees |
+| Native theming | Native components use platform theming inside Host | className or Uniwind tokens on SwiftUI/Compose components |
 
 ## 10. Cross-Reference Map
 
@@ -369,6 +375,8 @@ See references/interaction-patterns.md for Reanimated patterns with code example
 | Route definitions            | `building-native-ui`         | Screen containers only                 |
 | Atomic RN rules              | `vercel-react-native-skills` | Synthesizes into patterns with Uniwind |
 | React component architecture | `dev__react`                 | RN-specific layout patterns            |
+| expo-ui SwiftUI API      | `expo:expo-ui-swift-ui`        | Uses components, documents verified patterns |
+| expo-ui Compose API      | `expo:expo-ui-jetpack-compose` | Uses components, documents verified patterns |
 
 ## 11. Style Rules
 
@@ -444,8 +452,9 @@ These patterns have no web counterpart and are unique to React Native:
 │   ├── interaction-patterns.md        # Link.Trigger, EaseView, Reanimated presets/layout/stagger, Gesture.Tap, haptics, scroll
 │   ├── typography-patterns.md         # Text rules, font loading, scaling, platform fonts, emphasis
 │   ├── image-patterns.md             # expo-image, SymbolView, Galeria lightbox, blurhash, SF Symbols, withUniwind
-│   └── error-loading-patterns.md     # Loading (ActivityIndicator, skeleton), empty states, error states, status tokens
-└── templates/                         # 16 templates (*.tmpl.tsx)
+│   ├── error-loading-patterns.md     # Loading (ActivityIndicator, skeleton), empty states, error states, status tokens
+│   └── expo-ui-patterns.md        # @expo/ui platform-conditional patterns, Host/RNHostView, verified APIs
+└── templates/                         # 16 RN templates + 10 expo-ui template sets (34 platform files)
     ├── screen.tmpl.tsx                # Basic scrollable screen
     ├── list-screen.tmpl.tsx           # FlashList v2 screen
     ├── form-screen.tmpl.tsx           # Form with KeyboardAwareScrollView
@@ -461,7 +470,42 @@ These patterns have no web counterpart and are unique to React Native:
     ├── error-empty-state.tmpl.tsx     # EmptyState + ErrorState, EaseView enter, SymbolView
     ├── wizard-form.tmpl.tsx           # Multi-step local state, EaseView transitions, ProgressDots
     ├── wizard-form-routed.tmpl.tsx    # Multi-step Expo Router Stack, Zustand, multi-file
-    └── chat-emoji-screen.tmpl.tsx     # KeyboardExtender suggestions, OverKeyboardView emoji, freeze
+    ├── chat-emoji-screen.tmpl.tsx     # KeyboardExtender suggestions, OverKeyboardView emoji, freeze
+    # expo-ui native patterns (file-based platform resolution)
+    ├── native-settings.types.ts             # Shared types for settings
+    ├── native-settings.tmpl.ios.tsx          # SwiftUI Form/Section/Toggle/Picker + RNHostView
+    ├── native-settings.tmpl.android.tsx      # Compose LazyColumn/ListItem/Switch
+    ├── native-settings.tmpl.tsx              # RN fallback (FlashList)
+    ├── color-picker.types.ts                # Shared types for color picker
+    ├── color-picker.tmpl.ios.tsx             # SwiftUI ColorPicker
+    ├── color-picker.tmpl.tsx                 # RN fallback (Pressable swatches)
+    ├── chip-filter.types.ts                 # Shared types for chip filter
+    ├── chip-filter.tmpl.android.tsx          # Compose FlowRow/FilterChip
+    ├── chip-filter.tmpl.tsx                  # RN fallback (ScrollView + Pressable)
+    ├── confirmation-dialog.types.ts         # Shared types for dialog
+    ├── confirmation-dialog.tmpl.ios.tsx      # SwiftUI ConfirmationDialog
+    ├── confirmation-dialog.tmpl.android.tsx  # Compose AlertDialog
+    ├── confirmation-dialog.tmpl.tsx          # RN fallback (Modal + EaseView)
+    ├── native-search.types.ts               # Shared types for search
+    ├── native-search.tmpl.android.tsx        # Compose DockedSearchBar/FilterChip/LazyColumn
+    ├── native-search.tmpl.tsx               # RN fallback (headerSearchBarOptions + FlashList)
+    ├── native-empty-state.types.ts          # Shared types for empty state
+    ├── native-empty-state.tmpl.ios.tsx       # SwiftUI ContentUnavailableView
+    ├── native-empty-state.tmpl.tsx           # RN fallback (EaseView + SF Symbol)
+    ├── context-menu.types.ts                # Shared types for context menu
+    ├── context-menu.tmpl.ios.tsx             # SwiftUI ContextMenu with Preview
+    ├── context-menu.tmpl.tsx                 # RN fallback (onLongPress overlay)
+    ├── native-bottom-sheet.types.ts         # Shared types for bottom sheet
+    ├── native-bottom-sheet.tmpl.ios.tsx      # SwiftUI BottomSheet + RNHostView
+    ├── native-bottom-sheet.tmpl.android.tsx  # Compose ModalBottomSheet
+    ├── native-bottom-sheet.tmpl.tsx          # RN fallback (Modal + EaseView slide)
+    ├── expandable-section.types.ts          # Shared types for expandable
+    ├── expandable-section.tmpl.ios.tsx       # SwiftUI DisclosureGroup
+    ├── expandable-section.tmpl.tsx           # RN fallback (EaseView accordion)
+    ├── date-picker.types.ts                 # Shared types for date picker
+    ├── date-picker.tmpl.ios.tsx              # SwiftUI DatePicker
+    ├── date-picker.tmpl.android.tsx          # Compose DateTimePicker
+    └── date-picker.tmpl.tsx                  # RN fallback
 ```
 
 ## 14. Sources
@@ -511,3 +555,12 @@ No separate docs site — the README is the single source of truth.
 - [API Reference](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/category/api-reference) — 9 components, 7 hooks, KeyboardController static API, KeyboardEvents
 - [Troubleshooting](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/troubleshooting) — Kotlin, Swift, Sentry, Android new arch
 </details>
+
+### expo-ui
+- [Expo UI Documentation](https://docs.expo.dev/versions/latest/sdk/ui/)
+- [Building SwiftUI apps with Expo UI](https://docs.expo.dev/guides/expo-ui-swift-ui/)
+- [Expo UI in SDK 55: Jetpack Compose](https://expo.dev/blog/expo-ui-in-sdk-55-jetpack-compose-now-available-for-react-native-apps)
+- [6 Expo UI Tips — codewithbeto](https://codewithbeto.dev/blog/expo-ui-tips)
+- [Platform-specific modules](https://docs.expo.dev/router/advanced/platform-specific-modules/)
+- [Liquid Glass with Expo UI](https://expo.dev/blog/liquid-glass-app-with-expo-ui-and-swiftui)
+- [EvanBacon/crispy](https://github.com/EvanBacon/crispy) — production Expo Router component library
