@@ -445,7 +445,7 @@ These patterns have no web counterpart and are unique to React Native:
 │   ├── typography-patterns.md         # Text rules, font loading, scaling, platform fonts, emphasis
 │   ├── image-patterns.md             # expo-image, SymbolView, Galeria lightbox, blurhash, SF Symbols, withUniwind
 │   └── error-loading-patterns.md     # Loading (ActivityIndicator, skeleton), empty states, error states, status tokens
-└── templates/                         # 13 templates (*.tmpl.tsx)
+└── templates/                         # 16 templates (*.tmpl.tsx)
     ├── screen.tmpl.tsx                # Basic scrollable screen
     ├── list-screen.tmpl.tsx           # FlashList v2 screen
     ├── form-screen.tmpl.tsx           # Form with KeyboardAwareScrollView
@@ -458,7 +458,10 @@ These patterns have no web counterpart and are unique to React Native:
     ├── adaptive-grid.tmpl.tsx         # Dynamic numColumns, breakpoints
     ├── keyboard-toolbar-form.tmpl.tsx # KeyboardToolbar Prev/Next/Done
     ├── search-screen.tmpl.tsx         # headerSearchBarOptions, useSearch, FlashList, 3 states
-    └── error-empty-state.tmpl.tsx     # EmptyState + ErrorState, FadeIn, SymbolView
+    ├── error-empty-state.tmpl.tsx     # EmptyState + ErrorState, EaseView enter, SymbolView
+    ├── wizard-form.tmpl.tsx           # Multi-step local state, EaseView transitions, ProgressDots
+    ├── wizard-form-routed.tmpl.tsx    # Multi-step Expo Router Stack, Zustand, multi-file
+    └── chat-emoji-screen.tmpl.tsx     # KeyboardExtender suggestions, OverKeyboardView emoji, freeze
 ```
 
 ## 14. Sources

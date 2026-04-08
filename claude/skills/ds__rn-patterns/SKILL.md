@@ -453,9 +453,9 @@ const resolved = useResolveClassNames("bg-surface-default");
 // Pass resolved.style to screenOptions.contentStyle
 ```
 
-## 13. Templates (13 total)
+## 13. Templates (16 total)
 
-All in `templates/`. Settings list, profile, chat, detail, modal, animated list, adaptive grid, keyboard toolbar form, tabs, search, error/empty states.
+All in `templates/`. Settings list, profile, chat, chat+emoji, detail, modal, animated list, adaptive grid, keyboard toolbar form, tabs, search, error/empty states, wizard form (local state), wizard form (routed).
 
 > New: `search-screen.tmpl.tsx` (headerSearchBarOptions + FlashList + 3 states), `error-empty-state.tmpl.tsx` (EmptyState + ErrorState + EaseView initialAnimate + SymbolView).
 > Error/loading/empty patterns: see references/error-loading-patterns.md.

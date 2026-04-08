@@ -211,7 +211,7 @@ Note: `active:`/`focus:`/`disabled:` work ONLY on core RN Pressable/TextInput/Sw
 
 `active` = CSS `:active` = finger down. NOT "selected/toggled" — use `data-[selected=true]:` for that.
 
-## Existing Templates (13)
+## Existing Templates (16)
 
 | Template | Key Patterns |
 |---|---|
@@ -228,6 +228,9 @@ Note: `active:`/`focus:`/`disabled:` work ONLY on core RN Pressable/TextInput/Sw
 | `keyboard-toolbar-form.tmpl.tsx` | KeyboardToolbar Prev/Next/Done, multiline |
 | `search-screen.tmpl.tsx` | headerSearchBarOptions, useSearch hook, FlashList, 3 states, Link.Trigger + Link.Preview |
 | `error-empty-state.tmpl.tsx` | EmptyState + ErrorState components, EaseView initialAnimate enter, SymbolView animated error, status tokens |
+| `wizard-form.tmpl.tsx` | Multi-step local state, EaseView step transitions, ProgressDots, KeyboardAwareScrollView, review step |
+| `wizard-form-routed.tmpl.tsx` | Multi-step Expo Router Stack, Zustand shared state, native back gesture, multi-file structure |
+| `chat-emoji-screen.tmpl.tsx` | KeyboardExtender suggestions, OverKeyboardView emoji picker, freeze coordination, haptics |
 
 ## Template Conventions
 
@@ -277,11 +280,11 @@ export default function RootLayout() {
 
 After this setup, `pt-safe`, `pb-safe`, `px-safe`, `p-safe` and compound variants (`pt-safe-or-4`, `pb-safe-offset-4`) work everywhere.
 
-## Next: Patterns to Add
+## Completed Patterns (this session)
 
-Approved patterns not yet documented — pick these up in the next session:
+All 4 next-run items implemented:
 
-1. **Progressive loading decision tree** — blurhash vs thumbhash vs low-res URI, transition timing per context (hero: 200-300ms, list: 100ms, avatar: 0)
-2. **Multi-step form orchestration** — wizard-style with shared state across steps, progress indicator, back/next navigation, keyboard-aware per step
-3. **KeyboardExtender patterns** — emoji bar, quick-reply suggestions, custom content in keyboard region (keyboard-controller docs have the API, needs concrete Uniwind patterns)
-4. **Platform keyboard differences table** — iOS vs Android `returnKeyType`, `keyboardType`, `autoComplete`, `secureTextEntry` behavioral differences
+1. ~~Progressive loading decision tree~~ → image-patterns.md (placeholder strategy, transition timing, CDN resize, blurhash generation)
+2. ~~Multi-step form orchestration~~ → form-patterns.md (local state + EaseView, Expo Router Stack + Zustand, decision table)
+3. ~~KeyboardExtender + OverKeyboardView patterns~~ → form-patterns.md (AI autocomplete suggestions, emoji picker with freeze, component decision table)
+4. ~~Platform keyboard differences~~ → form-patterns.md (iOS/Android prop table, enterKeyHint, Android softInputMode)
