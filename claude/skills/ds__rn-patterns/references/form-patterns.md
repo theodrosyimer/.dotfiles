@@ -205,6 +205,49 @@ Multiline:
 />
 ```
 
+## Platform Keyboard Differences
+
+| Prop | iOS | Android | Notes |
+|------|-----|---------|-------|
+| `returnKeyType` | `"done"` `"go"` `"next"` `"search"` `"send"` | Same + `"none"` `"previous"` | Android has `"previous"`, iOS doesn't |
+| `keyboardType` | `"default"` `"email-address"` `"numeric"` `"phone-pad"` `"decimal-pad"` `"url"` `"web-search"` | Same + `"visible-password"` | Android `"visible-password"` shows non-secure numeric |
+| `autoComplete` | Maps to `textContentType` internally | Native autofill suggestions | Values differ per platform |
+| `secureTextEntry` | Hides text, shows dots | Hides text, may show "show password" toggle (OEM-dependent) | Set `autoComplete="password"` alongside for autofill |
+| `textContentType` | `"emailAddress"` `"password"` `"newPassword"` `"oneTimeCode"` etc. | N/A (iOS only) | iOS autofill + password manager integration |
+| `enterKeyHint` | Overrides `returnKeyType` display | Same | Cross-platform, preferred over `returnKeyType` |
+| Keyboard dismiss | Swipe down native (`keyboardDismissMode="interactive"`) | Needs `KeyboardGestureArea` wrapper | keyboard-controller provides cross-platform |
+
+### Prefer `enterKeyHint` over `returnKeyType`
+
+Cross-platform prop that sets the return key label:
+
+```tsx
+<TextInput enterKeyHint="next" />   {/* shows "Next" on both platforms */}
+<TextInput enterKeyHint="done" />   {/* shows "Done" */}
+<TextInput enterKeyHint="search" /> {/* shows "Search" */}
+<TextInput enterKeyHint="send" />   {/* shows "Send" */}
+```
+
+### Android softInputMode
+
+keyboard-controller uses edge-to-edge with `adjustResize`-like behavior by default. Override per-screen for specific needs:
+
+```tsx
+import { useFocusEffect } from "expo-router";
+import { KeyboardController, AndroidSoftInputModes } from "react-native-keyboard-controller";
+
+function SpecialScreen() {
+  useFocusEffect(
+    useCallback(() => {
+      KeyboardController.setInputMode(AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE);
+      return () => KeyboardController.setDefaultMode();
+    }, []),
+  );
+
+  return <View>{/* content */}</View>;
+}
+```
+
 ## Validation States
 
 ```tsx
@@ -379,6 +422,136 @@ import { KeyboardExtender } from "react-native-keyboard-controller";
 - Increases keyboard height (reported via `useReanimatedKeyboardAnimation`)
 - Hides when keyboard hides
 
+### AI Autocomplete Suggestions (KeyboardExtender)
+
+Inline suggestions that appear above the keyboard while user types. Track text with `useFocusedInputHandler`, show chips with EaseView enter.
+
+```tsx
+import { KeyboardExtender } from "react-native-keyboard-controller";
+import { useFocusedInputHandler } from "react-native-keyboard-controller";
+import { EaseView } from "react-native-ease/uniwind";
+import * as Haptics from "expo-haptics";
+
+function AutocompleteSuggestions({
+  suggestions,
+  onSelect,
+}: {
+  suggestions: string[];
+  onSelect: (text: string) => void;
+}) {
+  return (
+    <KeyboardExtender enabled={suggestions.length > 0}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerClassName="gap-inline-sm px-component-md py-component-sm"
+        keyboardShouldPersistTaps="always"
+      >
+        {suggestions.map((suggestion, index) => (
+          <EaseView
+            key={suggestion}
+            initialAnimate={{ opacity: 0, scaleX: 0.9, scaleY: 0.9 }}
+            animate={{ opacity: 1, scaleX: 1, scaleY: 1 }}
+            transition={{ type: "spring", damping: 15, stiffness: 200, delay: index * 30 }}
+          >
+            <Pressable
+              onPress={() => {
+                if (process.env.EXPO_OS === "ios") {
+                  Haptics.selectionAsync();
+                }
+                onSelect(suggestion);
+              }}
+              accessibilityRole="button"
+              className="bg-surface-raised rounded-lg border-continuous border border-default px-component-sm py-inline-xs active:bg-surface-hover"
+            >
+              <Text className="text-content-primary text-sm">{suggestion}</Text>
+            </Pressable>
+          </EaseView>
+        ))}
+      </ScrollView>
+    </KeyboardExtender>
+  );
+}
+```
+
+### Emoji Picker (OverKeyboardView)
+
+OverKeyboardView renders content **above** the keyboard without dismissing it — correct for emoji pickers, sticker panels, media selectors. KeyboardExtender is for inline suggestions **inside** the keyboard area.
+
+```tsx
+import { OverKeyboardView } from "react-native-keyboard-controller";
+import { KeyboardChatScrollView } from "react-native-keyboard-controller";
+import * as Haptics from "expo-haptics";
+
+function ChatWithEmoji() {
+  const [showEmoji, setShowEmoji] = useState(false);
+
+  return (
+    <>
+      <KeyboardChatScrollView
+        keyboardLiftBehavior="always"
+        freeze={showEmoji} // prevent layout jump when showing picker
+      >
+        {/* messages */}
+      </KeyboardChatScrollView>
+
+      {/* Input bar with emoji toggle */}
+      <KeyboardStickyView offset={{ closed: 0, opened: 0 }}>
+        <View className="flex-row gap-inline-sm px-component-md py-component-sm bg-surface-raised border-t border-subtle">
+          <Pressable
+            onPress={() => setShowEmoji((v) => !v)}
+            accessibilityRole="button"
+            className="items-center justify-center w-10 h-10"
+          >
+            <Image
+              source={showEmoji ? "sf:keyboard" : "sf:face.smiling"}
+              className="w-6 h-6"
+              tintColorClassName="accent-content-secondary"
+            />
+          </Pressable>
+          <TextInput
+            className="flex-1 bg-surface-default rounded-lg border-continuous px-component-sm py-component-sm text-content-primary text-base"
+            placeholderTextColorClassName="accent-content-tertiary"
+            placeholder="Message..."
+          />
+        </View>
+      </KeyboardStickyView>
+
+      {/* Emoji picker — renders over keyboard */}
+      <OverKeyboardView visible={showEmoji}>
+        <View className="h-64 bg-surface-raised border-t border-subtle px-component-md py-component-sm">
+          {/* Emoji grid — FlashList or ScrollView with emoji data */}
+          <ScrollView contentContainerClassName="flex-row flex-wrap gap-inline-sm">
+            {emojis.map((emoji) => (
+              <Pressable
+                key={emoji}
+                onPress={() => {
+                  if (process.env.EXPO_OS === "ios") {
+                    Haptics.selectionAsync();
+                  }
+                  insertEmoji(emoji);
+                }}
+                className="w-10 h-10 items-center justify-center"
+              >
+                <Text className="text-2xl">{emoji}</Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+      </OverKeyboardView>
+    </>
+  );
+}
+```
+
+**OverKeyboardView vs KeyboardExtender:**
+
+| Use Case | Component | Why |
+|----------|-----------|-----|
+| Autocomplete suggestions, quick replies | `KeyboardExtender` | Extends keyboard, matches its appearance |
+| Emoji picker, sticker panel, media selector | `OverKeyboardView` | Full custom UI above keyboard |
+| Toolbar with TextInput | `KeyboardBackgroundView` + `KeyboardStickyView` | KeyboardExtender can't contain TextInput |
+
 ### KeyboardBackgroundView
 
 Matches system keyboard background color. Use for toolbars that should visually blend with the keyboard.
@@ -484,6 +657,210 @@ Isolates prev/next navigation within a form section — cycling stays within the
   </KeyboardToolbar.Group>
 </KeyboardToolbar>
 ```
+
+## Multi-Step Form Orchestration
+
+Two approaches depending on complexity.
+
+### Approach A: Local State + EaseView Transitions
+
+Single screen, steps controlled by state. Simpler, no route overhead.
+
+```tsx
+import { View, Text, Pressable, TextInput } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { EaseView } from "react-native-ease/uniwind";
+import { Stack } from "expo-router/stack";
+import { useState, useCallback } from "react";
+
+type FormData = {
+  name?: string;
+  email?: string;
+  password?: string;
+};
+
+const STEPS = ["Account", "Profile", "Confirm"] as const;
+
+export default function WizardForm() {
+  const [step, setStep] = useState(0);
+  const [data, setData] = useState<FormData>({});
+
+  const update = useCallback(
+    (field: keyof FormData, value: string) =>
+      setData((prev) => ({ ...prev, [field]: value })),
+    [],
+  );
+
+  return (
+    <>
+      <Stack.Screen options={{ title: STEPS[step] }} />
+
+      {/* Progress dots */}
+      <View className="flex-row gap-inline-sm justify-center py-component-sm">
+        {STEPS.map((_, i) => (
+          <View
+            key={i}
+            className={`w-2 h-2 rounded-full ${
+              i === step ? "bg-action-primary" : "bg-surface-sunken"
+            }`}
+          />
+        ))}
+      </View>
+
+      {/* Step content — EaseView enter on step change */}
+      <EaseView
+        key={step}
+        initialAnimate={{ opacity: 0, translateX: 20 }}
+        animate={{ opacity: 1, translateX: 0 }}
+        transition={{ type: "timing", duration: 250, easing: "easeOut" }}
+        className="flex-1"
+      >
+        <KeyboardAwareScrollView
+          bottomOffset={20}
+          keyboardShouldPersistTaps="handled"
+          className="flex-1 bg-surface-default"
+          contentContainerClassName="px-component-md py-component-md gap-layout-sm"
+        >
+          {step === 0 && (
+            <View className="gap-inline-xs">
+              <Text className="text-content-secondary text-sm font-medium">Email</Text>
+              <TextInput
+                className="bg-surface-raised border border-default focus:border-focus rounded-lg border-continuous px-component-sm py-component-sm text-content-primary text-base"
+                placeholderTextColorClassName="accent-content-tertiary"
+                cursorColorClassName="accent-action-primary"
+                value={data.email ?? ""}
+                onChangeText={(v) => update("email", v)}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+          )}
+          {step === 1 && (
+            <View className="gap-inline-xs">
+              <Text className="text-content-secondary text-sm font-medium">Name</Text>
+              <TextInput
+                className="bg-surface-raised border border-default focus:border-focus rounded-lg border-continuous px-component-sm py-component-sm text-content-primary text-base"
+                placeholderTextColorClassName="accent-content-tertiary"
+                cursorColorClassName="accent-action-primary"
+                value={data.name ?? ""}
+                onChangeText={(v) => update("name", v)}
+              />
+            </View>
+          )}
+          {step === 2 && (
+            <View className="gap-layout-sm items-center">
+              <Text className="text-content-primary text-lg font-semibold">Confirm</Text>
+              <Text className="text-content-secondary text-base">{data.email}</Text>
+              <Text className="text-content-secondary text-base">{data.name}</Text>
+            </View>
+          )}
+        </KeyboardAwareScrollView>
+      </EaseView>
+
+      {/* Bottom nav */}
+      <View className="flex-row gap-inline-sm px-component-md pb-safe-or-4 pt-component-sm border-t border-subtle">
+        {step > 0 && (
+          <Pressable
+            onPress={() => setStep((s) => s - 1)}
+            accessibilityRole="button"
+            className="flex-1 bg-action-secondary active:bg-action-secondary-active rounded-lg border-continuous py-component-sm items-center min-h-11"
+          >
+            <Text className="text-content-primary text-base font-semibold">Back</Text>
+          </Pressable>
+        )}
+        <Pressable
+          onPress={() =>
+            step < STEPS.length - 1 ? setStep((s) => s + 1) : handleSubmit(data)
+          }
+          accessibilityRole="button"
+          className="flex-1 bg-action-primary active:bg-action-primary-active active:opacity-90 rounded-lg border-continuous py-component-sm items-center min-h-11"
+        >
+          <Text className="text-content-on-action text-base font-semibold">
+            {step < STEPS.length - 1 ? "Next" : "Submit"}
+          </Text>
+        </Pressable>
+      </View>
+    </>
+  );
+}
+```
+
+Key points:
+- `key={step}` on EaseView forces remount → `initialAnimate` fires on each step change
+- `data.email ?? ""` — fallback pattern (undefined = user hasn't entered, falls back to empty)
+- `pb-safe-or-4` on bottom nav ensures minimum padding with safe area
+- KeyboardAwareScrollView wraps each step's content individually
+
+### Approach B: Expo Router Stack (Native Transitions)
+
+Each step is a route. Native back gesture for free. Shared state via Zustand.
+
+```tsx
+// store/wizard.ts
+import { create } from "zustand";
+
+type WizardStore = {
+  data: FormData;
+  update: (field: keyof FormData, value: string) => void;
+  reset: () => void;
+};
+
+const useWizardStore = create<WizardStore>((set) => ({
+  data: {},
+  update: (field, value) => set((s) => ({ data: { ...s.data, [field]: value } })),
+  reset: () => set({ data: {} }),
+}));
+```
+
+```tsx
+// app/wizard/_layout.tsx
+import { Stack } from "expo-router/stack";
+
+export default function WizardLayout() {
+  return (
+    <Stack>
+      <Stack.Screen name="step-1" options={{ title: "Account" }} />
+      <Stack.Screen name="step-2" options={{ title: "Profile" }} />
+      <Stack.Screen name="confirm" options={{ title: "Confirm" }} />
+    </Stack>
+  );
+}
+```
+
+```tsx
+// app/wizard/step-1.tsx
+import { router } from "expo-router";
+
+export default function Step1() {
+  const { data, update } = useWizardStore();
+
+  return (
+    <KeyboardAwareScrollView
+      className="flex-1 bg-surface-default"
+      contentContainerClassName="px-component-md py-component-md gap-layout-sm"
+    >
+      {/* form fields using update() */}
+      <Pressable
+        onPress={() => router.push("/wizard/step-2")}
+        accessibilityRole="button"
+        className="bg-action-primary active:bg-action-primary-active rounded-lg border-continuous py-component-sm items-center min-h-11"
+      >
+        <Text className="text-content-on-action font-semibold">Next</Text>
+      </Pressable>
+    </KeyboardAwareScrollView>
+  );
+}
+```
+
+### When to Choose
+
+| Need | Approach |
+|------|----------|
+| Simple 2-3 step form, no deep linking | Local state (A) |
+| Many steps, each independently accessible | Expo Router Stack (B) |
+| Need native back gesture | Expo Router Stack (B) |
+| Animated step transitions (custom) | Local state + EaseView (A) |
+| Need to resume from specific step (deep link) | Expo Router Stack (B) |
 
 ## KeyboardGestureArea Advanced
 
