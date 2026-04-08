@@ -69,13 +69,71 @@ Anti-pattern — padding on ScrollView instead of contentContainerStyle:
 
 ## 3. Safe Area Handling
 
+**Rules:**
 - NEVER wrap ScrollView in SafeAreaView (double padding)
-- NEVER use `<SafeAreaView>` wrapper component
-- Import from `react-native-safe-area-context`, never from `react-native`
+- NEVER use `<SafeAreaView>` as a wrapper component
+- NEVER import SafeAreaView from `react-native` — only from `react-native-safe-area-context` if absolutely needed
+- NEVER create a `ScreenWrapper` component that wraps children in SafeAreaView
 
-### Tier 1: Uniwind safe area utilities (default)
+### Required Setup (one-time, in root layout)
 
-Requires setup: `SafeAreaProvider` + `SafeAreaListener` + `Uniwind.updateInsets()` (or Uniwind Pro for automatic).
+Uniwind's `pt-safe`/`pb-safe` utilities need inset values injected at runtime. This setup goes in the root layout file and is done once for the entire app.
+
+**With Uniwind Free:**
+
+```tsx
+// app/_layout.tsx
+import '../global.css'
+import { Stack } from 'expo-router/stack'
+import { SafeAreaProvider, SafeAreaListener } from 'react-native-safe-area-context'
+import { KeyboardProvider } from 'react-native-keyboard-controller'
+import { Uniwind } from 'uniwind'
+
+export default function RootLayout() {
+  return (
+    <SafeAreaProvider>
+      <SafeAreaListener
+        onChange={({ insets }) => {
+          Uniwind.updateInsets(insets)
+        }}
+      >
+        <KeyboardProvider>
+          <Stack />
+        </KeyboardProvider>
+      </SafeAreaListener>
+    </SafeAreaProvider>
+  )
+}
+```
+
+Key points:
+- `SafeAreaProvider` must wrap the entire app — it provides the inset context
+- `SafeAreaListener` calls `Uniwind.updateInsets(insets)` whenever insets change (rotation, etc.)
+- After this setup, `pt-safe`, `pb-safe`, `px-safe`, `p-safe` and compound variants work everywhere
+- `KeyboardProvider` (from `react-native-keyboard-controller`) is co-located here since it also wraps the app
+
+**With Uniwind Pro:**
+
+```tsx
+// app/_layout.tsx
+import '../global.css'
+import { Stack } from 'expo-router/stack'
+import { KeyboardProvider } from 'react-native-keyboard-controller'
+
+export default function RootLayout() {
+  return (
+    <KeyboardProvider>
+      <Stack />
+    </KeyboardProvider>
+  )
+}
+```
+
+Pro injects insets from the native layer automatically — no `SafeAreaProvider`, no `SafeAreaListener`, no `Uniwind.updateInsets()`.
+
+### Tier 1: Uniwind safe area utilities (default for fixed screens)
+
+After setup, use className utilities directly — no hooks, no imports:
 
 ```tsx
 // Simple safe area padding — covers most cases
