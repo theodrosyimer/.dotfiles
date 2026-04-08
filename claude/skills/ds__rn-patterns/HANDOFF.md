@@ -10,12 +10,13 @@ Session context for continuing work on the `ds__rn-patterns` skill. Read this be
 ├── SKILL.md                           # Main skill (<500 lines), loaded on trigger
 ├── references/
 │   ├── layout-patterns.md             # SafeArea setup, ScrollView, modals, tabs, adaptive
-│   ├── list-patterns.md               # FlashList v2, memoization, performance
-│   ├── form-patterns.md               # keyboard-controller (7 components), TextInput, Switch
-│   ├── interaction-patterns.md        # Link vs Pressable, EaseView, Reanimated, haptics
-│   ├── typography-patterns.md         # Text rules, font loading, scaling
-│   └── image-patterns.md             # expo-image setup (withUniwind), blurhash, SF Symbols
-└── templates/                         # 11 templates (*.tmpl.tsx)
+│   ├── list-patterns.md               # FlashList v2, memoization, performance, stable refs
+│   ├── form-patterns.md               # keyboard-controller (9 components, 7 hooks), TextInput, Switch, advanced chat props
+│   ├── interaction-patterns.md        # Link vs Pressable, EaseView, Reanimated presets/layout/stagger, Gesture.Tap, haptics
+│   ├── typography-patterns.md         # Text rules, font loading, scaling, platform fonts
+│   ├── image-patterns.md             # expo-image, SymbolView, Galeria, blurhash, SF Symbols, withUniwind
+│   └── error-loading-patterns.md     # Loading (ActivityIndicator, skeleton), empty states, error states, status tokens
+└── templates/                         # 13 templates (*.tmpl.tsx)
 ```
 
 Symlinked: `~/.claude/skills/ds__rn-patterns` → `~/.dotfiles/claude/skills/ds__rn-patterns`
@@ -139,6 +140,10 @@ Generated CSS consumed via:
 | Images | `expo-image` via withUniwind | RN `Image` |
 | Press | `<Pressable>` | `TouchableOpacity` |
 | Keyboard | `KeyboardAwareScrollView` from keyboard-controller | RN's `KeyboardAvoidingView` |
+| Link context menu | `Link.Trigger` wrapping interactive area | Direct children without `Link.Trigger` |
+| SF Symbols (static) | `expo-image` `source="sf:name"` + `tintColorClassName` | `SymbolView` for simple static icons |
+| SF Symbols (animated) | `SymbolView` from `expo-symbols` (bounce, pulse, weights) | `expo-image` for animated icons |
+| Image lightbox | `@nandorojo/galeria` with `Galeria.Image` | Custom modal with fullscreen image |
 
 ## Library APIs (key points for patterns)
 
@@ -156,10 +161,14 @@ Generated CSS consumed via:
 
 ### react-native-ease (EaseView)
 - `import { EaseView } from 'react-native-ease/uniwind'`
-- `animate` prop: `{ opacity, translateX, translateY, scaleX, scaleY, rotate, borderRadius, backgroundColor }`
-- `transition`: timing `{ type: 'timing', duration, easing }` or spring `{ type: 'spring', damping, stiffness, mass }`
+- `animate` prop: `{ opacity, translateX, translateY, scale, scaleX, scaleY, rotate, rotateX, rotateY, borderRadius, backgroundColor }`
+- `initialAnimate` prop: starting values for enter animations (mounts at these, animates to `animate`)
+- `transition`: timing `{ type: 'timing', duration, easing, delay, loop }` or spring `{ type: 'spring', damping, stiffness, mass, delay }`
+- `loop: 'repeat' | 'reverse'` on timing transition config only (requires `initialAnimate`)
+- `transformOrigin: { x, y }` — 0-1 fractions for scale/rotation pivot (default center)
+- `onTransitionEnd` callback
 - Fabric (New Architecture) only
-- NOT for: gestures, layout animations (width/height), shared elements
+- NOT for: gestures, layout animations (width/height), shared elements, stagger (use Reanimated)
 
 ### expo-image
 - Must wrap: `const Image = withUniwind(ExpoImage)`
@@ -184,7 +193,7 @@ Generated CSS consumed via:
 | Need | Tool |
 |---|---|
 | Press/focus/disabled visual state | `active:`/`focus:`/`disabled:` className |
-| State-driven animation (fade, slide, scale) | `EaseView` |
+| State-driven animation (fade, slide, scale, enter via `initialAnimate`) | `EaseView` |
 | Gesture-driven (pan, pinch, swipe) | Reanimated + GestureDetector |
 | Complex interpolation, layout animation | Reanimated |
 
@@ -202,7 +211,7 @@ Note: `active:`/`focus:`/`disabled:` work ONLY on core RN Pressable/TextInput/Sw
 
 `active` = CSS `:active` = finger down. NOT "selected/toggled" — use `data-[selected=true]:` for that.
 
-## Existing Templates (11)
+## Existing Templates (13)
 
 | Template | Key Patterns |
 |---|---|
@@ -217,6 +226,8 @@ Note: `active:`/`focus:`/`disabled:` work ONLY on core RN Pressable/TextInput/Sw
 | `tab-screen.tmpl.tsx` | NativeTabs, tab scroll context |
 | `adaptive-grid.tmpl.tsx` | Dynamic numColumns, Uniwind breakpoints |
 | `keyboard-toolbar-form.tmpl.tsx` | KeyboardToolbar Prev/Next/Done, multiline |
+| `search-screen.tmpl.tsx` | headerSearchBarOptions, useSearch hook, FlashList, 3 states, Link.Trigger + Link.Preview |
+| `error-empty-state.tmpl.tsx` | EmptyState + ErrorState components, EaseView initialAnimate enter, SymbolView animated error, status tokens |
 
 ## Template Conventions
 
@@ -265,3 +276,12 @@ export default function RootLayout() {
 ```
 
 After this setup, `pt-safe`, `pb-safe`, `px-safe`, `p-safe` and compound variants (`pt-safe-or-4`, `pb-safe-offset-4`) work everywhere.
+
+## Next: Patterns to Add
+
+Approved patterns not yet documented — pick these up in the next session:
+
+1. **Progressive loading decision tree** — blurhash vs thumbhash vs low-res URI, transition timing per context (hero: 200-300ms, list: 100ms, avatar: 0)
+2. **Multi-step form orchestration** — wizard-style with shared state across steps, progress indicator, back/next navigation, keyboard-aware per step
+3. **KeyboardExtender patterns** — emoji bar, quick-reply suggestions, custom content in keyboard region (keyboard-controller docs have the API, needs concrete Uniwind patterns)
+4. **Platform keyboard differences table** — iOS vs Android `returnKeyType`, `keyboardType`, `autoComplete`, `secureTextEntry` behavioral differences
