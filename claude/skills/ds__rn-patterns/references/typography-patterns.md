@@ -153,3 +153,56 @@ Use tabular numbers for:
   {minutes}:{seconds.toString().padStart(2, '0')}
 </Text>
 ```
+
+## 8. Platform Font Setup (Uniwind)
+
+Define platform-specific fonts via `@variant` in `@layer theme` — not `@theme` (which only accepts static values).
+
+```css
+/* global.css */
+@layer theme {
+  :root {
+    @variant ios {
+      --font-sans: 'SF Pro Text';
+    }
+    @variant android {
+      --font-sans: 'Roboto-Regular';
+    }
+    @variant web {
+      --font-sans: 'Inter';
+    }
+  }
+}
+```
+
+Font name must **exactly match** the font file name (without extension). Single font per family — RN doesn't support fallbacks.
+
+## 9. Build-Time Font Loading
+
+Use the `expo-font` config plugin to embed fonts at build time — not `useFonts()` or `Font.loadAsync()`. Build-time fonts are available instantly at launch, no loading state needed.
+
+```json
+// app.json
+{
+  "expo": {
+    "plugins": [
+      ["expo-font", { "fonts": ["./assets/fonts/Geist-Bold.otf"] }]
+    ]
+  }
+}
+```
+
+After adding fonts, run `npx expo prebuild` and rebuild.
+
+## 10. Emphasis via Weight and Color
+
+Minimize font size variations. Use `fontWeight` and content color tokens for visual hierarchy instead.
+
+```tsx
+// Hierarchy through weight and color — not size
+<Text className="text-content-primary text-base font-semibold">Title</Text>
+<Text className="text-content-secondary text-base">Subtitle</Text>
+<Text className="text-content-tertiary text-base">Caption</Text>
+```
+
+Limiting font sizes creates visual consistency. Reserve size changes for truly distinct scale levels (Display, H1, Body, Caption from the typography scale).

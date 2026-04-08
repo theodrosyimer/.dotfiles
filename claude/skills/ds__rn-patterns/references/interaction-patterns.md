@@ -274,3 +274,200 @@ import { cn } from 'tailwind-variants'
 
 <Pressable className={cn(button({ color: 'primary' }), props.className)}>
 ```
+
+## Reanimated Entering/Exiting Presets
+
+For **staggered lists, layout animations, and complex multi-element choreography** where you need per-item `delay`, `layout` prop, or Reanimated-specific modifiers. For simple enter/exit on a single element (fade in on mount, slide in on state change), use **EaseView with `initialAnimate`** instead — it's the state-driven tier per the animation decision matrix.
+
+```tsx
+import Animated, { FadeIn, FadeOut, FadeInDown, SlideOutLeft } from "react-native-reanimated";
+
+// Basic enter/exit
+{!!visible && (
+  <Animated.View entering={FadeIn} exiting={FadeOut}>
+    <Text className="text-content-primary">Appears with fade</Text>
+  </Animated.View>
+)}
+
+// With modifiers — chaining
+<Animated.View
+  entering={FadeInDown.duration(300).delay(100)}
+  exiting={SlideOutLeft.duration(200)}
+/>
+
+// Spring physics
+<Animated.View entering={FadeIn.springify().damping(15).stiffness(100)} />
+```
+
+### Common Presets
+
+**Entering:** `FadeIn`, `FadeInUp`, `FadeInDown`, `FadeInLeft`, `FadeInRight`, `SlideInUp`, `SlideInDown`, `SlideInLeft`, `SlideInRight`, `ZoomIn`, `ZoomInUp`, `ZoomInDown`, `BounceIn`, `BounceInUp`, `BounceInDown`
+
+**Exiting:** `FadeOut`, `FadeOutUp`, `FadeOutDown`, `FadeOutLeft`, `FadeOutRight`, `SlideOutUp`, `SlideOutDown`, `SlideOutLeft`, `SlideOutRight`, `ZoomOut`, `BounceOut`
+
+### Modifiers
+
+- `.duration(ms)` — animation length
+- `.delay(ms)` — start delay
+- `.springify()` — spring physics (chain `.damping()`, `.stiffness()`, `.mass()`)
+- `.easing(Easing.bezier(...))` — custom easing curve
+- Chain freely: `FadeInDown.duration(400).delay(200).springify()`
+
+## Layout Animations
+
+Animate position/size changes when siblings are added or removed from the tree. Apply via `layout` prop on `Animated.View`.
+
+```tsx
+import Animated, { LinearTransition, FadingTransition } from "react-native-reanimated";
+
+// Items reposition smoothly when one is removed
+{items.map((item) => (
+  <Animated.View
+    key={item.id}
+    entering={FadeIn}
+    exiting={FadeOut}
+    layout={LinearTransition}
+    className="bg-surface-raised p-component-md rounded-lg border-continuous mb-inline-sm"
+  >
+    <Text className="text-content-primary">{item.title}</Text>
+  </Animated.View>
+))}
+```
+
+| Preset | Effect |
+|--------|--------|
+| `LinearTransition` | Smooth linear repositioning |
+| `SequencedTransition` | Sequenced property changes |
+| `FadingTransition` | Fade between layout states |
+
+## Staggered List Animations
+
+Delay entering animations by index for a cascading effect. Used in `animated-list.tmpl.tsx`.
+
+```tsx
+import Animated, { FadeInUp } from "react-native-reanimated";
+
+{items.map((item, index) => (
+  <Animated.View
+    key={item.id}
+    entering={FadeInUp.delay(index * 50)}
+  >
+    <ListItem item={item} />
+  </Animated.View>
+))}
+```
+
+Keep delay increments small (30-50ms) for responsive feel. Total animation for a screen of ~10 items should stay under 500ms.
+
+## Animation Performance Rules
+
+### GPU-Accelerated Properties Only
+
+Only animate `transform` (translate, scale, rotate) and `opacity` — these run on the GPU without triggering layout recalculation.
+
+**Never animate:** `width`, `height`, `top`, `left`, `margin`, `padding` — triggers layout on every frame.
+
+**Exception:** Layout animations via `layout={LinearTransition}` handle width/height changes natively through Reanimated's layout animation system.
+
+### useDerivedValue over useAnimatedReaction
+
+`useDerivedValue` for computed animations — declarative, auto-tracks dependencies. `useAnimatedReaction` only for side effects (haptics, logging, `runOnJS`).
+
+```tsx
+const progress = useSharedValue(0);
+const opacity = useDerivedValue(() => 1 - progress.get());
+```
+
+## State as Ground Truth
+
+Shared values represent **state** (what is happening), not **visual output** (what it looks like). Derive visual values via interpolation.
+
+```tsx
+// WRONG — storing visual output
+const scale = useSharedValue(1);
+tap.onBegin(() => { scale.set(withTiming(0.95)); });
+
+// CORRECT — storing state, deriving visual
+const pressed = useSharedValue(0); // 0 = not pressed, 1 = pressed
+tap.onBegin(() => { pressed.set(withTiming(1)); });
+
+const style = useAnimatedStyle(() => ({
+  transform: [{ scale: interpolate(pressed.get(), [0, 1], [1, 0.95]) }],
+}));
+```
+
+Benefits: single source of truth, easier to extend (same state drives scale + opacity + rotation), clearer debugging (`pressed = 1` vs `scale = 0.95`).
+
+## Gesture.Tap for Animated Press
+
+For animated press feedback beyond what `active:` className provides — use `Gesture.Tap()` with shared values. Runs on UI thread (worklets), no JS round-trip.
+
+`active:` className is still the **first choice** for simple press feedback per the animation decision matrix. Use Gesture.Tap only when you need custom animated scale/opacity/rotation responses.
+
+```tsx
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, interpolate, runOnJS } from "react-native-reanimated";
+
+function AnimatedButton({ onPress }: { onPress: () => void }) {
+  const pressed = useSharedValue(0);
+
+  const tap = Gesture.Tap()
+    .onBegin(() => { pressed.set(withTiming(1)); })
+    .onFinalize(() => { pressed.set(withTiming(0)); })
+    .onEnd(() => { runOnJS(onPress)(); });
+
+  const style = useAnimatedStyle(() => ({
+    transform: [{ scale: interpolate(pressed.get(), [0, 1], [1, 0.95]) }],
+    opacity: interpolate(pressed.get(), [0, 1], [1, 0.8]),
+  }));
+
+  return (
+    <GestureDetector gesture={tap}>
+      <Animated.View style={style} className="bg-action-primary rounded-lg border-continuous px-component-md py-component-sm items-center">
+        <Text className="text-content-on-action font-semibold">Press</Text>
+      </Animated.View>
+    </GestureDetector>
+  );
+}
+```
+
+Use `.get()` / `.set()` on shared values for React Compiler compatibility (not `.value`).
+
+## Scroll Position — Never useState
+
+Never store scroll position in `useState`. Scroll events fire ~60 times/second — state updates cause render thrashing and dropped frames.
+
+```tsx
+// WRONG — re-renders every frame
+const [scrollY, setScrollY] = useState(0);
+<ScrollView onScroll={(e) => setScrollY(e.nativeEvent.contentOffset.y)} />
+
+// CORRECT — Reanimated for scroll-driven animations (UI thread)
+const scrollY = useSharedValue(0);
+const onScroll = useAnimatedScrollHandler({
+  onScroll: (e) => { scrollY.value = e.contentOffset.y; },
+});
+<Animated.ScrollView onScroll={onScroll} scrollEventThrottle={16} />
+
+// CORRECT — useRef for non-reactive tracking
+const scrollY = useRef(0);
+<ScrollView onScroll={(e) => { scrollY.current = e.nativeEvent.contentOffset.y; }} />
+```
+
+### On-Scroll Animations
+
+Combine `useAnimatedRef`, `useScrollViewOffset`, and `interpolate` for header parallax, fade effects, etc.
+
+```tsx
+const ref = useAnimatedRef();
+const scroll = useScrollViewOffset(ref);
+const style = useAnimatedStyle(() => ({
+  opacity: interpolate(scroll.value, [0, 30], [0, 1], "clamp"),
+}));
+
+<Animated.ScrollView ref={ref}>
+  <Animated.View style={style}>
+    {/* fades in as user scrolls */}
+  </Animated.View>
+</Animated.ScrollView>
+```

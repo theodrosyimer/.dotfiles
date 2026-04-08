@@ -223,13 +223,102 @@ const stickyIndices = data
 
 Or use `getItemType` to differentiate header rows from content rows for recycling efficiency.
 
+## Masonry vs numColumns Grid
+
+| Need | Use | Why |
+|------|-----|-----|
+| Variable-height items (Pinterest) | `masonry` prop | Each column independently sized |
+| Uniform grid (product catalog) | `numColumns` prop | Fixed grid, equal cell sizes |
+| Responsive grid | `numColumns` + `useWindowDimensions` | Imperative — numColumns is a prop, not className |
+| Responsive flex layout | `flex-row flex-wrap` + `sm:w-1/2 lg:w-1/3` | className-driven, no FlashList needed |
+
+## Performance Rules (from vercel-react-native-skills)
+
+### Virtualize Every List
+
+Use FlashList for **any** scrollable list, even short ones. Virtualizers only render visible items — `ScrollView` with `.map()` mounts all children upfront.
+
+### Stable Object References
+
+Don't map/filter data before passing to FlashList. New references cause full re-renders of all visible items.
+
+```tsx
+// WRONG — new array on every keystroke
+const domains = tlds.map((tld) => ({ domain: `${keyword}.${tld.name}` }));
+<FlashList data={domains} />
+
+// CORRECT — stable data, derive inside items
+<FlashList data={tlds} renderItem={({ item }) => <DomainItem tld={item} />} />
+
+function DomainItem({ tld }: { tld: Tld }) {
+  const keyword = useSearchStore((s) => s.keyword);
+  return <Text className="text-content-primary">{keyword}.{tld.name}</Text>;
+}
+```
+
+Sorting is fine — `toSorted()` creates new array but inner object references stay stable.
+
+### Hoist Callbacks
+
+Single callback instance at list root. Items call with their ID.
+
+```tsx
+// WRONG — new function per item
+renderItem={({ item }) => <Item onPress={() => handlePress(item.id)} />}
+
+// CORRECT — pass ID, handle in child
+const ItemRow = memo(function ItemRow({ id, name }: Props) {
+  const handlePress = useCallback(() => { /* use id */ }, [id]);
+  return <Pressable onPress={handlePress}><Text className="text-content-primary">{name}</Text></Pressable>;
+});
+```
+
+### Keep Items Lightweight
+
+- No queries/data fetching inside items
+- No expensive computations — move to parent
+- Prefer Zustand selectors over React Context (selector only re-renders when value changes)
+- Minimize useState/useEffect hooks
+- Pass pre-computed primitives as props
+
+### No Inline Objects in renderItem
+
+```tsx
+// WRONG — new object every render, breaks memo()
+<Item style={{ backgroundColor: item.isActive ? 'green' : 'gray' }} />
+
+// CORRECT — derive inside memoized child
+const Item = memo(function Item({ isActive }: { isActive: boolean }) {
+  return <View className={isActive ? 'bg-status-success-bg' : 'bg-surface-sunken'} />;
+});
+```
+
+### contentInset for Dynamic Spacing
+
+When scroll spacing changes dynamically (keyboard, toolbars), use `contentInset` instead of padding — no layout recalculation.
+
+```tsx
+<ScrollView
+  contentInset={{ bottom: bottomOffset }}
+  scrollIndicatorInsets={{ bottom: bottomOffset }}
+>
+  {/* content */}
+</ScrollView>
+```
+
+For static spacing that never changes, padding is fine.
+
 ## Performance Checklist
 
 - `memo()` on all list item components
 - Primitive props only — destructure before passing
 - No inline objects/styles in renderItem
+- Stable data references — don't map/filter before passing to FlashList
+- Hoist callbacks — single instance per callback
+- Keep items lightweight — no queries, minimal hooks
 - `recyclingKey` on every `expo-image` in lists
 - Avoid heavy computation in renderItem — move to data preparation
 - `getItemType` when mixing item shapes
 - `useRecyclingState` for local state in recycled items
 - `contentInsetAdjustmentBehavior="automatic"` for iOS safe area
+- `contentInset` for dynamic spacing (not padding)
