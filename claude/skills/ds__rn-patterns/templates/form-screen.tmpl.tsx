@@ -1,36 +1,38 @@
-import { View, Text, TextInput, Pressable } from 'react-native'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
-import { Stack } from 'expo-router/stack'
-import { useState } from 'react'
-import { button } from '@/ui/variants/button'
+import { View, Text, TextInput, Pressable } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { Stack } from "expo-router/stack";
+import { useState } from "react";
+import { button } from "@/ui/variants/button";
 
 export default function __SCREEN_NAME__() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
 
   const handleSubmit = () => {
-    const nextErrors: { email?: string; password?: string } = {}
+    const nextErrors: { email?: string; password?: string } = {};
 
     if (!email) {
-      nextErrors.email = 'Email is required'
+      nextErrors.email = "Email is required";
     }
     if (!password) {
-      nextErrors.password = 'Password is required'
+      nextErrors.password = "Password is required";
     }
 
     if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors)
-      return
+      setErrors(nextErrors);
+      return;
     }
 
-    setErrors({})
+    setErrors({});
     // TODO: submit form
-  }
+  };
 
   return (
     <>
-      <Stack.Screen options={{ title: '__SCREEN_TITLE__' }} />
+      <Stack.Screen options={{ title: "__SCREEN_TITLE__" }} />
       <KeyboardAwareScrollView
         bottomOffset={20}
         keyboardShouldPersistTaps="handled"
@@ -55,7 +57,7 @@ export default function __SCREEN_NAME__() {
             autoCapitalize="none"
             autoComplete="email"
             className={`bg-surface-raised border border-default focus:border-focus rounded-xl border-continuous px-component-md py-component-sm text-content-primary text-base ${
-              !!errors.email && 'border-status-error-border'
+              !!errors.email && "border-status-error-border"
             }`}
           />
           {!!errors.email && (
@@ -77,7 +79,7 @@ export default function __SCREEN_NAME__() {
             secureTextEntry
             autoComplete="password"
             className={`bg-surface-raised border border-default focus:border-focus rounded-xl border-continuous px-component-md py-component-sm text-content-primary text-base ${
-              !!errors.password && 'border-status-error-border'
+              !!errors.password && "border-status-error-border"
             }`}
           />
           {!!errors.password && (
@@ -90,7 +92,10 @@ export default function __SCREEN_NAME__() {
         <Pressable
           onPress={handleSubmit}
           accessibilityRole="button"
-          className={button({ intent: 'primary', size: 'md' }) + ' active:opacity-90 border-continuous'}
+          className={
+            button({ intent: "primary", size: "md" }) +
+            " active:opacity-90 border-continuous"
+          }
         >
           <Text className="text-content-on-action text-base font-semibold text-center">
             Submit
@@ -98,5 +103,5 @@ export default function __SCREEN_NAME__() {
         </Pressable>
       </KeyboardAwareScrollView>
     </>
-  )
+  );
 }

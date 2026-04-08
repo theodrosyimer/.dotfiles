@@ -1,27 +1,27 @@
-import { View, Text, Pressable, RefreshControl } from 'react-native'
-import { FlashList } from '@shopify/flash-list'
-import { withUniwind } from 'uniwind'
-import { Image as ExpoImage } from 'expo-image'
-import { Link } from 'expo-router'
-import { Stack } from 'expo-router/stack'
-import { memo, useState, useCallback } from 'react'
+import { View, Text, Pressable, RefreshControl } from "react-native";
+import { FlashList } from "@shopify/flash-list";
+import { withUniwind } from "uniwind";
+import { Image as ExpoImage } from "expo-image";
+import { Link } from "expo-router";
+import { Stack } from "expo-router/stack";
+import { memo, useState, useCallback } from "react";
 
-const Image = withUniwind(ExpoImage)
+const Image = withUniwind(ExpoImage);
 
 type __ITEM_TYPE__ = {
-  id: string
-  title: string
-  imageUrl: string
-}
+  id: string;
+  title: string;
+  imageUrl: string;
+};
 
 const __ITEM_COMPONENT__ = memo(function __ITEM_COMPONENT__({
   id,
   title,
   imageUrl,
 }: {
-  id: string
-  title: string
-  imageUrl: string
+  id: string;
+  title: string;
+  imageUrl: string;
 }) {
   return (
     <Link href={`__ITEM_HREF__/${id}`} asChild>
@@ -36,18 +36,18 @@ const __ITEM_COMPONENT__ = memo(function __ITEM_COMPONENT__({
         </Text>
       </Pressable>
     </Link>
-  )
-})
+  );
+});
 
 export default function __SCREEN_NAME__() {
-  const [refreshing, setRefreshing] = useState(false)
-  const [items] = useState<__ITEM_TYPE__[]>([])
+  const [refreshing, setRefreshing] = useState(false);
+  const [items] = useState<__ITEM_TYPE__[]>([]);
 
   const onRefresh = useCallback(() => {
-    setRefreshing(true)
+    setRefreshing(true);
     // TODO: fetch data
-    setRefreshing(false)
-  }, [])
+    setRefreshing(false);
+  }, []);
 
   const renderItem = useCallback(({ item }: { item: __ITEM_TYPE__ }) => {
     return (
@@ -56,12 +56,12 @@ export default function __SCREEN_NAME__() {
         title={item.title}
         imageUrl={item.imageUrl}
       />
-    )
-  }, [])
+    );
+  }, []);
 
   return (
     <>
-      <Stack.Screen options={{ title: '__SCREEN_TITLE__' }} />
+      <Stack.Screen options={{ title: "__SCREEN_TITLE__" }} />
       <FlashList
         data={items}
         renderItem={renderItem}
@@ -81,5 +81,5 @@ export default function __SCREEN_NAME__() {
         }
       />
     </>
-  )
+  );
 }

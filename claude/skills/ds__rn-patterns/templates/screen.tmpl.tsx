@@ -1,10 +1,10 @@
-import { ScrollView, View, Text } from 'react-native'
-import { Stack } from 'expo-router/stack'
+import { ScrollView, View, Text } from "react-native";
+import { Stack } from "expo-router/stack";
 
 export default function __SCREEN_NAME__() {
   return (
     <>
-      <Stack.Screen options={{ title: '__SCREEN_TITLE__' }} />
+      <Stack.Screen options={{ title: "__SCREEN_TITLE__" }} />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         contentContainerClassName="px-component-md py-component-md gap-layout-md"
@@ -28,5 +28,5 @@ export default function __SCREEN_NAME__() {
         </View>
       </ScrollView>
     </>
-  )
+  );
 }
