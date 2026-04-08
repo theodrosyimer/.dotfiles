@@ -70,6 +70,9 @@ FlashList v2 -- no `estimatedItemSize` needed.
 | Corners              | `border-continuous` className                   | Default border curve                       |
 | Navigation           | `Link` (Expo Router)                            | `Pressable` + `router.push` for nav        |
 | Actions              | `Pressable` `accessibilityRole="button"`        | `Link` for non-navigation actions          |
+| Native UI trees      | `<Host>` wrapper (`matchContents` or `flex: 1`) | Nested `<Host>` inside `<Host>`            |
+| RN in native trees   | `<RNHostView matchContents>`                    | RN views inside Host without RNHostView    |
+| Platform files       | `.ios.tsx`/`.android.tsx` + `.tsx` fallback      | Inline branching for entire component trees |
 
 ## 3. Spacing and Layout Tokens
 
@@ -453,12 +456,14 @@ const resolved = useResolveClassNames("bg-surface-default");
 // Pass resolved.style to screenOptions.contentStyle
 ```
 
-## 13. Templates (16 total)
+## 13. Templates (16 RN + 10 expo-ui sets)
 
-All in `templates/`. Settings list, profile, chat, chat+emoji, detail, modal, animated list, adaptive grid, keyboard toolbar form, tabs, search, error/empty states, wizard form (local state), wizard form (routed).
+All in `templates/`. RN: settings, chat, chat+emoji, detail, modal, animated list, adaptive grid, keyboard toolbar form, tabs, search, error/empty states, wizard form (local + routed).
 
-> New: `search-screen.tmpl.tsx` (headerSearchBarOptions + FlashList + 3 states), `error-empty-state.tmpl.tsx` (EmptyState + ErrorState + EaseView initialAnimate + SymbolView).
-> Error/loading/empty patterns: see references/error-loading-patterns.md.
+**expo-ui** (file-based platform resolution — `.ios.tsx`/`.android.tsx` + `.tsx` fallback + `.types.ts`):
+native-settings, color-picker, chip-filter, confirmation-dialog, native-search, native-empty-state, context-menu, native-bottom-sheet, expandable-section, date-picker.
+
+> @expo/ui imports: `@expo/ui/swift-ui` (iOS), `@expo/ui/jetpack-compose` (Android). Modifiers from `*/modifiers`. See references/expo-ui-patterns.md for verified component APIs.
 
 ---
 
