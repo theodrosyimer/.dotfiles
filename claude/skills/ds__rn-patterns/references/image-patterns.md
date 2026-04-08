@@ -223,6 +223,69 @@ Image CDN patterns: Cloudinary (`/w_200,h_200,c_fill/`), Imgix (`?w=200&h=200&fi
 | `cachePolicy` | `"memory-disk"` `"memory"` `"disk"` `"none"` | Default `memory-disk`. Use `none` for signed URLs that change per request |
 | `recyclingKey` | `string` | Required in FlashList items — unique key to prevent image flickering during recycling |
 
+## Progressive Loading
+
+### Placeholder Strategy Decision
+
+| Strategy | When | Pros | Cons |
+|----------|------|------|------|
+| Blurhash `{ blurhash: '...' }` | Pre-computed at upload, stored alongside URL in DB | Tiny (28 chars), instant decode, smooth transition | Requires server-side generation |
+| Low-res URI `{ uri: thumbUrl }` | Server/CDN generates thumbnails | No pre-computation, real preview content | Extra network request for placeholder |
+| Thumbhash | Computed from image data client-side | More detail than blurhash, smaller payload | Needs image data before display |
+| None | Fast network, small images, avatars | No delay, no placeholder flash | Content shift when image loads |
+
+### Transition Timing by Context
+
+| Context | `transition` | `priority` | `placeholder` | Why |
+|---------|-------------|-----------|---------------|-----|
+| Hero / above-fold | 200–300ms | `"high"` | blurhash | Prominent — user sees and appreciates transition |
+| List item thumbnail | 100ms | `"normal"` | blurhash | Fast during scroll, minimal distraction |
+| Avatar (small) | 0 | `"normal"` | none or blurhash | Too small for visible transition |
+| Off-screen / lazy | 200ms | `"low"` | blurhash | Not urgent, smooth when scrolled to |
+| Gallery grid | 100ms | `"normal"` | blurhash | Rapid scrolling, consistent feel |
+
+### Pipeline Example
+
+```tsx
+// Full pipeline: blurhash placeholder → transition → cached full image
+<Image
+  source={{ uri: fullUrl }}
+  placeholder={{ blurhash: item.blurhash }}
+  contentFit="cover"
+  transition={100}
+  priority="normal"
+  cachePolicy="memory-disk"
+  recyclingKey={item.id}
+  className="w-full aspect-video rounded-lg border-continuous"
+/>
+```
+
+### Server-Side Blurhash Generation
+
+Generate at upload time, store alongside image URL in database:
+
+- **Node.js**: `sharp` to extract raw pixels → `blurhash` encode
+- **Wasm**: `blurhash-wasm` for edge/serverless
+- Component count: `(4, 3)` — good detail-to-size ratio
+- Output: 28-char string (e.g., `LGF5]+Yk^6#M@-5c,1J5@[or[Q6.`)
+
+### Image CDN Resize Patterns
+
+Request 2x display size for retina. Resize at CDN level — never load full-resolution into a thumbnail.
+
+| CDN | URL Pattern |
+|-----|-------------|
+| Cloudflare Images | `/cdn-cgi/image/width=200,height=200,fit=cover/${path}` |
+| Cloudflare R2 + Worker | Custom transform in Worker |
+| Supabase Storage | `/render/image/public/?width=200&height=200` |
+| Cloudinary | `/w_200,h_200,c_fill/` |
+| Imgix | `?w=200&h=200&fit=crop` |
+
+```tsx
+// 100x100 display → 200x200 request (2x retina)
+const thumbnailUrl = `${baseUrl}/cdn-cgi/image/width=200,height=200,fit=cover/${imagePath}`;
+```
+
 ## Galeria Image Lightbox
 
 `@nandorojo/galeria` — native shared element transitions with pinch-to-zoom, double-tap zoom, pan-to-close. Works with expo-image.
