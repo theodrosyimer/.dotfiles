@@ -61,7 +61,7 @@ alias ghc='gh repo clone "$(chrome_get_front_window_url)"' # Clone a GitHub repo
 # alias gbdm="git branch --merged origin/main | grep -v 'main' | xargs git branch -d" # Delete a Git branch that is merged to main (using fzf to select the branch interactively)
 
 # Package managers + npq (https://github.com/lirantal/npq)
-alias inpq="npm i -g npq"
+alias inpq="command npm i -g npq"
 alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
 alias p='pnpm 2>/dev/null'
 alias pi='pnpm install'
