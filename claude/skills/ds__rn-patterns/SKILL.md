@@ -1,6 +1,6 @@
 ---
 name: rn-patterns
-description: "React Native layout, composition, and screen patterns using Uniwind and Expo. Use when building RN screens, laying out components, creating lists, handling forms, or implementing interactions. Covers SafeAreaView, FlashList v2, Pressable, keyboard-controller, platform-specific patterns. All styling via Uniwind className strings with semantic tokens."
+description: "React Native layout, composition, and screen patterns using Uniwind and Expo. Use when building RN screens, laying out components, creating lists, handling forms, or implementing interactions. Covers safe area handling, FlashList v2, Pressable, keyboard-controller, EaseView animations, platform-specific patterns. All styling via Uniwind className strings with semantic tokens."
 ---
 
 # React Native Patterns
@@ -192,7 +192,7 @@ Consume tv() variants from the design system:
 ```tsx
 import { Pressable, View, Text } from "react-native";
 import { Link } from "expo-router";
-import { cn } from "uniwind";
+import { cn } from "tailwind-variants";
 import { card } from "@/ui/variants/card";
 
 function NavigableCard({ href, title, subtitle }: Props) {
@@ -271,7 +271,7 @@ Keyboard component selection:
 | Sticky input bar | `KeyboardStickyView`      |
 | Prev/next/done   | `KeyboardToolbar`         |
 
-> See references/form-patterns.md for all 7 keyboard-controller components, validation states, and TextInput patterns.
+> See references/form-patterns.md for all 9 keyboard-controller components, 7 hooks, validation states, chat advanced props, and TextInput patterns.
 
 ## 8. Typography
 
@@ -313,7 +313,7 @@ Rules:
 </Pressable>
 ```
 
-Rule: `Link` = navigation (screen/resource). `Pressable` = action (submit/delete/toggle). `Link.Preview` + `Link.Menu` only work on Link.
+Rule: `Link` = navigation (screen/resource). `Pressable` = action (submit/delete/toggle). `Link.Trigger` wraps the interactive area. `Link.Preview` + `Link.Menu` only work on Link.
 
 ### Interaction + Animation Decision
 
@@ -324,6 +324,7 @@ Rule: `Link` = navigation (screen/resource). `Pressable` = action (submit/delete
 | Gesture-driven (pan, pinch, swipe) | Reanimated + GestureDetector             |
 
 > `active:`/`focus:`/`disabled:` work ONLY on core RN `Pressable`/`TextInput`, NOT on RNGH Pressable or `withUniwind`-wrapped components.
+> Reanimated entering/exiting presets, layout animations, stagger, Gesture.Tap, scroll animations: see references/interaction-patterns.md.
 
 **EaseView example:**
 
@@ -424,7 +425,7 @@ const Image = withUniwind(ExpoImage)
 <Image source="sf:gear" className="w-6 h-6" tintColorClassName="accent-content-secondary" />
 ```
 
-> See references/image-patterns.md for caching, priority, avatars, and hero image patterns.
+> See references/image-patterns.md for caching, priority, avatars, hero images, SymbolView (animated SF Symbols), Galeria lightbox, compressed list images, and withUniwind setup patterns.
 
 ## 11. Dark Mode
 
@@ -439,13 +440,7 @@ Semantic tokens auto-resolve via Uniwind:
 <View className="border border-default">         {/* light gray / dark gray */}
 ```
 
-For conditional logic only:
-
-```tsx
-import { useColorScheme } from "react-native";
-const isDark = useColorScheme() === "dark";
-// Use only for logic (different icons, etc.), NOT for styling
-```
+For conditional logic only: `const isDark = useColorScheme() === 'dark'` — use only for logic (different icons, etc.), NOT for styling.
 
 ## 12. Uniwind Utilities
 
@@ -458,15 +453,12 @@ const resolved = useResolveClassNames("bg-surface-default");
 // Pass resolved.style to screenOptions.contentStyle
 ```
 
-## 13. Common Combinations
+## 13. Templates (13 total)
 
-**Settings list:** FlashList + Switch rows + navigation rows (Link) + section headers
+All in `templates/`. Settings list, profile, chat, detail, modal, animated list, adaptive grid, keyboard toolbar form, tabs, search, error/empty states.
 
-**Profile screen:** expo-image hero + scrollable content + action button (Pressable)
-
-**Search results:** `headerSearchBarOptions` + FlashList + empty state
-
-> See templates/ for complete copy-paste screen templates.
+> New: `search-screen.tmpl.tsx` (headerSearchBarOptions + FlashList + 3 states), `error-empty-state.tmpl.tsx` (EmptyState + ErrorState + EaseView initialAnimate + SymbolView).
+> Error/loading/empty patterns: see references/error-loading-patterns.md.
 
 ---
 
