@@ -50,7 +50,10 @@ function node_version_updater() {
     if ! fnm list | grep -q "$latest_lts_version"; then
       printf "%b\n" "$YELLOW""Installing LTS version: $RESET$latest_lts_version"
       fnm install "$latest_lts_version" || error_exit "Failed to install LTS version $latest_lts_version"
-      command npm i -g corepack@latest && corepack enable && corepack enable npm && corepack install -g pnpm@latest
+      command npm i -g corepack@latest && \
+      corepack enable && \
+      corepack enable npm # && corepack install -g pnpm@latest
+
       command npm i -g npq
     else
       printf "%b\n" "$GREEN""LTS version $latest_lts_version already installed$RESET"
@@ -87,7 +90,10 @@ function node_version_updater() {
     if ! fnm list | grep -q "$node_latest_version"; then
       printf "%b\n" "$YELLOW""Installing latest version: $RESET$node_latest_version"
       fnm install "$node_latest_version" || error_exit "Failed to install latest version $node_latest_version"
-      command npm i -g corepack@latest && corepack enable && corepack enable npm && corepack install -g pnpm@latest
+      command npm i -g corepack@latest && \
+      corepack enable && \
+      corepack enable npm # && corepack install -g pnpm@latest
+
       command npm i -g npq
     else
       printf "%b\n" "$GREEN""Latest version $node_latest_version already installed$RESET"
