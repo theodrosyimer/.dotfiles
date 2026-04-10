@@ -1,11 +1,12 @@
 # Event Payload Structure for PII Scanning
 
-This reference helps dev__gdpr-scan by describing event payload anatomy -- which fields carry user data, how payloads are structured, and where PII typically hides in event-sourced systems.
+This reference helps dev\_\_gdpr-scan by describing event payload anatomy -- which fields carry user data, how payloads are structured, and where PII typically hides in event-sourced systems.
 
 ## Event Anatomy
 
 Every business event has:
-- **Name/type**: Verb phrase in past tense (e.g., "RideScheduled", "BookingRequested")
+
+- **Name/type**: Verb phrase in past tense (e.g., "OrderPlaced", "UserRegistered")
 - **Data payload**: All data necessary to understand the business occurrence
 
 ### Events Must Be Denormalized and Data-Covering
@@ -17,28 +18,36 @@ All data necessary to understand the business process is contained within the ev
 ## Where PII Typically Appears
 
 ### Command Payloads (Input)
+
 Commands carry user-submitted data. High PII risk:
+
 - User registration commands: name, email, phone, address
 - Profile update commands: any personal data field
-- Booking/order commands: contact details, preferences
+- Order/reservation commands: contact details, preferences
 - Payment commands: billing address, payment method references
 
 ### Event Payloads (Recorded Facts)
+
 Events record what happened. PII from commands propagates here:
+
 - `UserRegistered`: name, email, phone
-- `BookingRequested`: guest name, contact info, stay dates
+- `OrderPlaced`: customer name, contact info, delivery address
 - `PaymentProcessed`: billing address, last 4 digits
 - `ProfileUpdated`: any changed personal fields
 
 ### Read Model Projections
+
 Read models aggregate event data for queries. PII accumulates:
+
 - User profile read models
-- Booking detail read models
-- Order history read models
+- Order/reservation detail read models
+- Transaction history read models
 - Search indexes (may contain names, locations)
 
 ### React Function Side Effects
+
 The `react` function maps events to downstream commands. PII flows across streams:
+
 - Notification stream receives user contact info
 - Analytics stream may receive user behavior data
 - External integrations forward user data to third parties
@@ -75,23 +84,29 @@ For each event stream, check:
 ## GDPR-by-Design Patterns
 
 ### Forgettable Payloads
+
 For user profiles and personal data:
+
 - Store PII in a separate, deletable store keyed by user ID
 - Events reference the user ID, not inline PII
 - Deletion = remove from forgettable store; events remain valid (just missing PII fields)
 
 ### Crypto Shredding
+
 For transactional contexts where PII must be in events:
+
 - Encrypt PII fields in event payloads with per-user keys
 - Deletion = destroy the encryption key
 - Events become unreadable for that user's PII but structurally intact
 
 ### Rule: PII Out of Event Payloads from Day One
-This project mandates GDPR-by-design: PII should NOT be in event payloads. Use Forgettable Payloads for user profiles, Crypto Shredding for transactional contexts.
+
+GDPR-by-design mandates: PII should NOT be in event payloads. Use Forgettable Payloads for user profiles, Crypto Shredding for transactional contexts.
 
 ## Event Stream Integration Risk
 
 Fat events carrying full models across modules are an anti-pattern for PII:
+
 - Thin events with IDs only -- let consumers look up their own data
 - Each consumer's read model controls its own PII retention
 - Reduces PII blast radius across bounded contexts
