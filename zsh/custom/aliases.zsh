@@ -63,6 +63,8 @@ alias ghc='gh repo clone "$(chrome_get_front_window_url)"' # Clone a GitHub repo
 # Package managers + npq (https://github.com/lirantal/npq)
 alias inpq="command npm i -g npq"
 alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
+alias usep='corepack use pnpm'
+alias pup=' pnpm self-update'
 alias p='pnpm 2>/dev/null'
 alias pi='pnpm install'
 alias pif='pnpm install --frozen-lockfile'
@@ -80,6 +82,7 @@ alias ba='bun add'
 alias bad='bun add -D'
 alias bp='buns publish'
 alias npm="npq-hero"
+alias usen='corepack use npm'
 alias n='npm'
 alias ni='npm install'
 alias nci='npm ci'
