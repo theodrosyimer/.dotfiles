@@ -39,7 +39,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/ty/.claude/hooks/enforce-memory.sh"
+            "command": "/Users/ty/.claude/scripts/hooks/enforce-memory.sh"
           }
         ]
       }
@@ -50,8 +50,8 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Bash(/bin/rm*)",
-            "command": "/Users/ty/.claude/hooks/block-bin-rm.sh"
+            "command": "/Users/ty/.claude/scripts/hooks/block-bin-rm.sh",
+            "if": "Bash(/bin/rm*)"
           }
         ]
       },
@@ -60,8 +60,8 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Bash(git push*)",
-            "command": "/Users/ty/.claude/hooks/block-git-push.sh"
+            "command": "/Users/ty/.claude/scripts/hooks/block-git-push.sh",
+            "if": "Bash(git push*)"
           }
         ]
       },
@@ -70,7 +70,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /Users/ty/.claude/hooks/prefer-modern-cli.py"
+            "command": "python3 /Users/ty/.claude/scripts/hooks/prefer-modern-cli.py"
           }
         ]
       },
