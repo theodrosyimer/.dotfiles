@@ -36,6 +36,7 @@ alias cs='open -b com.todesktop.230313mzl4w4u92' # Cursor
 alias cs.='cs .'
 
 alias cc='claude'
+alias ccdash='python3 cli.py dashboard'
 
 alias sd='fzf_code_projects'
 # alias ccd='cc "$(eza --absolute $CODE_DIRS | fzf)" && z $_'
