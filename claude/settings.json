@@ -18,7 +18,8 @@
       "Bash(rg *)",
       "Bash(wc -l *)",
       "Bash(npx tsc*)",
-      "Bash(pnpm test*)"
+      "Bash(pnpm test*)",
+      "Bash(gh search:*)"
     ],
     "deny": [
       "Bash(curl:*)",
@@ -39,7 +40,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/ty/.claude/scripts/hooks/enforce-memory.sh"
+            "command": "/Users/ty/.dotfiles/claude/scripts/hooks/enforce-memory.sh"
           }
         ]
       }
@@ -50,7 +51,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/ty/.claude/scripts/hooks/block-bin-rm.sh",
+            "command": "/Users/ty/.dotfiles/claude/scripts/hooks/block-bin-rm.sh",
             "if": "Bash(/bin/rm*)"
           }
         ]
@@ -60,7 +61,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/ty/.claude/scripts/hooks/block-git-push.sh",
+            "command": "/Users/ty/.dotfiles/claude/scripts/hooks/block-git-push.sh",
             "if": "Bash(git push*)"
           }
         ]
@@ -70,7 +71,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 /Users/ty/.claude/scripts/hooks/prefer-modern-cli.py"
+            "command": "python3 /Users/ty/.dotfiles/claude/scripts/hooks/prefer-modern-cli.py"
           }
         ]
       },
