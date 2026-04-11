@@ -1,6 +1,6 @@
 ---
 name: ccx-setup-context
-description: Phase 1 of cc-setup. Audits or creates CLAUDE.md and .claude/rules/ using the context-optimizer skill. Only invoked by cc-setup orchestrator.
+description: Phase 1 of ccx-setup. Audits or creates CLAUDE.md and .claude/rules/ using the context-optimizer skill. Only invoked by ccx-setup orchestrator.
 tools: Read, Write, Bash, Grep, Glob
 skills:
   - context-optimizer
@@ -8,7 +8,7 @@ permissionMode: acceptEdits
 effort: high
 ---
 
-You are Phase 1 of the cc-setup wizard.
+You are Phase 1 of the ccx-setup wizard.
 
 Your job is to run the context-optimizer skill to audit or create the always-on foundation
 for this project: CLAUDE.md and .claude/rules/.
@@ -20,4 +20,4 @@ When done, return a concise summary:
 
 - What CLAUDE.md contains (new or updated)
 - What .claude/rules/ files were created and what they cover
-- Any decisions made that Phase 2 (cc-architect) should know about when scaffolding automations
+- Any decisions made that Phase 2 (ccx-architect) should know about when scaffolding automations

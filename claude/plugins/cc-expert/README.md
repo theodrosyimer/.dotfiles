@@ -259,7 +259,8 @@ This skill applies research-backed principles from ACE and empirical studies on
 AGENTS.md effectiveness. It keeps context files minimal, non-redundant, and
 high-signal.
 
-Also used internally by `/cc:setup` Phase 1 via the `cc-setup-context` subagent.
+Also used internally by `/cc:setup` Phase 1 via the `ccx-setup-context`
+subagent.
 
 ---
 
@@ -282,7 +283,7 @@ explicitly with `/cc:setup`. Claude will never run it autonomously.
 Orchestrates three specialist subagents sequentially. Each phase depends on the
 previous — they do not run in parallel.
 
-**Phase 1 — Foundation (`cc-setup-context` subagent)** Uses the
+**Phase 1 — Foundation (`ccx-setup-context` subagent)** Uses the
 `context-optimizer` skill to build or audit your CLAUDE.md and `.claude/rules/`.
 
 What it produces:
@@ -295,9 +296,9 @@ What it produces:
   when relevant files are accessed
 - A summary of everything created or changed
 
-**Phase 2 — Design & Scaffold (`cc-setup-architect` subagent)** Uses the
-`cc-architect` skill, pre-loaded with the Phase 1 output, to design and scaffold
-your automation primitives.
+**Phase 2 — Design & Scaffold (`ccx-setup-architect` subagent)** Uses the
+`ccx-architect` skill, pre-loaded with the Phase 1 output, to design and
+scaffold your automation primitives.
 
 What it receives: the Phase 1 summary (what conventions now exist) + your
 automation goals.
@@ -309,8 +310,9 @@ What it produces:
 - `# TODO:` markers for specifics you need to fill in
 - A summary of all files created with their paths
 
-**Phase 3 — Validate (`cc-setup-validator` subagent)** Uses the `cc-primitives`
-skill in `permissionMode: plan` (read-only) to validate everything.
+**Phase 3 — Validate (`ccx-setup-validator` subagent)** Uses the
+`ccx-primitives` skill in `permissionMode: plan` (read-only) to validate
+everything.
 
 What it receives: project root + Phase 1 summary + Phase 2 summary (both, so
 CLAUDE.md and rules are validated alongside the scaffolded primitives).
@@ -330,7 +332,7 @@ What it checks:
 <what context-optimizer created or changed>
 
 ## ✅ Phase 2 — Design & Scaffold
-<what cc-architect scaffolded, with file paths>
+<what ccx-architect scaffolded, with file paths>
 
 ## Phase 3 — Validation
 <🔴 errors / 🟡 upgrades / 🔵 suggestions>
@@ -476,9 +478,9 @@ cc-plugin/
 │   └── setup/
 │       └── SKILL.md                   ← /cc:setup (orchestrator)
 └── agents/
-    ├── cc-setup-context.md            ← Phase 1 subagent (uses context-optimizer skill)
-    ├── cc-setup-architect.md          ← Phase 2 subagent (uses cc-architect skill)
-    └── cc-setup-validator.md          ← Phase 3 subagent (uses cc-primitives skill)
+    ├── ccx-setup-context.md            ← Phase 1 subagent (uses context-optimizer skill)
+    ├── ccx-setup-architect.md          ← Phase 2 subagent (uses ccx-architect skill)
+    └── ccx-setup-validator.md          ← Phase 3 subagent (uses ccx-primitives skill)
 ```
 
 ---

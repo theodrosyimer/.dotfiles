@@ -1,8 +1,8 @@
 ---
 name: ccx-setup
 description: >
-  Full Claude Code project setup wizard. Sequences context-optimizer → cc-architect →
-  cc-primitives to build a complete, validated automation setup from scratch or audit and
+  Full Claude Code project setup wizard. Sequences context-optimizer → ccx-architect →
+  ccx-primitives to build a complete, validated automation setup from scratch or audit and
   upgrade an existing one. Use when starting a new project's Claude Code configuration,
   doing a full setup review, or onboarding a new repo. Triggers on "set up Claude Code",
   "scaffold my Claude setup", "full setup wizard", "audit my entire Claude config".

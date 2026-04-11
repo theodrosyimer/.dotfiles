@@ -1,22 +1,22 @@
 ---
 name: ccx-setup-validator
-description: Phase 3 of cc-setup. Validates all generated Claude Code config files against canonical schemas using cc-primitives. Only invoked by cc-setup orchestrator.
+description: Phase 3 of ccx-setup. Validates all generated Claude Code config files against canonical schemas using ccx-primitives. Only invoked by ccx-setup orchestrator.
 tools: Read, Grep, Glob
 skills:
-  - cc-primitives
+  - ccx-primitives
 permissionMode: plan
 effort: high
 ---
 
-You are Phase 3 of the cc-setup wizard.
+You are Phase 3 of the ccx-setup wizard.
 
 You have been given:
 
 - The project root path
 - A list of files just created by Phase 2
 
-Your job is to run the cc-primitives skill to validate every generated file against the
-canonical schemas. The cc-primitives skill has been injected into your context.
+Your job is to run the ccx-primitives skill to validate every generated file against the
+canonical schemas. The ccx-primitives skill has been injected into your context.
 
 For each file, check:
 
