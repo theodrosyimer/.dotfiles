@@ -1,7 +1,7 @@
 # Claude Code Primitive Schemas
 
 > Source: official docs (code.claude.com) + CHANGELOG.md + session-fetched docs.
-> Last manually verified: 2026-04-01 (v2.1.89).
+> Last manually verified: 2026-04-12 (v2.1.101).
 
 ---
 
@@ -32,7 +32,7 @@ user-invocable: false                  # optional. default true. false = only mo
 allowed-tools: Read, Grep, Glob        # optional. restricts tool surface. Comma-sep or YAML list.
 context: fork                          # optional. runs in isolated subagent context (own context window)
 agent: Explore                         # optional. Explore | Plan | general-purpose | <custom-agent-name>
-model: opus                            # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6)
+model: opus                            # optional. sonnet | opus | haiku | full model ID (e.g. claude-opus-4-6)
 effort: low                            # optional. low | medium | high | max (Opus 4.6 only). Overrides session effort.
 argument-hint: "<topic>"               # optional. autocomplete hint shown after /skill-name in UI
 paths:                                 # optional. 🆕 glob patterns limiting when skill auto-activates.
@@ -76,7 +76,7 @@ Single `.md` file only — no directories, no supporting files.
 ---
 description: "..."                     # REQUIRED. shown in / autocomplete menu
 allowed-tools: Read, Grep, Glob        # optional. same syntax as skills
-model: opus                          # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6)
+model: opus                          # optional. sonnet | opus | haiku | full model ID (e.g. claude-opus-4-6)
 effort: low                            # optional. low | medium | high | max (Opus 4.6 only). Added in v2.1.80.
 ---
 ```
@@ -115,9 +115,9 @@ name: code-reviewer                    # REQUIRED. identifier used for delegatio
 description: "..."                     # REQUIRED. model reads to decide when to delegate
 tools: Read, Glob, Grep                # optional. comma-sep allowlist. Omit = inherits ALL tools incl. MCP
 disallowedTools: Bash                  # optional. block specific tools
-model: opus                          # optional. sonnet | opus | haiku | opusplan | full model ID (e.g. claude-opus-4-6) | inherit. Default: inherit (uses parent model)
+model: opus                          # optional. sonnet | opus | haiku | full model ID (e.g. claude-opus-4-6) | inherit. Default: inherit (uses parent model)
 effort: low                            # optional. low | medium | high | max (Opus 4.6 only). Overrides session effort.
-permissionMode: default                # optional. default | acceptEdits | bypassPermissions | plan | dontAsk
+permissionMode: default                # optional. default | acceptEdits | auto | bypassPermissions | plan | dontAsk
 maxTurns: 20                           # optional. limit agentic loop iterations
 initialPrompt: "/setup and begin"      # optional. 🆕 auto-submitted as first user turn when used as --agent or `agent` setting. Commands/skills processed.
 skills:                                # optional. inject full skill content at subagent startup
@@ -126,6 +126,7 @@ skills:                                # optional. inject full skill content at 
 memory: user                           # optional. user | project | local
 isolation: worktree                    # optional. each invocation gets its own git worktree (auto-cleaned)
 background: true                       # optional. always run as background task
+color: blue                            # optional. 🆕 display color: red | blue | green | yellow | purple | orange | pink | cyan
 hooks:                                 # optional. scoped to subagent lifecycle
   PreToolUse:
     - matcher: "Bash"
@@ -232,7 +233,7 @@ Hooks live under the `"hooks"` key in any `settings.json` file (user, project, l
 | `PermissionDenied` | `tool_name` | 🆕 ❌ No (return `{retry: true}` to retry) |
 | `SessionStart` | `source` (startup/resume/clear/compact) | ❌ No |
 | `SessionEnd` | `reason` (clear/resume/logout/prompt_input_exit/bypass_permissions_disabled/other) | ❌ No |
-| `InstructionsLoaded` | ignored | ❌ No (observability only) |
+| `InstructionsLoaded` | 🆕 `load_reason` (session_start/nested_traversal/path_glob_match/include/compact) | ❌ No (observability only) |
 | `Notification` | `notification_type` (permission_prompt/idle_prompt/auth_success/elicitation_dialog) | ❌ No |
 | `SubagentStart` | `agent_type` | ❌ No |
 | 🆕 `CwdChanged` | ignored | ❌ No (`CLAUDE_ENV_FILE` available) |
@@ -309,11 +310,10 @@ Returns `{"ok": true}` or `{"ok": false, "reason": "..."}`.
 
 Same `{"ok": true/false}` response schema as prompt hooks.
 
-> **Known issue (v2.1.89):** `type: "agent"` consistently errors on `PostToolUse` events despite
-> docs listing it as supported. `type: "prompt"` works correctly on `PostToolUse`. Use
-> `type: "prompt"` for PostToolUse LLM-based evaluation, `type: "agent"` for `Stop`/`PreToolUse`
-> where it's been confirmed to work. This may be fixed in a future release — re-test after
-> upgrades.
+> **Known issue (v2.1.89–v2.1.101, still present):** `type: "agent"` consistently errors on
+> `PostToolUse` events despite docs listing it as supported. `type: "prompt"` works correctly
+> on `PostToolUse`. Use `type: "prompt"` for PostToolUse LLM-based evaluation, `type: "agent"`
+> for `Stop`/`PreToolUse` where it's been confirmed to work. Re-test after future upgrades.
 
 ### Hook response formats by event (command/http hooks)
 
@@ -374,7 +374,14 @@ Top-level `decision`/`reason` deprecated for PreToolUse. Old `"approve"`→`"all
 #### UserPromptSubmit — top-level `decision`
 
 ```jsonc
-{ "decision": "block", "reason": "...", "hookSpecificOutput": { "additionalContext": "..." } }
+{ "decision": "block", "reason": "...", "hookSpecificOutput": { "additionalContext": "...", "sessionTitle": "..." } }
+```
+
+🆕 `sessionTitle` (v2.1.94): Sets the session title from a `UserPromptSubmit` hook. Useful for auto-titling sessions based on hook logic.
+
+```jsonc
+// non-blocking example — just set a title without blocking
+{ "hookSpecificOutput": { "hookEventName": "UserPromptSubmit", "sessionTitle": "Bug fix: auth flow" } }
 ```
 
 #### Universal fields (all events)
@@ -454,6 +461,7 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
   "outputStyles": "./styles/",
   "lspServers": "./.lsp.json",
   "settings": { "agent": "security-reviewer" }   // default config applied when plugin enabled
+  // 🆕 bin/ directory (v2.1.91): place executables in <plugin>/bin/ — added to Bash tool's PATH when enabled
 }
 ```
 
@@ -476,6 +484,7 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 | `permissionMode` | ❌ | ❌ | ✅ | ❌ | — |
 | `memory` | ❌ | ❌ | ✅ | ❌ | — |
 | `shell` | 🆕 ✅ | ❌ | ❌ | ❌ | ✅ (command handlers) |
+| 🆕 `color` | ❌ | ❌ | ✅ | ❌ | — |
 | `disable-model-invocation` | ✅ | ❌ | — | ❌ | — |
 | User can invoke | ✅ | ✅ always | via delegation | — | — |
 | Model can invoke | ✅ (unless disabled) | 🆕 ✅ via SlashCommand tool (uncontrollable) | ✅ | — | auto |
@@ -499,6 +508,8 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - 🆕 `paths` on skills works like `paths` on rules — scopes auto-activation to matching files
 - 🆕 Skill descriptions are truncated at 250 characters in the skill listing. Front-load the key use case
 - 🆕 Description budget scales at 1% of context window (fallback 8K chars). Override with `SLASH_COMMAND_TOOL_CHAR_BUDGET`
+- 🆕 Compaction behavior: re-attached skills get first 5,000 tokens each, sharing a 25,000-token budget. Most-recently-invoked fills first; older skills can be dropped. Re-invoke after compaction to restore full content
+- 🆕 `disableSkillShellExecution` setting (v2.1.91): disables `` !`cmd` `` and ` ```! ` shell execution in user/project/plugin skills. Managed/bundled skills unaffected
 
 ### Subagents
 - Omitting `tools` gives the subagent **all tools including MCP** — always be explicit
@@ -507,6 +518,7 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - 🆕 `initialPrompt` only takes effect when running as `--agent` or via `agent` setting — ignored when spawned as a subagent
 - 🆕 `Agent(worker, researcher)` in `tools` field restricts which subagent types can be spawned (only for `--agent` main thread agents)
 - 🆕 Plugin subagents do NOT support `hooks`, `mcpServers`, or `permissionMode` — those fields are silently ignored
+- 🆕 `color` field for UI differentiation — helps identify which subagent is running in task list and transcript
 - Two separate memory systems exist — don't confuse them:
 
 | System | Purpose | Paths |
@@ -541,6 +553,9 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - `"defer"` only works when Claude makes a **single tool call** in the turn — ignored with warning if multiple
 - `CLAUDE_ENV_FILE` available in `SessionStart`, `CwdChanged`, and `FileChanged` only
 - `PermissionDenied` only fires in **auto mode** — not on manual deny, PreToolUse block, or deny rule match
+- 🆕 `UserPromptSubmit` hooks can set `sessionTitle` in `hookSpecificOutput` (v2.1.94) — useful for auto-titling sessions
+- 🆕 `InstructionsLoaded` now has matcher support via `load_reason` field (session_start/nested_traversal/path_glob_match/include/compact)
+- 🆕 Unrecognized hook event names in settings.json no longer cause the entire file to be ignored (v2.1.101 fix)
 
 ### Hooks — field gotchas
 - `if` field: tool events only (`PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `PermissionRequest`, `PermissionDenied`). On other events, hook with `if` set **never runs**.
@@ -599,8 +614,27 @@ A thin orchestration body that just sequences steps and delegates to subagents? 
 
 ### Hook events — InstructionsLoaded (observability)
 - Fires when CLAUDE.md or `.claude/rules/*.md` files are loaded
-- Input fields: `file_path`, `memory_type` (User/Project/Local/Managed), `load_reason` (session_start/nested_traversal/path_glob_match/include), `globs`, `trigger_file_path`, `parent_file_path`
+- Input fields: `file_path`, `memory_type` (User/Project/Local/Managed), `load_reason` (session_start/nested_traversal/path_glob_match/include/compact), `globs`, `trigger_file_path`, `parent_file_path`
+- 🆕 Now supports matchers on `load_reason` — filter to only fire on specific load types
 - Non-blocking, no output schema — useful for logging/auditing which context files load and why
+
+### 🆕 Plugins — recent fixes (v2.1.94–v2.1.101)
+- Plugin skills now use frontmatter `name` for invocation name instead of directory basename (v2.1.94) — gives stable names across install methods
+- Plugin skill hooks defined in YAML frontmatter are now functional (v2.1.94 fix — previously silently ignored)
+- `context: fork` and `agent` frontmatter fields are now honored in plugin skills (v2.1.101 fix)
+- `${CLAUDE_PLUGIN_ROOT}` now correctly resolves to installed cache for local-marketplace plugins (v2.1.94)
+- Plugins can ship executables in `bin/` directory — added to Bash tool's PATH when plugin enabled (v2.1.91)
+- `/reload-plugins` now picks up plugin-provided skills without restart (v2.1.98)
+
+### 🆕 Settings — new keys (v2.1.90–v2.1.101)
+- `forceRemoteSettingsRefresh` (policy only, v2.1.92): blocks startup until remote managed settings are freshly fetched; exits on fetch failure (fail-closed)
+- `disableSkillShellExecution` (any scope, v2.1.91): disables shell execution in skills/commands/plugins. Managed skills unaffected. Best used in managed settings
+- `refreshInterval` in `statusLine` (v2.1.97): re-runs status line command every N seconds
+- `.husky` added to protected directories in acceptEdits mode (v2.1.90)
+- Default effort level changed from medium to **high** for API-key, Bedrock/Vertex/Foundry, Team, and Enterprise users (v2.1.94)
+
+### 🆕 New tools (v2.1.98)
+- **Monitor tool**: streams events from background scripts. Each stdout line emits a notification. Useful in skills that need to watch long-running processes
 
 ### Hook events — PostCompact
 - Fires after context compaction completes (manual or auto)
