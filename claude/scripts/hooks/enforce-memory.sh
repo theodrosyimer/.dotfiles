@@ -9,7 +9,7 @@ project_dir=$(jq -r '.cwd // "."' < /dev/stdin)
 context_files=()
 
 if [[ -f "$HOME/.claude/CLAUDE.md" ]]; then
-  context_files+=("~/.claude/CLAUDE.md (global preferences)")
+  context_files+=("$HOME/.claude/CLAUDE.md (global preferences)")
 fi
 
 if [[ -f "$project_dir/CLAUDE.md" ]]; then
