@@ -95,3 +95,6 @@ _ZO_EXCLUDE_DIRS=""
 _ZO_FZF_OPTS="$FZF_DEFAULT_OPTS"
 
 _ZO_RESOLVE_SYMLINKS=1
+
+# Vite+ bin (https://viteplus.dev)
+. "$HOME/.vite-plus/env"

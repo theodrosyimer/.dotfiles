@@ -105,3 +105,6 @@ fpath=(/Users/ty/.docker/completions $fpath)
 autoload -Uz compinit
 compinit
 # End of Docker CLI completions
+
+# Vite+ bin (https://viteplus.dev)
+. "$HOME/.vite-plus/env"
