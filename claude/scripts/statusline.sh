@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# inspiration: https://www.linkedin.com/posts/zahirhaniche_je-pensais-que-ma-vie-%C3%A9tait-rythm%C3%A9e-par-le-activity-7450858465218031617-dfeN?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD_aqRABVXncVe6JaMWxOYb03qO2ymAO-8k
 # Claude Code status line — 4 rows:
 #   L0  Starship prompt (cwd + git)
 #   L1  model  🧠 ctx%  ⚡ effort  user
@@ -27,11 +29,12 @@ input=$(cat)
 
 C_RESET=$'\033[0m'
 C_DIM=$'\033[2m'
-C_GREEN=$'\033[32m'
-C_YELLOW=$'\033[33m'
-C_RED=$'\033[31m'
-C_CYAN=$'\033[36m'
-C_MAGENTA=$'\033[35m'
+# Truecolor palette.
+C_GREEN=$'\033[38;2;13;171;66m'    # #0dab42
+C_YELLOW=$'\033[38;5;222m'         # LightGoldenrod2
+C_RED=$'\033[38;2;255;84;85m'      # #ff5455
+C_CYAN=$'\033[38;5;110m'           # SkyBlue3
+C_SEP=$'\033[38;5;240m'            # dim gray, for `|` separators
 
 color_for_pct() {
   local p=$1
@@ -144,9 +147,10 @@ fi
 [[ $effort == "max"   && $model_id != *opus-4-7* ]] && effort="high"
 
 ctx_col=$(color_for_pct "$ctx_pct")
-header="${C_CYAN}${model}${C_RESET}  🧠 ${ctx_col}${ctx_pct}%${C_RESET}"
-[[ -n $effort ]] && header+="  ⚡ ${C_MAGENTA}${effort}${C_RESET}"
-header+="  ${C_DIM}${USER}${C_RESET}"
+sep=" ${C_SEP}|${C_RESET} "
+header="${C_CYAN}${model}${C_RESET}${sep}🧠 ${ctx_col}${ctx_pct}%${C_RESET}"
+[[ -n $effort ]] && header+="${sep}⚡${C_RED}${effort}${C_RESET}"
+header+="${sep}${C_DIM}${USER}${C_RESET}"
 printf '%s\n' "$header"
 
 now=$(date +%s)
