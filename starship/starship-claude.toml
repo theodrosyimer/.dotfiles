@@ -1,0 +1,88 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Claude Code variant: $fill and $character removed ($fill can't right-align
+# in Claude Code's fixed-width pty; $character is a shell prompt arrow).
+format = """
+$username\
+$hostname\
+$directory\
+$git_branch\
+$git_status\
+$git_metrics\
+$nodejs\
+$python\
+$rust\
+$golang\
+$jobs"""
+
+add_newline = false
+palette = 'onedarkcustom'
+
+command_timeout = 1000
+
+# Define custom colors
+[palettes.onedarkcustom]
+blue = '21'
+# Define new color
+mustard = '#af8700'
+rust_color = '#ef5c38'
+
+[fill]
+symbol = " "
+
+[directory]
+style = "cyan"
+read_only = " 🔒"
+truncation_length = 1
+truncate_to_repo = false
+
+# [directory.substitutions]
+# "Documents" = "󰈙 "
+# "Downloads" = " "
+# "Music" = " "
+# "Pictures" = " "
+
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"
+
+[git_branch]
+symbol =  " "
+style = "bright-black"
+format = '[$symbol$branch ]($style)'
+
+[jobs]
+symbol = ""
+style = "bold red"
+number_threshold = 1
+format = '[$symbol]($style)'
+
+[nodejs]
+symbol = " "
+style = "green"
+format = '[$symbol($version)]($style)'
+
+[python]
+symbol = " "
+style = 'yellow bold'
+format = '[${symbol}${pyenv_prefix}(${version})(\($virtualenv\) )]($style)'
+pyenv_version_name = true
+
+[rust]
+# symbol = " "
+style = "rust_color"
+format = '[$symbol($version)]($style)'
+
+[cmd_duration]
+format = ' [$duration]($style)'
+style = 'bold yellow'
+min_time = 1000
+
+
+# [time]
+# disabled = false
+# # time_format = "%R" # Hour:Minute Format
+# style = "white"
+# format = '[$time]($style)'
