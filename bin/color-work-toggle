@@ -1,0 +1,58 @@
+#!/bin/bash
+# Toggle macOS into color-critical mode (and back).
+#
+# Flips:
+#   - Night Shift      — via `nightshift` CLI (~/dev/projects/oss/corebright)
+#   - True Tone        — via `truetone`   CLI (same repo)
+#   - Color profile    — no clean CLI; left to the user
+#
+# Usage:
+#   color-work-toggle         # toggle based on ~/.cache/color-work-mode
+#   color-work-toggle on      # color-critical (True Tone off, Night Shift off)
+#   color-work-toggle off     # everyday (True Tone on, Night Shift scheduled)
+#
+# First run prerequisites (installs both `truetone` and `nightshift` binaries):
+#   git clone https://github.com/theodrosyimer/corebright
+#   cd corebright && make && make install
+# Docs: https://github.com/theodrosyimer/corebright
+
+set -u
+
+STATE_FILE="$HOME/.cache/color-work-mode"
+mkdir -p "$(dirname "$STATE_FILE")"
+
+mode="${1:-}"
+if [[ -z $mode ]]; then
+  [[ -f $STATE_FILE && $(cat "$STATE_FILE") == "on" ]] && mode="off" || mode="on"
+fi
+
+case "$mode" in
+  on|off) ;;
+  *) echo "usage: $(basename "$0") [on|off]" >&2; exit 2 ;;
+esac
+
+# ───────── Night Shift ─────────
+if command -v nightshift >/dev/null; then
+  if [[ $mode == on ]]; then
+    nightshift schedule off >/dev/null
+  else
+    nightshift schedule sunset >/dev/null
+  fi
+else
+  echo "⚠ nightshift not installed — skipping Night Shift. Install: git clone https://github.com/theodrosyimer/corebright && cd corebright && make && make install" >&2
+fi
+
+# ───────── True Tone (via the `truetone` CLI) ─────────
+# Install: git clone https://github.com/theodrosyimer/corebright && cd corebright && make && sudo make install
+if command -v truetone >/dev/null; then
+  if [[ $mode == on ]]; then
+    truetone off >/dev/null
+  else
+    truetone on  >/dev/null
+  fi
+else
+  echo "⚠ truetone not installed — skipping True Tone. Install: git clone https://github.com/theodrosyimer/corebright && cd corebright && make && sudo make install" >&2
+fi
+
+echo "$mode" > "$STATE_FILE"
+echo "color-work-toggle: $mode  (Night Shift + True Tone flipped; switch colour profile manually in Displays if needed)"
