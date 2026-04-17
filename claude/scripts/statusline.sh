@@ -30,6 +30,8 @@ input=$(cat)
 C_RESET=$'\033[0m'
 C_DIM=$'\033[2m'
 # Truecolor palette.
+C_WHITE=$'\033[38;2;255;255;255m'  # white
+C_BLUE=$'\033[38;2;25;151;239m'    # #007eff
 C_GREEN=$'\033[38;2;13;171;66m'    # #0dab42
 C_YELLOW=$'\033[38;5;222m'         # LightGoldenrod2
 C_RED=$'\033[38;2;255;84;85m'      # #ff5455
@@ -148,7 +150,7 @@ fi
 
 ctx_col=$(color_for_pct "$ctx_pct")
 sep=" ${C_SEP}|${C_RESET} "
-header="${C_CYAN}${model}${C_RESET}${sep}🧠 ${ctx_col}${ctx_pct}%${C_RESET}"
+header="${C_BLUE}${model}${C_RESET}${sep}🧠 ${ctx_col}${ctx_pct}%${C_RESET}"
 [[ -n $effort ]] && header+="${sep}⚡${C_RED}${effort}${C_RESET}"
 header+="${sep}${C_DIM}${USER}${C_RESET}"
 printf '%s\n' "$header"
@@ -165,8 +167,9 @@ else
 fi
 
 col=$(color_for_pct "$cur_pct")
-printf 'current %s  %s%3d%%%s  %s⟳ %s%s\n' \
-  "$(bar "$cur_pct")" "$col" "$cur_pct" "$C_RESET" "$C_DIM" "$remain_str" "$C_RESET"
+printf '%scurrent%s %s  %s%3d%%%s  %s⟳%s %s%s%s\n' \
+  "$C_WHITE" "$C_RESET" "$(bar "$cur_pct")" "$col" "$cur_pct" "$C_RESET" \
+  "$C_DIM" "$C_RESET" "$C_WHITE" "$remain_str" "$C_RESET"
 
 # ───────────────── L3: weekly (7-day rate limit) ─────────────────
 if (( wk_reset > 0 )); then
@@ -177,5 +180,6 @@ else
 fi
 
 col=$(color_for_pct "$wk_pct")
-printf 'weekly  %s  %s%3d%%%s  %s⟳ %s%s\n' \
-  "$(bar "$wk_pct")" "$col" "$wk_pct" "$C_RESET" "$C_DIM" "$reset_str" "$C_RESET"
+printf '%sweekly%s  %s  %s%3d%%%s  %s⟳%s %s%s%s\n' \
+  "$C_WHITE" "$C_RESET" "$(bar "$wk_pct")" "$col" "$wk_pct" "$C_RESET" \
+  "$C_DIM" "$C_RESET" "$C_WHITE" "$reset_str" "$C_RESET"
