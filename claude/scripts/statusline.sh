@@ -76,8 +76,12 @@ IFS=$'\t' read -r cwd project_dir model model_id ctx_pct \
   )
 
 # ───────────────── L0: Starship ─────────────────
-STARSHIP_SHELL="" STARSHIP_CONFIG="/Users/ty/.dotfiles/starship/starship.toml" \
-  starship prompt --path "${cwd:-$PWD}" | head -1
+# Use the Claude-specific config (no $fill, no right-aligned modules). Claude
+# Code allocates a fixed ~147-col pty to the statusline process, so $fill from
+# the main config would stop mid-line in wider terminals.
+STARSHIP_SHELL="" STARSHIP_CONFIG="/Users/ty/.dotfiles/starship/starship-claude.toml" \
+  starship prompt --path "${cwd:-$PWD}"
+echo
 
 # ───────────────── L1: header ─────────────────
 
