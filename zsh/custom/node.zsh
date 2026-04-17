@@ -52,7 +52,7 @@ function node_version_updater() {
       fnm install "$latest_lts_version" || error_exit "Failed to install LTS version $latest_lts_version"
       command npm i -g corepack@latest && \
       corepack enable && \
-      corepack enable npm # && corepack install -g pnpm@latest
+      corepack enable npm && corepack install -g pnpm@latest
 
       command npm i -g npq
     else
@@ -92,7 +92,7 @@ function node_version_updater() {
       fnm install "$node_latest_version" || error_exit "Failed to install latest version $node_latest_version"
       command npm i -g corepack@latest && \
       corepack enable && \
-      corepack enable npm # && corepack install -g pnpm@latest
+      corepack enable npm && corepack install -g pnpm@latest
 
       command npm i -g npq
     else
