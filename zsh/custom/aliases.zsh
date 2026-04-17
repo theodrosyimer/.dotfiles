@@ -66,7 +66,7 @@ alias inpq="command npm i -g npq"
 alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
 alias usep='corepack use pnpm'
 alias pup=' pnpm self-update'
-alias p='pnpm 2>/dev/null'
+alias p='pnpm'
 alias pi='pnpm install'
 alias pif='pnpm install --frozen-lockfile'
 alias pa='pnpm add'
