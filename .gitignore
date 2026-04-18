@@ -9,10 +9,7 @@ karabiner/automatic_backups
 karabiner/assets
 
 npm
-skhd
-yabai
 # Brewfile
-personal/*
 ansible/*
 nvim/undo
 nvim.bak
