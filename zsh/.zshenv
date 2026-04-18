@@ -14,6 +14,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=true
 export STORYBOOK_DISABLE_TELEMETRY=1
 export HOMEBREW_CASK_OPTS="--no-quarantine"
 export HOMEBREW_NO_AUTO_UPDATE=1
+export HOMEBREW_BUNDLE_FILE_GLOBAL="$HOME/.dotfiles/brew/Brewfile"
 
 export LC_COLLATE=en_US.UTF-8
 export LC_CTYPE=en_US.UTF-8
