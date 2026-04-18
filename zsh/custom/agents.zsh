@@ -19,26 +19,22 @@ function _cc_sync_link() {
   fi
 }
 
-function _cc_sync_claude_md() {
-  local force="$1"
-  local src=~/.dotfiles/claude/CLAUDE.md dest=~/.claude/CLAUDE.md
+function _cc_sync_file() {
+  local src="$1" dest="$2" force="$3"
+  local name="${dest:t}"
 
   if [[ -L "$dest" ]]; then
-    if [[ "$(readlink "$dest")" != "$src" ]]; then
-      if $force; then
-        rm "$dest" && ln -s "$src" "$dest" && ((++updated))
-        echo "CLAUDE.md: updated"
-      else
-        conflicts+=("$dest → $(readlink "$dest") (expected $src)")
-      fi
+    if [[ "$(readlink "$dest")" == "$src" ]]; then
+      echo "${name}: linked"
+    elif $force; then
+      rm "$dest" && ln -s "$src" "$dest" && echo "${name}: retargeted"
     else
-      ((skipped++))
+      conflicts+=("$dest → $(readlink "$dest") (expected $src)")
     fi
   elif [[ -e "$dest" ]]; then
     conflicts+=("$dest (not a symlink, won't overwrite)")
   else
-    ln -s "$src" "$dest" && ((++created))
-    echo "CLAUDE.md: linked"
+    ln -s "$src" "$dest" && echo "${name}: linked"
   fi
 }
 
@@ -50,7 +46,8 @@ function ccsync() {
   local conflicts=()
 
   mkdir -p ~/.claude
-  _cc_sync_claude_md $force
+  _cc_sync_file ~/.dotfiles/claude/CLAUDE.md     ~/.claude/CLAUDE.md     $force
+  _cc_sync_file ~/.dotfiles/claude/settings.json ~/.claude/settings.json $force
 
   local pairs=(
     ~/.dotfiles/claude/skills ~/.claude/skills
