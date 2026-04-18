@@ -1,0 +1,13 @@
+.zsh_history
+.zlogin
+.zextras.zsh
+.zcompdump*
+sh
+.DS_Store
+.zsh_sessions
+
+custom/plugins/fzf-tab/
+custom/plugins/you-should-use/
+custom/plugins/zsh-autosuggestions/
+custom/plugins/zsh-completions/
+custom/plugins/zsh-syntax-highlighting/
