@@ -35,7 +35,6 @@ C_BLUE=$'\033[38;2;25;151;239m'    # #007eff
 C_GREEN=$'\033[38;2;13;171;66m'    # #0dab42
 C_YELLOW=$'\033[38;5;222m'         # LightGoldenrod2
 C_RED=$'\033[38;2;255;84;85m'      # #ff5455
-C_CYAN=$'\033[38;5;110m'           # SkyBlue3
 C_SEP=$'\033[38;5;240m'            # dim gray, for `|` separators
 
 color_for_pct() {
