@@ -8,9 +8,6 @@
 # [include]
 #   path = ~/.dotfiles/git/.gitconfig.local
 
-[includeIf "gitdir:~/dev/projects/work/etna/"]
-  path = ~/dev/projects/work/etna/.gitconfig-etna
-
 [includeIf "gitdir:~/dev/projects/work/coqagile/elody/"]
   path = ~/dev/projects/work/coqagile/elody/.gitconfig-elody
 
