@@ -1,12 +1,12 @@
 ---
 name: plan-feature
 description: Plan a feature using TDD. Explores the codebase, identifies affected modules, and produces a structured implementation plan with test cases. Does NOT write any code.
-disable-model-invocation: true
 context: fork
 agent: Plan
 argument-hint: "<feature description>"
 allowed-tools: Read, Grep, Glob
 ---
+
 ultrathink
 
 Plan the implementation of: $ARGUMENTS
@@ -38,6 +38,7 @@ Plan the implementation of: $ARGUMENTS
 - **PRD validation**: `scripts/validate-prd.ts`
 
 ## Constraints
+
 - You are in read-only mode. Do NOT attempt to create or edit files.
 - Follow hexagonal architecture: test through ports, fake the adapters
 - Prefer ultra-light fakes (XxxRepositoryFake, SequentialIdProvider) over mocks (ADR-0016)
