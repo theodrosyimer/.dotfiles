@@ -310,6 +310,42 @@ investigation", "production debugging pipeline", "close the observability loop".
 
 ---
 
+## N. Persona-First Session Launch
+
+**Primitives:** `--agent <name>` + subagent frontmatter (`permissionMode`, `tools`, `skills:`, `hooks:`, `mcpServers:`, `initialPrompt`, optionally `isolation: worktree`) + 🆕 v2.1.116/117 (main-thread agents now activate `hooks:` and `mcpServers:` from frontmatter)
+
+Launch Claude Code AS a specialist role, instead of dropping into generalist Claude and delegating
+to one:
+
+- `claude --agent code-reviewer -p "review the current branch"` runs the entire session under the
+  agent's contract — its system prompt IS the session, its `tools:` allowlist is the session's
+  tool surface, its `permissionMode` gates every call, its `skills:` are pre-injected, its MCP
+  servers are pre-connected, its `hooks:` are active from turn zero
+- `initialPrompt` auto-submits the first user turn (e.g. `/setup && analyze`) — ideal for CI or
+  scripted flows that should boot into a specific state
+- Guardrailed workflows set `permissionMode: plan` + tight `tools: Read, Grep, Glob` so every tool
+  call in the whole session is gated, not just calls in one delegated subagent invocation
+- Combined with `isolation: worktree`, the session runs in a dedicated worktree — safe entry point
+  for untrusted PRs, production consoles, or compliance-sensitive operations
+
+**Key insight:** Before v2.1.116/117, `--agent` only activated `system prompt + tools +
+permissionMode` on the main thread — `hooks:` and `mcpServers:` in frontmatter were silently
+ignored (subagent-only). Now the whole agent contract activates end-to-end on the main thread.
+This promotes subagents from "delegated workers" to **role-first entry points** — the CLI becomes
+a launcher for specialized Claude personas, not a generalist that delegates out.
+
+**Anti-pattern / historical caveat:** Pre-v2.1.116 users who wrote `hooks:` or `mcpServers:` in an
+agent frontmatter and launched it via `--agent` saw those fields silently no-op, then often
+concluded the fields were invalid. That bug window closed in v2.1.116 (hooks) and v2.1.117
+(mcpServers). If you have agent files written against older versions, re-audit them — fields that
+used to be dead are now live.
+
+**Trigger signals:** "review this branch in CI", "locked-down prod console", "security-only
+session", "role-first automation", "one-shot scripted specialist", "persistent guardrailed mode",
+"agent file as CI unit of deployment".
+
+---
+
 ---
 
 # Cross-Pollinations
@@ -381,6 +417,26 @@ implement independently in worktrees. Stop hooks validate both test passage AND 
 (using the tpp-reviewer agent prompt that reads tpp-rules from disk). The winning implementation
 is the one that follows TPP most faithfully while passing all tests — selection pressure for
 clean, incremental code.
+
+---
+
+## X12. Persona + Headless Review Pipeline (N + G)
+
+Pattern G (Headless Review-then-Merge) wires up `claude -p` with default-Claude as the reviewer,
+assembles MCP + hooks + review prompt per invocation, then uses `defer` for human approval before
+posting. Pattern N shifts that config into the agent file: launch the pipeline via
+`claude --agent code-reviewer -p "Review PR #123"` so the reviewer's contract (`tools:`,
+`skills: [review-checklist, security-checks]`, `permissionMode: plan`, `mcpServers: { github: ... }`,
+`hooks:` for draft validation) activates from turn zero. CI becomes a thin launcher — one line,
+no per-invocation config. The specialist agent file is the unit of deployment; updating the
+reviewer's frontmatter updates every future PR review without touching the pipeline.
+`defer` still gates the public-facing comment, so human approval remains the final gate.
+
+**Key insight:** G assumes the pipeline configures the reviewer at invocation time (prompt + MCP +
+tools assembled per run). N moves that configuration **into the agent file**, making the pipeline
+declarative. The agent file becomes the version-controlled source of truth for "how we review
+PRs," living alongside the code it reviews — changes to review policy flow through normal PR
+review, not through CI infrastructure changes.
 
 ---
 
