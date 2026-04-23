@@ -1,8 +1,3 @@
----
-description: Global Claude config lives in ~/.dotfiles/claude/, not ~/.claude/
-globs: *
----
-
 All global Claude Code configuration (skills, rules, hooks, plugins) lives in `~/.dotfiles/claude/`.
 Individual items are symlinked into `~/.claude/` (e.g., `~/.claude/skills/foo` → `~/.dotfiles/claude/skills/foo`).
 

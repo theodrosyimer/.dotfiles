@@ -1,8 +1,3 @@
----
-description: Decision tree for where to place knowledge files in a project
-globs: *
----
-
 # Knowledge Placement Decision Tree
 
 ```
