@@ -36,6 +36,7 @@ alias cs='open -b com.todesktop.230313mzl4w4u92' # Cursor
 alias cs.='cs .'
 
 alias cc='claude'
+alias ccs="CLAUDE_CONFIG_DIR=\"$HOME/.dotfiles/claude\" claude"
 alias ccdash='python3 cli.py dashboard'
 
 alias sd='fzf_code_projects'
