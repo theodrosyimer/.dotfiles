@@ -10,14 +10,23 @@ description: >
   Includes a knowledge-freshness check with official doc links for refreshing schemas.
 effort: high
 hooks:
+  PostToolUse:
+    - matcher: "Edit|Write"
+      hooks:
+        - type: command
+          if: "Edit(**/ccx-primitives/references/schemas.md)"
+          command: touch "${TMPDIR:-/tmp}/claude-${CLAUDE_SESSION_ID}-ccx-schemas-dirty"
+        - type: command
+          if: "Write(**/ccx-primitives/references/schemas.md)"
+          command: touch "${TMPDIR:-/tmp}/claude-${CLAUDE_SESSION_ID}-ccx-schemas-dirty"
   Stop:
     - hooks:
-        - type: prompt
-          prompt: >
-            schemas.md was just refreshed. Remind the user to update the
-            claude-code-schemas repo by running /schema-sync there.
-            Always include this reminder — never skip it.
-          timeout: 10
+        - type: command
+          timeout: 5
+          command: |
+            F="${TMPDIR:-/tmp}/claude-${CLAUDE_SESSION_ID}-ccx-schemas-dirty"
+            [ -f "$F" ] || exit 0
+            printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"Stop","additionalContext":"Reminder: schemas.md was refreshed this session. Sync the downstream claude-code-schemas repo by running /schema-sync there."}}'
 ---
 
 # ccx-primitives — Claude Code Schema Reference

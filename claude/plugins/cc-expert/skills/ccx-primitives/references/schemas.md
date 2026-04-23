@@ -1,7 +1,7 @@
 # Claude Code Primitive Schemas
 
 > Source: official docs (code.claude.com) + CHANGELOG.md + session-fetched docs.
-> Last manually verified: 2026-04-12 (v2.1.101).
+> Last manually verified: 2026-04-23 (v2.1.117).
 
 ---
 
@@ -33,7 +33,7 @@ allowed-tools: Read, Grep, Glob        # optional. restricts tool surface. Comma
 context: fork                          # optional. runs in isolated subagent context (own context window)
 agent: Explore                         # optional. Explore | Plan | general-purpose | <custom-agent-name>
 model: opus                            # optional. sonnet | opus | haiku | full model ID (e.g. claude-opus-4-6)
-effort: low                            # optional. low | medium | high | max (Opus 4.6 only). Overrides session effort.
+effort: low                            # optional. low | medium | high | xhigh (Opus 4.7 only, 🆕 v2.1.111) | max. Overrides session effort.
 argument-hint: "<topic>"               # optional. autocomplete hint shown after /skill-name in UI
 paths:                                 # optional. 🆕 glob patterns limiting when skill auto-activates.
   - "src/api/**/*.ts"                  #   Comma-sep string or YAML list. Same format as rule paths.
@@ -77,7 +77,7 @@ Single `.md` file only — no directories, no supporting files.
 description: "..."                     # REQUIRED. shown in / autocomplete menu
 allowed-tools: Read, Grep, Glob        # optional. same syntax as skills
 model: opus                          # optional. sonnet | opus | haiku | full model ID (e.g. claude-opus-4-6)
-effort: low                            # optional. low | medium | high | max (Opus 4.6 only). Added in v2.1.80.
+effort: low                            # optional. low | medium | high | xhigh (Opus 4.7 only, 🆕 v2.1.111) | max. Added in v2.1.80.
 ---
 ```
 
@@ -116,7 +116,7 @@ description: "..."                     # REQUIRED. model reads to decide when to
 tools: Read, Glob, Grep                # optional. comma-sep allowlist. Omit = inherits ALL tools incl. MCP
 disallowedTools: Bash                  # optional. block specific tools
 model: opus                          # optional. sonnet | opus | haiku | full model ID (e.g. claude-opus-4-6) | inherit. Default: inherit (uses parent model)
-effort: low                            # optional. low | medium | high | max (Opus 4.6 only). Overrides session effort.
+effort: low                            # optional. low | medium | high | xhigh (Opus 4.7 only, 🆕 v2.1.111) | max. Overrides session effort.
 permissionMode: default                # optional. default | acceptEdits | auto | bypassPermissions | plan | dontAsk
 maxTurns: 20                           # optional. limit agentic loop iterations
 initialPrompt: "/setup and begin"      # optional. 🆕 auto-submitted as first user turn when used as --agent or `agent` setting. Commands/skills processed.
@@ -238,7 +238,7 @@ Hooks live under the `"hooks"` key in any `settings.json` file (user, project, l
 | `SubagentStart` | `agent_type` | ❌ No |
 | 🆕 `CwdChanged` | ignored | ❌ No (`CLAUDE_ENV_FILE` available) |
 | 🆕 `FileChanged` | `filename` (basename, e.g. `.env`, `package.json`) | ❌ No (`CLAUDE_ENV_FILE` available) |
-| `PreCompact` | `trigger` (manual/auto) | ❌ No |
+| `PreCompact` | `trigger` (manual/auto) | 🆕 ✅ Yes (v2.1.105 — exit 2 or `{"decision":"block"}` blocks compaction) |
 | `PostCompact` | `trigger` (manual/auto) | ❌ No |
 | `WorktreeRemove` | ignored | ❌ No |
 | `StopFailure` | `error` (rate_limit/authentication_failed/billing_error/invalid_request/server_error/max_output_tokens/unknown) | ❌ No |
@@ -460,8 +460,10 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
   "mcpServers": "./mcp-config.json",              // default: .mcp.json
   "outputStyles": "./styles/",
   "lspServers": "./.lsp.json",
+  "monitors": "./monitors/monitors.json",         // 🆕 v2.1.105. Background monitors; auto-arm at session start or on skill invoke. Default: monitors/monitors.json
   "settings": { "agent": "security-reviewer" }   // default config applied when plugin enabled
   // 🆕 bin/ directory (v2.1.91): place executables in <plugin>/bin/ — added to Bash tool's PATH when enabled
+  // 🆕 monitors/ directory (v2.1.105): background monitor definitions referenced by the `monitors` manifest key
 }
 ```
 
@@ -506,7 +508,7 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - `context: fork` means only the summary returns to the main session — the full investigation log stays isolated
 - `allowed-tools` on a skill restricts that invocation only; it does not restrict MCP unless explicitly listed
 - 🆕 `paths` on skills works like `paths` on rules — scopes auto-activation to matching files
-- 🆕 Skill descriptions are truncated at 250 characters in the skill listing. Front-load the key use case
+- 🆕 Skill description listing cap: **1,536 characters** (raised from 250 in v2.1.105). Startup warning fires when descriptions are truncated. Front-load the key use case
 - 🆕 Description budget scales at 1% of context window (fallback 8K chars). Override with `SLASH_COMMAND_TOOL_CHAR_BUDGET`
 - 🆕 Compaction behavior: re-attached skills get first 5,000 tokens each, sharing a 25,000-token budget. Most-recently-invoked fills first; older skills can be dropped. Re-invoke after compaction to restore full content
 - 🆕 `disableSkillShellExecution` setting (v2.1.91): disables `` !`cmd` `` and ` ```! ` shell execution in user/project/plugin skills. Managed/bundled skills unaffected
@@ -712,3 +714,115 @@ A thin orchestration body that just sequences steps and delegates to subagents? 
 ### 🆕 Keybinding change (v2.1.83)
 - `Ctrl+F` (stop all agents) moved to `Ctrl+X Ctrl+K`
 - `Ctrl+X Ctrl+E` added as alias for external editor (`Ctrl+G` still works)
+
+---
+
+## 10. 🆕 Changelog additions (v2.1.102–v2.1.117)
+
+New primitive behavior and settings since v2.1.101. Grouped by surface area.
+
+### Effort levels — `xhigh` added (v2.1.111)
+- `xhigh` sits between `high` and `max`, available only on **Opus 4.7**. Other models silently fall back to `high`
+- Available via `/effort`, `--effort`, and the model picker (`/effort` now opens an interactive slider when called without arguments)
+- Auto mode is now available for Max subscribers on Opus 4.7; `--enable-auto-mode` is no longer required
+- `/effort auto` confirmation label corrected to "Effort level set to max"
+
+### Default effort — Pro/Max on Opus 4.6 & Sonnet 4.6 (v2.1.117)
+- Default effort is now `high` (was `medium`) for Pro/Max subscribers on Opus 4.6 and Sonnet 4.6
+- Baseline already noted API-key, Bedrock/Vertex/Foundry, Team, and Enterprise defaults changed to `high` in v2.1.94 — this extends it to Pro/Max
+
+### Plugins — new `monitors` manifest key (v2.1.105)
+- Top-level `monitors` path in `plugin.json` points at a JSON file (default: `monitors/monitors.json`)
+- Background monitors auto-arm at session start or on skill invoke
+- `/plugin` install flow now distinguishes conflicting / invalid / overly-complex version requirements (v2.1.111)
+- `plugin install` on an already-installed plugin now installs any missing dependencies (v2.1.117)
+- Marketplace `add` auto-resolves missing dependencies from configured marketplaces (v2.1.117)
+- `blockedMarketplaces` and `strictKnownMarketplaces` managed settings are now enforced on install/update/refresh/autoupdate (v2.1.117)
+
+### Hook events — PreCompact is now BLOCKING (v2.1.105)
+- Previously non-blocking. Now: exit 2 OR `{"decision":"block"}` aborts compaction
+- Existing PreCompact hooks should audit their exit codes to avoid accidentally blocking
+
+### Hook fixes — PermissionRequest (v2.1.110)
+- `updatedInput` returned from a PermissionRequest hook is now re-checked against `permissions.deny` rules (previously bypassed them)
+- `setMode: 'bypassPermissions'` updates now respect the `disableBypassPermissionsMode` setting (previously ignored it)
+- PreToolUse hook `additionalContext` is no longer dropped when the tool call fails
+
+### Subagent frontmatter — `hooks` + `mcpServers` on main-thread `--agent`
+- v2.1.116: Subagent frontmatter `hooks:` now fire when running as a main-thread agent via `--agent` (previously only fired as a true subagent)
+- v2.1.117: Subagent frontmatter `mcpServers:` are now loaded for main-thread agent sessions via `--agent`
+- Practical impact: agents designed to run as the main thread can now carry their own hooks and MCP servers, not just their system prompt
+
+### Skill fixes (v2.1.110)
+- Skills with `disable-model-invocation: true` no longer fail when invoked via `/<skill>` mid-message (regression fix)
+
+### Settings — `sandbox.network.deniedDomains` (v2.1.113)
+- Block specific domains even when a broader `allowedDomains` wildcard would otherwise permit them
+- Useful for carving exceptions out of permissive network allowlists
+
+### Bash permission rules — hardened (v2.1.113, v2.1.116)
+- `Bash(find:*)` allow rules **no longer auto-approve** `find -exec` or `find -delete` — write explicit rules if you need them
+- Bash deny rules now match commands wrapped in `env`, `sudo`, `watch`, `ionice`, `setsid`, and similar exec wrappers (previously bypassable)
+- macOS: `/private/{etc,var,tmp,home}` paths are treated as dangerous removal targets under `Bash(rm:*)` allow rules
+- v2.1.116: sandbox auto-allow no longer bypasses dangerous-path safety checks for `rm`/`rmdir` targeting `/`, `$HOME`, or other critical system directories
+- v2.1.113: `Bash(dangerouslyDisableSandbox)` no longer runs commands outside the sandbox without a permission prompt (security fix)
+- Read-only bash commands with glob patterns (e.g. `ls *.ts`) and commands starting with `cd <project-dir> &&` no longer trigger permission prompts (v2.1.111)
+
+### Bash tool — enforced timeout cap (v2.1.110)
+- Bash tool now enforces the documented maximum timeout instead of accepting arbitrarily large values
+
+### Tools — native builds replace Glob/Grep (v2.1.117, macOS/Linux native builds only)
+- On native macOS/Linux builds, the `Glob` and `Grep` tools are replaced by embedded `bfs` and `ugrep` available through the Bash tool
+- Windows and npm-installed builds unchanged — `Glob`/`Grep` still present
+- Faster searches (no separate tool round-trip)
+
+### New CLI commands, tools, and aliases
+| Command / Tool | Since | Notes |
+|---|---|---|
+| `/tui` + `tui` setting | v2.1.110 | `/tui fullscreen` switches to flicker-free rendering mid-conversation |
+| `/focus` | v2.1.110 | Focus-view toggle (split from `Ctrl+O`, which is now verbose-transcript only) |
+| `autoScrollEnabled` config | v2.1.110 | Disable conversation auto-scroll in fullscreen mode |
+| Push notification tool | v2.1.110 | Claude can send mobile push notifications when Remote Control + "Push when Claude decides" enabled |
+| `/recap` + recap feature | v2.1.108 | Session context summary on return; configurable in `/config` |
+| `/undo` | v2.1.108 | Alias for `/rewind` |
+| `/proactive` | v2.1.105 | Alias for `/loop` |
+| `/less-permission-prompts` skill | v2.1.111 | Scans transcripts for common read-only Bash/MCP calls → prioritized allowlist proposal for `.claude/settings.json` |
+| `/ultrareview` | v2.1.111 | Cloud multi-agent code review; no-arg reviews current branch, `<PR#>` reviews a GitHub PR |
+| `EnterWorktree` `path` param | v2.1.105 | Switch into an existing worktree of the current repo |
+
+### Environment variables — new in v2.1.102–v2.1.117
+| Variable | Since | Purpose |
+|---|---|---|
+| `ENABLE_PROMPT_CACHING_1H` | v2.1.108 | Opt into 1-hour prompt cache TTL on API key, Bedrock, Vertex, Foundry (supersedes `ENABLE_PROMPT_CACHING_1H_BEDROCK`) |
+| `FORCE_PROMPT_CACHING_5M` | v2.1.108 | Force 5-minute prompt cache TTL |
+| `CLAUDE_CODE_ENABLE_AWAY_SUMMARY` | v2.1.108 | Set `=0` to disable session recap auto-memory; enables recap for telemetry-disabled subscribers |
+| `OTEL_LOG_RAW_API_BODIES` | v2.1.111 | Emit full API request/response bodies as OpenTelemetry log events |
+| `OTEL_LOG_TOOL_DETAILS` | v2.1.117 | `=1` un-redacts custom/MCP command names in OTel `user_prompt` events |
+| `CLAUDE_CODE_USE_POWERSHELL_TOOL` | v2.1.111 | Opt in/out of PowerShell tool rollout (Windows default-on progressive, Linux/macOS opt-in requires `pwsh` on PATH) |
+| `CLAUDE_CODE_FORK_SUBAGENT` | v2.1.117 | Enable forked subagents on external builds |
+| `TRACEPARENT` / `TRACESTATE` | v2.1.110 | SDK/headless sessions read these for distributed trace linking |
+
+### OpenTelemetry attribute additions (v2.1.117)
+- `user_prompt` events now include `command_name` and `command_source` for slash commands
+- `cost.usage`, `token.usage`, `api_request`, `api_error` events now include an `effort` attribute when the model supports effort levels
+- Custom/MCP command names are redacted unless `OTEL_LOG_TOOL_DETAILS=1`
+
+### Miscellaneous skill/hook fixes
+- Plan files now named after the prompt (e.g. `fix-auth-race-snug-otter.md`) instead of random words (v2.1.111)
+- `/skills` menu supports sorting by estimated token count — press `t` to toggle (v2.1.111)
+- Built-in slash commands (`/init`, `/review`, `/security-review`) are now discoverable/invocable by the model via the Skill tool (v2.1.108)
+- `/reload-plugins` and background plugin auto-update auto-install missing dependencies from added marketplaces (v2.1.116)
+- `Ctrl+O` now toggles between normal and verbose transcript only (focus view split to `/focus`) (v2.1.110)
+- Windows: `CLAUDE_ENV_FILE` and `SessionStart` hook environment files now apply (previously a no-op) (v2.1.111)
+- Windows: permission rules with drive-letter paths are now correctly root-anchored; case-insensitive drive-letter matching (v2.1.111)
+
+### Items investigated and NOT in the changelog (conservative rejections, 2026-04-23)
+The following were surfaced by doc-scan subagents but are NOT confirmed by the upstream CHANGELOG.md and are therefore not added to the schema:
+
+- Skill `when_to_use` frontmatter field — not in changelog, likely doc-page speculation
+- `UserPromptExpansion` hook event — not in changelog
+- Plugin manifest `userConfig` field with `sensitive: true` — not in changelog
+- Auto-memory 25 KB truncation limit — not in changelog (line-count caps are documented, byte-count cap is not)
+- `claudeMdExcludes` setting — not in changelog
+
+If any of these later land in a release, promote them out of this list.
