@@ -29,9 +29,8 @@ my-turborepo/
 │   └── docs/                   # Documentation site (optional)
 ├── packages/
 │   ├── ui/                     # Shared UI components
-│   ├── domain/                 # Domain models & business logic
-│   ├── infrastructure/         # Infrastructure adapters (fakes & real)
-│   ├── shared/                 # Shared utilities
+│   ├── modules/                # Bounded contexts (e.g. booking, user)
+│   ├── design-system/          # Design system
 │   └── config/                 # Shared configurations
 ├── tools/
 │   ├── eslint-config/          # Custom ESLint configs
@@ -86,9 +85,9 @@ my-turborepo/
 
 ```yaml
 packages:
-  - 'apps/*'
-  - 'packages/*'
-  - 'tools/*'
+  - "apps/*"
+  - "packages/*"
+  - "tools/*"
 ```
 
 ### Root package.json with Catalog
