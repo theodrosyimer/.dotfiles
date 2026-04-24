@@ -157,4 +157,4 @@ typings/
 # Claude Code
 .claude.json
 
-.claude/.settings.local.json
+**/.claude/.settings.local.json
