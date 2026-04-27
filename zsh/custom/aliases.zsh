@@ -66,7 +66,8 @@ alias ghc='gh repo clone "$(chrome_get_front_window_url)"' # Clone a GitHub repo
 alias inpq="command npm i -g npq"
 alias pnpm="NPQ_PKG_MGR=pnpm npq-hero"
 alias usep='corepack use pnpm'
-alias pup=' pnpm self-update'
+alias pu='pnpm update'
+alias psu='pnpm self-update'
 alias p='pnpm'
 alias pi='pnpm install'
 alias pif='pnpm install --frozen-lockfile'
