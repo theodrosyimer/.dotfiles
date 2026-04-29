@@ -99,7 +99,8 @@
     "ccx@ty": true,
     "skill-lab@ty": true,
     "typescript-lsp@claude-plugins-official": true,
-    "expo@expo-plugins": true
+    "expo@expo-plugins": true,
+    "expo@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "ty": {
@@ -117,5 +118,9 @@
   },
   "effortLevel": "high",
   "autoDreamEnabled": true,
-  "voiceEnabled": true
+  "editorMode": "vim",
+  "remoteControlAtStartup": true,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true,
+  "model": "claude-opus-4-6[1M]"
 }
