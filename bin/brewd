@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
 
 # Need to set HOMEBREW_BUNDLE_FILE_GLOBAL before running this script.
+[ -z "$HOMEBREW_BUNDLE_FILE_GLOBAL" ] && echo "HOMEBREW_BUNDLE_FILE_GLOBAL not set" >&2 && return 1
 brew bundle dump --global --force --describe &&
 cat "$HOMEBREW_BUNDLE_FILE_GLOBAL"
