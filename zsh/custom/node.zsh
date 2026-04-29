@@ -148,11 +148,11 @@ function nodelts_to_nvmrc() {
 function nclean() {
   rm -rf node_modules
   npm cache clean --force
-  npm install
+  npm ci
 }
 
 function pclean() {
   rm -rf node_modules
   npm cache clean --force
-  pnpm install
+  pnpm install --frozen-lockfile
 }
