@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "ccx",
   "version": "0.1.0",
   "description": "Claude Code tooling: schema reference, automation architect, context optimizer, and full setup wizard.",
