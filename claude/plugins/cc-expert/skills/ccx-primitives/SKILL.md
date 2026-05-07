@@ -168,6 +168,17 @@ Present findings as a prioritized list:
 - 🟡 **Upgrades** — new features from changelog that could improve this file
 - 🔵 **Suggestions** — anti-patterns or style improvements
 
+### 2e — Update documentation links
+
+After reading the changelog (2b) and fetching docs (2a), check for new documentation pages or
+anchor sections:
+
+1. Scan changelog entries for any new `code.claude.com/docs/en/*` URLs or mentions of new doc pages
+2. Check if fetched doc pages in 2a revealed new anchor sections not yet in `cc-documentation.md`
+3. Add any new links to `references/cc-documentation.md` — both anchor-specific links (section 1–3)
+   and full-page links (sections 4–7)
+4. This keeps the doc link registry growing as Claude Code adds new primitives or restructures docs
+
 ### 2d — Finalize
 
 Parse the latest version from the top of the changelog slice (first line matching `^## X.Y.Z`).

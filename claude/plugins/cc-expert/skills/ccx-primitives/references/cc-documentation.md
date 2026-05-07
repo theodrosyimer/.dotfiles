@@ -10,6 +10,7 @@
 ### Skill frontmatter
 
 - [Skill frontmatter reference](https://code.claude.com/docs/en/skills#frontmatter-reference)
+- [Available string substitutions](https://code.claude.com/docs/en/skills#available-string-substitutions)
 - [Control who invokes a skill](https://code.claude.com/docs/en/skills#control-who-invokes-a-skill)
 - [Skill content lifecycle](https://code.claude.com/docs/en/skills#skill-content-lifecycle)
 - [Inject dynamic context](https://code.claude.com/docs/en/skills#inject-dynamic-context)
@@ -17,6 +18,9 @@
 - [Pre-approve tools for a skill](https://code.claude.com/docs/en/skills#pre-approve-tools-for-a-skill)
 - [Pass arguments to skills](https://code.claude.com/docs/en/skills#pass-arguments-to-skills)
 - [Add supporting files](https://code.claude.com/docs/en/skills#add-supporting-files)
+- [Override skill visibility from settings](https://code.claude.com/docs/en/skills#override-skill-visibility-from-settings)
+- [Restrict Claude's skill access](https://code.claude.com/docs/en/skills#restrict-claudes-skill-access)
+- [Generate visual output](https://code.claude.com/docs/en/skills#generate-visual-output)
 
 ### Agent (subagent) frontmatter
 
@@ -41,8 +45,11 @@
 
 - [Hooks reference](https://code.claude.com/docs/en/hooks)
 - [Hooks guide](https://code.claude.com/docs/en/hooks-guide)
+- [Hook events table](https://code.claude.com/docs/en/hooks#hook-events)
+- [Handler types](https://code.claude.com/docs/en/hooks#handler-types)
+- [MCP tool hooks](https://code.claude.com/docs/en/hooks#mcp-tool-hooks)
 - [Hooks in skills and agents](https://code.claude.com/docs/en/hooks#hooks-in-skills-and-agents)
-  (to the end of the page)
+- [Hook response formats](https://code.claude.com/docs/en/hooks#hook-response-formats)
 
 ### Output style frontmatter
 
@@ -55,7 +62,15 @@
 ### Plugin manifest (plugin.json)
 
 - [Plugin manifest schema](https://code.claude.com/docs/en/plugins-reference#plugin-manifest-schema)
+- [Complete schema](https://code.claude.com/docs/en/plugins-reference#complete-schema)
+- [Component path fields](https://code.claude.com/docs/en/plugins-reference#component-path-fields)
+- [User configuration](https://code.claude.com/docs/en/plugins-reference#user-configuration)
+- [Channels](https://code.claude.com/docs/en/plugins-reference#channels)
+- [Monitors](https://code.claude.com/docs/en/plugins-reference#monitors)
+- [Themes](https://code.claude.com/docs/en/plugins-reference#themes)
+- [Experimental components](https://code.claude.com/docs/en/plugins-reference#experimental-components)
 - [Plugin directory structure](https://code.claude.com/docs/en/plugins-reference#plugin-directory-structure)
+- [Environment variables](https://code.claude.com/docs/en/plugins-reference#environment-variables)
 - [LSP servers](https://code.claude.com/docs/en/plugins-reference#lsp-servers)
 - [Version management](https://code.claude.com/docs/en/plugins-reference#version-management)
 
@@ -144,6 +159,9 @@
 - [Scheduled tasks](https://code.claude.com/docs/en/scheduled-tasks)
 - [Channels](https://code.claude.com/docs/en/channels)
 - [Channels reference](https://code.claude.com/docs/en/channels-reference)
+- [Plugin dependencies](https://code.claude.com/docs/en/plugin-dependencies)
+- [Debug your config](https://code.claude.com/docs/en/debug-your-config)
+- [Worktrees](https://code.claude.com/docs/en/worktrees)
 
 ---
 

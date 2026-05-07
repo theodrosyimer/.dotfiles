@@ -1,7 +1,7 @@
 # Claude Code Primitive Schemas
 
 > Source: official docs (code.claude.com) + CHANGELOG.md + session-fetched docs.
-> Last manually verified: 2026-04-23 (v2.1.117).
+> Last manually verified: 2026-05-07 (v2.1.132).
 
 ---
 
@@ -27,6 +27,8 @@
 ---
 name: my-skill                         # optional. lowercase + hyphens, max 64 chars → becomes /my-skill. Defaults to directory name if omitted.
 description: "..."                     # recommended. max 1024 chars — primary model discovery mechanism. Falls back to first paragraph if omitted.
+when_to_use: "..."                     # optional. 🆕 v2.1.118+. Additional trigger context appended to description. Combined text capped at 1,536 chars.
+arguments: issue branch                # optional. 🆕 v2.1.118+. Named positional args for $name substitution. Space-sep string or YAML list.
 disable-model-invocation: true         # optional. default false. true = only user can invoke via /name
 user-invocable: false                  # optional. default true. false = only model can invoke
 allowed-tools: Read, Grep, Glob        # optional. restricts tool surface. Comma-sep or YAML list.
@@ -35,9 +37,9 @@ agent: Explore                         # optional. Explore | Plan | general-purp
 model: opus                            # optional. sonnet | opus | haiku | full model ID (e.g. claude-opus-4-6)
 effort: low                            # optional. low | medium | high | xhigh (Opus 4.7 only, 🆕 v2.1.111) | max. Overrides session effort.
 argument-hint: "<topic>"               # optional. autocomplete hint shown after /skill-name in UI
-paths:                                 # optional. 🆕 glob patterns limiting when skill auto-activates.
+paths:                                 # optional. glob patterns limiting when skill auto-activates.
   - "src/api/**/*.ts"                  #   Comma-sep string or YAML list. Same format as rule paths.
-shell: bash                            # optional. 🆕 bash (default) | powershell. Shell for !`cmd` blocks.
+shell: bash                            # optional. bash (default) | powershell. Shell for !`cmd` blocks.
 hooks:                                 # optional. scoped to skill lifecycle, auto-cleaned when done
   PreToolUse:
     - matcher: "Bash"
@@ -54,7 +56,9 @@ hooks:                                 # optional. scoped to skill lifecycle, au
 | `$ARGUMENTS` | Everything typed after `/skill-name` |
 | `$ARGUMENTS[N]` | Access a specific argument by 0-based index |
 | `$N` | Shorthand for `$ARGUMENTS[N]` (`$0` = first arg, `$1` = second) |
+| `$name` | 🆕 Named argument declared in `arguments` frontmatter list. Maps to positions in order |
 | `${CLAUDE_SESSION_ID}` | Current session ID |
+| `${CLAUDE_EFFORT}` | 🆕 Current effort level: `low`, `medium`, `high`, `xhigh`, or `max` |
 | `${CLAUDE_SKILL_DIR}` | Directory containing the skill's SKILL.md. For plugin skills, this is the skill subdirectory, not the plugin root. |
 
 **Special content prefixes** (in skill body):
@@ -212,15 +216,18 @@ Hooks live under the `"hooks"` key in any `settings.json` file (user, project, l
 }
 ```
 
-### All 25 hook events
+### All 28 hook events
 
 | Event | Matcher field | Blocks? |
 |---|---|---|
+| 🆕 `Setup` | `init`, `maintenance` | ❌ No (v2.1.118+ — `--init-only` or `-p --init/--maintenance`). Supports command, mcp_tool only. |
+| `UserPromptSubmit` | ignored | ✅ Yes |
+| 🆕 `UserPromptExpansion` | `command_name` | ✅ Yes (fires when slash command expands before reaching Claude) |
 | `PreToolUse` | `tool_name` | ✅ Yes |
 | `PostToolUse` | `tool_name` | ❌ No (feedback only — `additionalContext`, `updatedMCPToolOutput`) |
 | `PostToolUseFailure` | `tool_name` | ❌ No (feedback only — `additionalContext`) |
+| 🆕 `PostToolBatch` | ignored | ✅ Yes (exit 2 stops loop before next model call) |
 | `PermissionRequest` | `tool_name` | ✅ Yes |
-| `UserPromptSubmit` | ignored | ✅ Yes |
 | `Stop` | ignored | ✅ Yes (block = force continue) |
 | `SubagentStop` | `agent_type` | ✅ Yes |
 | `TaskCreated` | ignored | 🆕 ✅ Yes (exit 2 = rolls back task creation) |
@@ -228,28 +235,28 @@ Hooks live under the `"hooks"` key in any `settings.json` file (user, project, l
 | `TeammateIdle` | ignored | ✅ Yes (exit 2 = send feedback) |
 | `ConfigChange` | `source` (user_settings/project_settings/local_settings/policy_settings/skills) | ✅ Yes (except policy) |
 | `WorktreeCreate` | ignored | ✅ Yes (non-zero = fail) |
-| `Elicitation` | ignored | ✅ Yes (exit 2 or `action: "decline"`) |
-| `ElicitationResult` | ignored | ✅ Yes (exit 2 or `action: "decline"`) |
+| `Elicitation` | 🆕 `mcp_server_name` | ✅ Yes (exit 2 or `action: "decline"`) |
+| `ElicitationResult` | 🆕 `mcp_server_name` | ✅ Yes (exit 2 or `action: "decline"`) |
 | `PermissionDenied` | `tool_name` | 🆕 ❌ No (return `{retry: true}` to retry) |
 | `SessionStart` | `source` (startup/resume/clear/compact) | ❌ No |
 | `SessionEnd` | `reason` (clear/resume/logout/prompt_input_exit/bypass_permissions_disabled/other) | ❌ No |
 | `InstructionsLoaded` | 🆕 `load_reason` (session_start/nested_traversal/path_glob_match/include/compact) | ❌ No (observability only) |
-| `Notification` | `notification_type` (permission_prompt/idle_prompt/auth_success/elicitation_dialog) | ❌ No |
+| `Notification` | `notification_type` (permission_prompt/idle_prompt/auth_success/elicitation_dialog/🆕 elicitation_complete/elicitation_response) | ❌ No |
 | `SubagentStart` | `agent_type` | ❌ No |
 | 🆕 `CwdChanged` | ignored | ❌ No (`CLAUDE_ENV_FILE` available) |
 | 🆕 `FileChanged` | `filename` (basename, e.g. `.env`, `package.json`) | ❌ No (`CLAUDE_ENV_FILE` available) |
 | `PreCompact` | `trigger` (manual/auto) | 🆕 ✅ Yes (v2.1.105 — exit 2 or `{"decision":"block"}` blocks compaction) |
 | `PostCompact` | `trigger` (manual/auto) | ❌ No |
 | `WorktreeRemove` | ignored | ❌ No |
-| `StopFailure` | `error` (rate_limit/authentication_failed/billing_error/invalid_request/server_error/max_output_tokens/unknown) | ❌ No |
+| `StopFailure` | `error` (rate_limit/authentication_failed/🆕 oauth_org_not_allowed/billing_error/invalid_request/server_error/max_output_tokens/unknown) | ❌ No |
 
-### 4 handler types
+### 5 handler types
 
 **Common fields on all handlers:**
 
 | Field | Description |
 |---|---|
-| `type` | **Required.** `"command"` \| `"http"` \| `"prompt"` \| `"agent"` |
+| `type` | **Required.** `"command"` \| `"http"` \| 🆕 `"mcp_tool"` \| `"prompt"` \| `"agent"` |
 | `if` | 🆕 Optional. Permission rule syntax for conditional filtering (e.g. `"Bash(git *)"`, `"Edit(*.ts)"`). More granular than `matcher`. |
 | `timeout` | Seconds before cancellation (defaults vary by type) |
 | `statusMessage` | Custom spinner text shown while running |
@@ -263,7 +270,8 @@ Hooks live under the `"hooks"` key in any `settings.json` file (user, project, l
   "command": "./scripts/lint.sh",    // REQUIRED. Receives event JSON on stdin.
   "timeout": 30,                     // default: 600s
   "async": false,                    // optional. Run in background, non-blocking. Command-type only.
-  "shell": "bash"                    // 🆕 optional. "bash" (default) | "powershell". Command-type only.
+  "asyncRewake": false,              // 🆕 optional. Background run; exit code 2 wakes Claude. Command-type only.
+  "shell": "bash"                    // optional. "bash" (default) | "powershell". Command-type only.
 }
 ```
 
@@ -283,6 +291,22 @@ Exit codes: **0** = allow (stdout parsed as JSON), **2** = block (stderr → Cla
 
 Non-2xx = non-blocking. To block: return 2xx with `{"decision": "block"}`.
 Not supported for `SessionStart` events.
+
+#### 🆕 `type: "mcp_tool"`
+
+```jsonc
+{
+  "type": "mcp_tool",
+  "server": "my_server",                   // REQUIRED. Configured MCP server name.
+  "tool": "security_scan",                 // REQUIRED. Tool name on the server.
+  "input": {                               // optional. Arguments with ${path} substitution.
+    "file_path": "${tool_input.file_path}"
+  },
+  "timeout": 60                            // default: 60s
+}
+```
+
+Calls a tool on a configured MCP server. Available after server connects.
 
 #### `type: "prompt"`
 
@@ -377,7 +401,23 @@ Top-level `decision`/`reason` deprecated for PreToolUse. Old `"approve"`→`"all
 { "decision": "block", "reason": "...", "hookSpecificOutput": { "additionalContext": "...", "sessionTitle": "..." } }
 ```
 
-🆕 `sessionTitle` (v2.1.94): Sets the session title from a `UserPromptSubmit` hook. Useful for auto-titling sessions based on hook logic.
+`sessionTitle` (v2.1.94): Sets the session title from a `UserPromptSubmit` hook. Useful for auto-titling sessions based on hook logic.
+
+#### 🆕 UserPromptExpansion — top-level `decision`
+
+```jsonc
+{ "decision": "block", "reason": "Command not available", "hookSpecificOutput": { "hookEventName": "UserPromptExpansion", "additionalContext": "..." } }
+```
+
+Fires when a slash command expands. Matcher: `command_name`. Block to prevent the expansion.
+
+#### 🆕 PostToolBatch — top-level `decision`
+
+```jsonc
+{ "decision": "block", "reason": "Test suite failed", "hookSpecificOutput": { "hookEventName": "PostToolBatch", "additionalContext": "..." } }
+```
+
+Fires after a full batch of parallel tool calls resolves, before the next model call. Exit 2 stops the loop.
 
 ```jsonc
 // non-blocking example — just set a title without blocking
@@ -412,11 +452,12 @@ Top-level `decision`/`reason` deprecated for PreToolUse. Old `"approve"`→`"all
 | `CLAUDE_PROJECT_DIR` | All hooks |
 | `CLAUDE_SESSION_ID` | All hooks (v2.1.9+) |
 | `CLAUDE_CODE_REMOTE` | All hooks (`"true"` in remote web environments) |
-| `CLAUDE_ENV_FILE` | `SessionStart`, `CwdChanged`, `FileChanged` — write `export VAR=value` lines to persist vars |
+| `CLAUDE_ENV_FILE` | `SessionStart`, `Setup`, `CwdChanged`, `FileChanged` — write `export VAR=value` lines to persist vars |
 | `CLAUDE_PLUGIN_ROOT` | Plugin hooks only |
 | `CLAUDE_PLUGIN_DATA` | Plugin hooks only — persistent state dir that survives plugin updates |
-| 🆕 `CLAUDE_CODE_MCP_SERVER_NAME` | MCP-related hook contexts |
-| 🆕 `CLAUDE_CODE_MCP_SERVER_URL` | MCP-related hook contexts |
+| `CLAUDE_CODE_MCP_SERVER_NAME` | MCP-related hook contexts |
+| `CLAUDE_CODE_MCP_SERVER_URL` | MCP-related hook contexts |
+| 🆕 `CLAUDE_CODE_SESSION_ID` | Bash tool subprocess environment (v2.1.132) — matches `session_id` passed to hooks |
 
 ---
 
@@ -445,8 +486,9 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 
 ```jsonc
 {
-  "name": "my-plugin",           // REQUIRED. Becomes namespace prefix (skills → /my-plugin:skill-name)
-  "version": "1.2.0",            // REQUIRED. Semantic version for marketplace updates.
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",  // 🆕 optional. Editor validation.
+  "name": "my-plugin",           // REQUIRED. Becomes namespace prefix (skills → /my-plugin:skill-name). Only required field.
+  "version": "1.2.0",            // optional. Semantic version; pins updates. Falls back to git SHA if omitted.
   "description": "...",
   "author": { "name": "...", "email": "...", "url": "..." },
   "homepage": "...",
@@ -454,16 +496,33 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
   "license": "MIT",
   "keywords": ["..."],
   "commands": ["./custom/commands/special.md"],  // default: commands/
-  "agents": "./custom/agents/",                   // default: agents/
+  "agents": ["./custom/agents/reviewer.md"],     // default: agents/
   "skills": "./custom/skills/",                   // default: skills/
   "hooks": "./config/hooks.json",                 // default: hooks/hooks.json
   "mcpServers": "./mcp-config.json",              // default: .mcp.json
   "outputStyles": "./styles/",
   "lspServers": "./.lsp.json",
-  "monitors": "./monitors/monitors.json",         // 🆕 v2.1.105. Background monitors; auto-arm at session start or on skill invoke. Default: monitors/monitors.json
-  "settings": { "agent": "security-reviewer" }   // default config applied when plugin enabled
-  // 🆕 bin/ directory (v2.1.91): place executables in <plugin>/bin/ — added to Bash tool's PATH when enabled
-  // 🆕 monitors/ directory (v2.1.105): background monitor definitions referenced by the `monitors` manifest key
+  "settings": { "agent": "security-reviewer" },  // default config applied when plugin enabled
+  "experimental": {                               // 🆕 v2.1.118+. Wraps stabilizing components.
+    "monitors": "./monitors.json",                //   Background monitors; auto-arm at session start or on skill invoke.
+    "themes": "./themes/"                         //   Color themes shown in /theme.
+  },
+  "userConfig": {                                 // 🆕 v2.1.118+. Values prompted at enable time.
+    "api_token": {
+      "type": "string",                           //   string | number | boolean | directory | file
+      "title": "API token",
+      "description": "Authentication token",
+      "sensitive": true                           //   masks input, stores in secure storage
+    }
+  },
+  "channels": [                                   // 🆕 v2.1.118+. Message channels binding to MCP servers.
+    { "server": "telegram", "userConfig": { "bot_token": { "type": "string", "title": "Token", "description": "Bot token", "sensitive": true } } }
+  ],
+  "dependencies": [                               // 🆕 v2.1.118+. Other plugins this plugin requires.
+    "helper-lib",
+    { "name": "secrets-vault", "version": "~2.1.0" }
+  ]
+  // bin/ directory (v2.1.91): place executables in <plugin>/bin/ — added to Bash tool's PATH when enabled
 }
 ```
 
@@ -477,6 +536,8 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 |---|---|---|---|---|---|
 | `name` field | optional (defaults to dir name) | ❌ (filename) | ✅ required | ❌ invalid | — |
 | `description` field | recommended (falls back to first paragraph) | ✅ required | ✅ required | ❌ invalid | — |
+| 🆕 `when_to_use` field | ✅ (appended to description) | ❌ | ❌ | ❌ | — |
+| 🆕 `arguments` field | ✅ (named positional args) | ❌ | ❌ | ❌ | — |
 | `model` field | ✅ | ✅ | ✅ | ❌ | ✅ (prompt/agent types) |
 | 🆕 `effort` field | ✅ | ✅ | ✅ | ❌ | — |
 | `allowed-tools` / `tools` | ✅ | ✅ | ✅ | ❌ | — |
@@ -507,11 +568,13 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - `disable-model-invocation: true` is **mandatory** for anything with side effects (deploy, send, delete)
 - `context: fork` means only the summary returns to the main session — the full investigation log stays isolated
 - `allowed-tools` on a skill restricts that invocation only; it does not restrict MCP unless explicitly listed
-- 🆕 `paths` on skills works like `paths` on rules — scopes auto-activation to matching files
-- 🆕 Skill description listing cap: **1,536 characters** (raised from 250 in v2.1.105). Startup warning fires when descriptions are truncated. Front-load the key use case
-- 🆕 Description budget scales at 1% of context window (fallback 8K chars). Override with `SLASH_COMMAND_TOOL_CHAR_BUDGET`
-- 🆕 Compaction behavior: re-attached skills get first 5,000 tokens each, sharing a 25,000-token budget. Most-recently-invoked fills first; older skills can be dropped. Re-invoke after compaction to restore full content
-- 🆕 `disableSkillShellExecution` setting (v2.1.91): disables `` !`cmd` `` and ` ```! ` shell execution in user/project/plugin skills. Managed/bundled skills unaffected
+- `paths` on skills works like `paths` on rules — scopes auto-activation to matching files
+- Skill description listing cap: **1,536 characters**. `description` + `when_to_use` combined text is capped. Front-load the key use case
+- Description budget scales at 1% of context window (fallback 8K chars). Override with `SLASH_COMMAND_TOOL_CHAR_BUDGET`
+- Compaction behavior: re-attached skills get first 5,000 tokens each, sharing a 25,000-token budget. Most-recently-invoked fills first; older skills can be dropped. Re-invoke after compaction to restore full content
+- `disableSkillShellExecution` setting (v2.1.91): disables `` !`cmd` `` and ` ```! ` shell execution in user/project/plugin skills. Managed/bundled skills unaffected
+- 🆕 `when_to_use` is appended to `description` for the model listing — they share the 1,536-char cap. Use `description` for what; `when_to_use` for trigger phrases
+- 🆕 `arguments` names map to positions in order: `arguments: [issue, branch]` → `$issue` = first arg, `$branch` = second. Multi-word args need shell-style quoting
 
 ### Subagents
 - Omitting `tools` gives the subagent **all tools including MCP** — always be explicit
@@ -539,11 +602,12 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - **Universal fields** (all events): `continue: false` stops Claude entirely, `stopReason`, `suppressOutput`, `systemMessage`
 
 ### Hooks — handler type restrictions
-- **`SessionStart`**: only `type: "command"` supported — no http, prompt, or agent
+- **`SessionStart`**: 🆕 supports `type: "command"` and `type: "mcp_tool"` — no http, prompt, or agent
+- **`Setup`**: 🆕 supports `type: "command"` and `type: "mcp_tool"` only
 - **`StopFailure`**: output and exit code ignored entirely
 - **`InstructionsLoaded`**: no decision control — observability only, runs asynchronously
-- **`Notification`, `SubagentStart`, `CwdChanged`, `FileChanged`, `PreCompact`, `PostCompact`, `SessionEnd`, `WorktreeRemove`**: cannot block
-- `async: true` is **command-type only** — not supported on http, prompt, or agent handlers
+- **`Notification`, `SubagentStart`, `CwdChanged`, `FileChanged`, `PostCompact`, `SessionEnd`, `WorktreeRemove`**: cannot block
+- `async: true` and `asyncRewake: true` are **command-type only** — not supported on http, mcp_tool, prompt, or agent handlers
 - ⚠️ `type: "agent"` errors on `PostToolUse` events (v2.1.89) — use `type: "prompt"` instead. `type: "agent"` works on `Stop` and `PreToolUse`. Re-test after upgrades.
 
 ### Hooks — execution behavior
@@ -553,7 +617,7 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - `Stop` hook: always check `stop_hook_active` field — if true, approve unconditionally to avoid infinite loop
 - `Stop` and `SubagentStop` hooks receive `last_assistant_message` field
 - `"defer"` only works when Claude makes a **single tool call** in the turn — ignored with warning if multiple
-- `CLAUDE_ENV_FILE` available in `SessionStart`, `CwdChanged`, and `FileChanged` only
+- `CLAUDE_ENV_FILE` available in `SessionStart`, `Setup`, `CwdChanged`, and `FileChanged` only
 - `PermissionDenied` only fires in **auto mode** — not on manual deny, PreToolUse block, or deny rule match
 - 🆕 `UserPromptSubmit` hooks can set `sessionTitle` in `hookSpecificOutput` (v2.1.94) — useful for auto-titling sessions
 - 🆕 `InstructionsLoaded` now has matcher support via `load_reason` field (session_start/nested_traversal/path_glob_match/include/compact)
@@ -564,7 +628,7 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - `if` field: one pattern per handler, no OR syntax. Use separate handlers for multiple patterns.
 - `if` condition filtering handles compound commands (`ls && git push`) and env-prefixed commands (`FOO=bar git push`)
 - `once` field: **skills only**, not agents
-- `matcher`: regex against event-specific field. Events without matcher support (`UserPromptSubmit`, `Stop`, `TeammateIdle`, `TaskCreated`, `TaskCompleted`, `WorktreeCreate`, `WorktreeRemove`, `CwdChanged`) — always fire.
+- `matcher`: regex against event-specific field. Events without matcher support (`UserPromptSubmit`, `PostToolBatch`, `Stop`, `TeammateIdle`, `TaskCreated`, `TaskCompleted`, `WorktreeCreate`, `WorktreeRemove`, `CwdChanged`) — always fire.
 - `$CLAUDE_PROJECT_DIR` expands in `type: "command"` commands but NOT in `type: "prompt"`/`type: "agent"` prompts (those are LLM text, not shell). Use relative paths in prompt/agent hooks.
 - PreToolUse/PostToolUse hooks receive `file_path` as absolute path for Write/Edit/Read tools
 - `StopFailure` fires on API errors — output and exit code ignored. Non-blocking.
@@ -816,13 +880,70 @@ New primitive behavior and settings since v2.1.101. Grouped by surface area.
 - Windows: `CLAUDE_ENV_FILE` and `SessionStart` hook environment files now apply (previously a no-op) (v2.1.111)
 - Windows: permission rules with drive-letter paths are now correctly root-anchored; case-insensitive drive-letter matching (v2.1.111)
 
-### Items investigated and NOT in the changelog (conservative rejections, 2026-04-23)
+### Items investigated and NOT in the changelog (conservative rejections, 2026-05-07)
 The following were surfaced by doc-scan subagents but are NOT confirmed by the upstream CHANGELOG.md and are therefore not added to the schema:
 
-- Skill `when_to_use` frontmatter field — not in changelog, likely doc-page speculation
-- `UserPromptExpansion` hook event — not in changelog
-- Plugin manifest `userConfig` field with `sensitive: true` — not in changelog
 - Auto-memory 25 KB truncation limit — not in changelog (line-count caps are documented, byte-count cap is not)
 - `claudeMdExcludes` setting — not in changelog
 
-If any of these later land in a release, promote them out of this list.
+Previously rejected, now promoted (confirmed in official docs as of 2026-05-07):
+- ~~Skill `when_to_use` frontmatter field~~ → promoted to Section 1
+- ~~`UserPromptExpansion` hook event~~ → promoted to Section 5
+- ~~Plugin manifest `userConfig` field with `sensitive: true`~~ → promoted to Section 7
+
+If any remaining items later land in a release, promote them out of this list.
+
+---
+
+## 11. 🆕 Changelog additions (v2.1.118–v2.1.132)
+
+New primitive behavior and settings since v2.1.117. Grouped by surface area.
+
+### Skill frontmatter — new fields
+- `when_to_use` field (confirmed in official docs): additional trigger context appended to `description`, capped at 1,536 chars combined
+- `arguments` field: named positional args for `$name` substitution in skill content. Space-sep string or YAML list
+- `${CLAUDE_EFFORT}` string substitution: expands to current effort level (low/medium/high/xhigh/max)
+
+### Hook events — 3 new events (25 → 28)
+- **`Setup`**: fires on `--init-only` or `-p --init/--maintenance`. Matchers: `init`, `maintenance`. Non-blocking. Supports command + mcp_tool only
+- **`UserPromptExpansion`**: fires when slash command expands before reaching Claude. Matcher: `command_name`. Blocking
+- **`PostToolBatch`**: fires after full batch of parallel tool calls resolves, before next model call. No matcher. Blocking (exit 2 stops loop)
+
+### Hook handlers — 5th handler type
+- **`type: "mcp_tool"`**: calls a tool on a configured MCP server. Fields: `server` (required), `tool` (required), `input` (optional, supports `${path}` substitution), `timeout`
+- **`asyncRewake`** field on command handlers: background execution that wakes Claude on exit code 2
+
+### Hook event updates
+- `SessionStart` now supports `mcp_tool` handler type (was command-only)
+- `Elicitation`/`ElicitationResult` matchers now match on `mcp_server_name`
+- `StopFailure` matcher values: added `oauth_org_not_allowed`
+- `Notification` matcher values: added `elicitation_complete`, `elicitation_response`
+
+### Plugin manifest — new fields
+- `$schema`: JSON Schema URL for editor validation (`https://json.schemastore.org/claude-code-plugin-manifest.json`)
+- `version` is now optional (falls back to git SHA). Only `name` is required
+- `experimental` object: wraps stabilizing components (`experimental.monitors`, `experimental.themes`). Top-level `monitors` still works but will require `experimental.*` in a future release
+- `userConfig`: user-configurable values prompted at enable time. Fields: `type` (string/number/boolean/directory/file), `title`, `description`, `sensitive`, `required`, `default`, `multiple`, `min`/`max`
+- `channels`: message channel declarations binding to MCP servers
+- `dependencies`: other plugins this plugin requires, optionally with semver version constraints
+
+### Settings — new keys
+- `disableRemoteControl` (boolean, U/P/L/M, v2.1.128+): disable Remote Control feature
+- `worktree.symlinkDirectories` (array, U/P/L): directories to symlink in worktrees
+- `worktree.sparsePaths` (array, U/P/L): directories for sparse-checkout in worktrees
+- `skipWebFetchPreflight` (boolean, U/P/L): skip WebFetch domain safety check
+- `autoMode` object (U/P/L): customize auto mode classifier with `environment`, `allow`, `soft_deny` arrays (include `"$defaults"` to inherit built-ins)
+- `useAutoModeDuringPlan` (boolean, U/P/L): whether plan mode uses auto mode semantics
+- `awaySummaryEnabled` (boolean, U/P/L): show recap when returning after minutes away
+- `prefersReducedMotion` (boolean, U/P/L): reduce UI animations
+- `viewMode` (string, U/P/L): startup transcript view mode (default/verbose/focus)
+- `voice` object (U/P/L): voice dictation settings with `enabled`, `mode` (hold/tap), `autoSubmit` sub-fields
+- `autoConnectIde` (boolean, ~/.claude.json): auto-connect to running IDE
+- `externalEditorContext` (boolean, ~/.claude.json): show last response in external editor
+- `plansDirectory` (string, U/P/L): where plan files are stored
+
+### Environment variables — new in v2.1.118–v2.1.132
+| Variable | Since | Purpose |
+|---|---|---|
+| `CLAUDE_CODE_SESSION_ID` | v2.1.132 | In Bash tool subprocess environment — matches `session_id` passed to hooks |
+| `CLAUDE_CODE_DISABLE_ALTERNATE_SCREEN` | v2.1.132 | `=1` opts out of fullscreen alternate-screen renderer, keeps conversation in terminal scrollback |
