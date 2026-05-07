@@ -24,12 +24,13 @@ decision, and consequences of a significant choice.
 | [0016](0016-use-ultra-light-test-fakes-over-intelligent-inmemory.md)    | Use Ultra-Light Test Fakes Over Intelligent InMemory Implementations   | 2026-03-15 | accepted                                                                           |
 | [0017](0017-extract-data-mapper-as-standalone-concern.md)               | Extract Data Mapper as Standalone Concern                              | 2026-03-18 | accepted                                                                           |
 | [0018](0018-separate-core-primitives-from-shared-utilities.md)          | Separate Core Primitives from Shared Utilities                         | 2026-03-18 | accepted                                                                           |
-| [0019](0019-adopt-emmett-as-event-store-infrastructure.md)             | Adopt Emmett as Event Store Infrastructure                             | 2026-04-02 | proposed                                                                           |
+| [0019](0019-adopt-emmett-as-event-store-infrastructure.md)              | Adopt Emmett as Event Store Infrastructure                             | 2026-04-02 | proposed                                                                           |
+| [0020](0020-use-uuidv4-for-frontend-generated-aggregate-ids.md)         | Use UUIDv4 for Frontend-Generated Aggregate IDs                        | 2026-04-05 | accepted                                                                           |
 
 ## Statistics
 
-- **Total decisions**: 20
-- **Accepted**: 18
+- **Total decisions**: 21
+- **Accepted**: 19
 - **Superseded**: 1
 - **Proposed**: 1
 - **Deprecated**: 0
