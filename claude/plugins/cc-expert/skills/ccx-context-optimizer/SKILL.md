@@ -1,12 +1,14 @@
 ---
 name: ccx-context-optimizer
 description: >
-  Manage and optimize CLAUDE.md, .claude/rules/, and nested context files for Claude Code projects.
-  Use this skill whenever the user asks to audit, restructure, evolve, or maintain their agent context files.
-  Also trigger when: the user says "audit my context", "optimize my CLAUDE.md", "update context from this session",
-  "restructure my rules", "what should go in my CLAUDE.md", or references context file management.
-  This skill applies research-backed principles from ACE (Agentic Context Engineering) and empirical studies
-  on AGENTS.md effectiveness to keep context files minimal, non-redundant, and high-signal.
+  Manage and optimize CLAUDE.md, .claude/rules/, and nested context files. Four modes: Audit
+  (classify lines, flag redundancy), Evolve (capture session friction, propose deltas), Restructure
+  (reorganize to 3-layer architecture), Create Rule (validate and scaffold with gates). Applies ACE
+  (Agentic Context Engineering) principles to keep context minimal and high-signal.
+when_to_use: >
+  Trigger when the user asks to audit, restructure, evolve, or maintain agent context files.
+  Phrases: "audit my context", "optimize my CLAUDE.md", "update context from this session",
+  "restructure my rules", "what should go in my CLAUDE.md", or any context file management task.
 effort: high
 ---
 

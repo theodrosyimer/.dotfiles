@@ -1,13 +1,15 @@
 ---
 name: ccx-primitives
 description: >
-  Authoritative frontmatter schema reference for all Claude Code primitive file types: skills
-  (SKILL.md), slash commands (.claude/commands/*.md), subagents (.claude/agents/*.md), rules
-  (.claude/rules/*.md), and global hooks (settings.json). Use this skill whenever the user is
-  creating, editing, or auditing any Claude Code configuration file — even if they just ask "what
-  fields does a skill support?" or "how do I write a hook?" or "what's the frontmatter for an
-  agent?". Also triggers when reviewing CLAUDE.md, plugin.json, or output-styles frontmatter.
-  Includes a knowledge-freshness check with official doc links for refreshing schemas.
+  Authoritative frontmatter schema reference for all Claude Code primitives: skills, slash commands,
+  subagents, rules, hooks, output styles, and plugin manifests. Performs freshness checks against
+  npm registry, refreshes schemas from official docs and changelog, audits existing config files
+  for schema errors and upgrade opportunities, and answers with complete field tables and examples.
+when_to_use: >
+  Trigger when creating, editing, or auditing any Claude Code configuration file. Also on "what
+  fields does a skill support?", "how do I write a hook?", "what's the frontmatter for an agent?",
+  reviewing plugin.json or output-styles. Trigger on "refresh", "update schemas", "what's new in
+  Claude Code", or "audit my skills".
 effort: high
 hooks:
   PostToolUse:

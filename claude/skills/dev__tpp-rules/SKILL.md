@@ -1,6 +1,13 @@
 ---
 name: tpp-rules
-description: "Transformation Priority Premise (TPP) — Robert C. Martin's ordered list of code transformations for TDD. Simpler transformations should always be preferred."
+description: >
+  Transformation Priority Premise (TPP) — Robert C. Martin's ordered 12-item hierarchy of code
+  transformations for TDD, from simplest ({}→nil) to most complex (variable→assignment). Includes
+  core rules, test ordering guidance, and implementation guidance.
+when_to_use: >
+  Inject into agents/skills that implement or review TDD workflows, particularly /plan-feature,
+  /write-tests, and /implement-feature. Provides the theoretical foundation for test ordering
+  and minimal transformation selection.
 user-invocable: false
 ---
 

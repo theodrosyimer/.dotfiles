@@ -1,13 +1,14 @@
 ---
 name: reviewer-authoring
-description: >-
-  Create new specialised AI code reviewer agents for the ai-reviewer system.
-  Generates both the Claude Code subagent (.claude/agents/) and the CI reviewer
-  file (src/reviewers/) from the same input to keep them in sync. Use this skill
-  when the user says "add reviewer", "new reviewer", "create reviewer for",
-  "I need a reviewer that checks", "add review agent", or describes a new domain
-  that should be covered by the code review system. Also trigger when the user
-  wants to split an existing reviewer into more specialised sub-reviewers.
+description: >
+  Create specialized AI code reviewer agents for the ai-reviewer system. Generates both the
+  Claude Code subagent (.claude/agents/) and the CI reviewer file (src/reviewers/) from the same
+  input to keep them in sync. Enforces reviewer tier assignment, trigger pattern matching,
+  "What to Flag" / "What NOT to Flag" sections, and quality checklists.
+when_to_use: >
+  Trigger when the user says "add reviewer", "new reviewer", "create reviewer for", "I need a
+  reviewer that checks", "add review agent", or describes a new domain for the code review
+  system. Also when splitting an existing reviewer into more specialized sub-reviewers.
 ---
 
 # Reviewer Authoring

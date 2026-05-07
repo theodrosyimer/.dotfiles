@@ -1,13 +1,15 @@
 ---
 name: acd-plan
 description: >
-  Plan work using the Agent Delivery Contract specification from Agentic Continuous Delivery (ACD).
-  Guides an interactive discovery loop to produce a structured specification with Intent, Behavior,
-  Constraints, and Acceptance Criteria — scoped to thin vertical slices an agent can execute.
-  Use this skill whenever the user says "plan this", "spec this out", "help me think through",
-  "what should the spec look like", "write a spec", "plan the implementation", or wants to
-  break down a feature/task into an agent-executable specification. Also trigger when the user
-  has a vague idea and needs help turning it into a concrete, actionable plan.
+  Plan work using the Agent Delivery Contract (ACD) specification. Runs a 4-phase discovery loop
+  (framing, deep-dive interview, drafting, stress-test review) to produce a structured spec with
+  Intent, User-Facing Behavior (BDD scenarios), Constraints (musts/must nots/preferences), and
+  Acceptance Criteria — scoped to thin vertical slices an agent can execute.
+when_to_use: >
+  Trigger when the user says "plan this", "spec this out", "help me think through", "what should
+  the spec look like", "write a spec", "plan the implementation", or wants to break down a
+  feature/task into an agent-executable specification. Also when the user has a vague idea and
+  needs help turning it into a concrete, actionable plan.
 effort: high
 ---
 

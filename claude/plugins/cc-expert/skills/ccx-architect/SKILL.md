@@ -1,13 +1,15 @@
 ---
 name: ccx-architect
 description: >
-  Decision engine for Claude Code automation design. Use this skill whenever a user wants to
-  automate something with Claude Code and isn't sure which primitive(s) to use — skills, subagents,
-  hooks, slash commands, rules, agent teams, headless mode, MCP, or plugins. Also triggers when
-  the user says "how should I build this", "what's the best way to automate X", "should I use a
-  hook or a skill", "design my Claude Code setup", or describes any repeatable workflow they want
-  to capture. Interviews the user, runs the decision tree, recommends the right primitive(s) with
-  justification, flags anti-patterns, and writes the scaffold files directly to disk.
+  Decision engine for Claude Code automation design. Interviews the user, classifies requirements
+  against a decision tree, recommends the right primitive(s) — skills, subagents, hooks, commands,
+  rules, agent teams, headless mode, MCP, or plugins — with tradeoff analysis, flags anti-patterns,
+  and scaffolds configuration files directly to disk.
+when_to_use: >
+  Trigger when the user wants to automate something with Claude Code and isn't sure which
+  primitive(s) to use. Also on "how should I build this", "what's the best way to automate X",
+  "should I use a hook or a skill", "design my Claude Code setup", or any repeatable workflow
+  they want to capture.
 allowed-tools: Read, Write, Bash, Grep, Glob
 effort: high
 ---

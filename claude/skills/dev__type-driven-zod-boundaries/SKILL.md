@@ -1,6 +1,15 @@
 ---
 name: type-driven-zod-boundaries
-description: How to implement type-driven domain modeling with Zod at boundaries. Covers domain type definitions (plain TypeScript), boundary schema patterns, operation-specific schemas (Create/Update/Form), type derivation with z.infer at boundaries, form integration with React Hook Form, use case validation, test data factories, and schema evolution/migration. Use when writing Zod schemas, defining boundary contracts, creating operation variants, wiring forms, or defining domain types. For the rules and constraints (where Zod lives, structural vs business validation, type vs interface), see the type-driven-zod-boundaries rule.
+description: >
+  Implementation patterns for type-driven domain modeling with Zod at boundaries. Covers domain
+  type definitions (plain TypeScript), boundary schemas, operation-specific schemas (Create/Update/
+  Patch/Form), z.infer type derivation, React Hook Form integration, use case validation, test
+  data factories with createXxxFixture(), and Zod v4 migration patterns.
+when_to_use: >
+  Trigger when writing Zod schemas at module boundaries, defining boundary contracts, creating
+  operation-specific request schemas, extending base schemas for forms, validating user input at
+  use case entry points, or creating test fixtures. For rules/constraints (where Zod lives,
+  structural vs business validation), see the type-driven-zod-boundaries rule.
 ---
 
 # Type-Driven Domain Modeling + Zod at Boundaries — How

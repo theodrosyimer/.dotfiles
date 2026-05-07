@@ -1,6 +1,14 @@
 ---
 name: component-variant
-description: Create tailwind-variants (tv()) component variant definitions and React/React Native components that consume them. Use when building new UI components, adding variants to existing components, working with slots, compound variants, or extending base components. Also use when asked about tailwind-variants patterns, Uniwind compatibility, or component styling architecture.
+description: >
+  Create tailwind-variants (tv()) component variant definitions and React/React Native components
+  that consume them. Covers folder separation (variants/ vs components/), tv() definition syntax,
+  TypeScript variant type derivation, slot composition, compound variants, base extension, and
+  semantic token class naming rules. Includes Uniwind compatibility notes.
+when_to_use: >
+  Trigger when building new UI components with variants, adding variants to existing components,
+  working with slots or compound variants, extending base components, or asking about
+  tailwind-variants patterns and Uniwind compatibility.
 ---
 
 # Create Component Variant

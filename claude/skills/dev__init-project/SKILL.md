@@ -1,9 +1,13 @@
 ---
 name: init-project
 description: >
-  Bootstrap project Claude Code context (CLAUDE.md, rules, commands) via interactive discovery
-  + vault knowledge. Trigger: "init project", "new project", "set up claude context",
-  "bootstrap", "add context to this project".
+  Bootstrap project Claude Code context (CLAUDE.md, .claude/rules/, .claude/commands/) via
+  interactive discovery and user vault knowledge. Discovers project shape via guided questions
+  or code inspection, reads relevant patterns from vault, and generates tailored (not generic)
+  configuration files matching the project's actual stack and conventions.
+when_to_use: >
+  Trigger on "init project", "new project", "set up claude context", "bootstrap", "add context
+  to this project", or when onboarding a repo that lacks Claude Code configuration.
 effort: high
 allowed-tools: Read, Write, Glob, Grep, Bash, AskUserQuestion
 argument-hint: "[project-name]"

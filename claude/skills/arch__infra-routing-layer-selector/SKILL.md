@@ -1,6 +1,16 @@
 ---
 name: infra-routing-layer-selector
-description: "Help decide which infrastructure routing layer to use: reverse proxy, load balancer, API gateway, CDN, or a combination. Use this skill whenever the user discusses, plans, or questions traffic routing architecture — even if they don't use the exact terms. Trigger on phrases like 'should I use nginx or kong', 'do I need a load balancer', 'how should traffic reach my backend', 'API gateway vs reverse proxy', 'where should auth/rate limiting live', 'how to expose my API publicly', 'need SSL termination', 'scaling my backend', 'adding health checks', or any infrastructure decision involving request routing between clients and servers. Also trigger when the user is setting up deployment architecture, choosing between AWS ALB/NLB/API Gateway, deciding where crosscutting concerns (auth, rate limiting, monitoring) should live, or evaluating tools like Nginx, HAProxy, Kong, Traefik, Caddy, Tyk, or Apigee."
+description: >
+  Help decide which infrastructure routing layers to use: reverse proxy, load balancer, API gateway,
+  CDN, or a combination. Gathers context about backend type, instance count, clients, and crosscutting
+  concerns. Recommends layers (not tools first) with justification, addresses the spectrum problem,
+  warns against over-engineering, and provides migration paths (current → next → future).
+when_to_use: >
+  Trigger when the user discusses, plans, or questions traffic routing architecture. Phrases:
+  "should I use nginx or kong", "do I need a load balancer", "how should traffic reach my backend",
+  "API gateway vs reverse proxy", "where should auth/rate limiting live", "need SSL termination",
+  "scaling my backend". Also when choosing between AWS ALB/NLB/API Gateway, deciding where
+  crosscutting concerns live, or evaluating Nginx, HAProxy, Kong, Traefik, Caddy, Tyk, Apigee.
 ---
 
 # Infrastructure Routing Layer Selector

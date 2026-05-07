@@ -1,13 +1,16 @@
 ---
 name: adr
-description: Manage Architecture Decision Records (ADRs) for the project. Use this skill whenever
-  the user discusses, proposes, or questions an architectural choice — even if they don't
-  say "ADR" explicitly. Trigger on phrases like "should we use X or Y", "why did we choose",
-  "let's switch from", "I'm thinking about changing", "what's the current approach for",
-  "document this decision", or any architectural trade-off discussion. Also trigger when
-  implementing a feature that contradicts or isn't covered by existing ADRs, or when a
-  code review raises architectural questions. This skill creates, queries, supersedes,
-  and maintains ADRs following the project's structured text diagram standard.
+description: >
+  Manage Architecture Decision Records (ADRs) for the project. Four workflows: Create (fill
+  template, save to docs/adr/, regenerate index), Query (search existing ADRs, summarize state),
+  Supersede (create replacement ADR, mark old as superseded), Seed (bootstrap from seed/ directory).
+  Uses structured text diagrams and enforces a quality checklist.
+when_to_use: >
+  Trigger whenever the user discusses, proposes, or questions an architectural choice — even
+  without saying "ADR". Phrases: "should we use X or Y", "why did we choose", "let's switch from",
+  "I'm thinking about changing", "what's the current approach for", "document this decision".
+  Also trigger when implementing a feature that contradicts existing ADRs or when a code review
+  raises architectural questions.
 ---
 
 # Architecture Decision Records (ADR) Skill

@@ -1,6 +1,14 @@
 ---
 name: convention-enforcer
-description: "Audit and fix convention violations across monorepo. Learns from compliant code, fixes in dependency order."
+description: >
+  Audit and fix convention violations across a monorepo in 4 phases: discover conventions from
+  .claude/rules/ or agent memory, spawn read-only auditor subagents per module to find violations,
+  extract compliant code examples and build dependency tiers, then spawn fixer subagents per tier
+  in dependency order using compliant examples as reference patterns. Re-audits to verify fixes.
+when_to_use: >
+  Trigger when the user wants to enforce a convention across the monorepo. Phrases: "enforce this
+  convention", "audit convention violations", "fix all modules to follow this rule", "apply this
+  pattern everywhere". Takes a convention rule as argument.
 disable-model-invocation: true
 context: fork
 argument-hint: "<convention rule to enforce>"

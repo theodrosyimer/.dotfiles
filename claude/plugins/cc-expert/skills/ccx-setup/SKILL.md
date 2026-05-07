@@ -1,11 +1,14 @@
 ---
 name: ccx-setup
 description: >
-  Full Claude Code project setup wizard. Sequences context-optimizer → ccx-architect →
-  ccx-primitives to build a complete, validated automation setup from scratch or audit and
-  upgrade an existing one. Use when starting a new project's Claude Code configuration,
-  doing a full setup review, or onboarding a new repo. Triggers on "set up Claude Code",
-  "scaffold my Claude setup", "full setup wizard", "audit my entire Claude config".
+  Full Claude Code project setup wizard. Orchestrates three sequential phases: Foundation
+  (ccx-context-optimizer audits/creates CLAUDE.md and rules), Design (ccx-architect designs and
+  scaffolds automation primitives), Validation (validates all generated files against canonical
+  schemas). Produces a comprehensive report with TODO markers and next upgrade steps.
+when_to_use: >
+  Trigger when starting a new project's Claude Code configuration, doing a full setup review,
+  or onboarding a new repo. Phrases: "set up Claude Code", "scaffold my Claude setup", "full
+  setup wizard", "audit my entire Claude config".
 disable-model-invocation: true
 context: fork
 allowed-tools: Read, Write, Bash, Grep, Glob

@@ -1,12 +1,15 @@
 ---
 name: reviewer-prompt-tuning
-description: >-
-  Tune AI code reviewer prompts by processing false positives, calibrating severity,
-  and refining "What NOT to Flag" exclusion boundaries. Use this skill when the user
-  says "false positive", "reviewer too noisy", "tune reviewer", "wrong severity",
-  "shouldn't have flagged", "add exclusion", "calibrate reviewer", or reports that
-  a specific reviewer is producing unhelpful findings. Also trigger when analyzing
-  review output quality or when the user pastes a review finding they disagree with.
+description: >
+  Tune AI code reviewer prompts by processing false positives, calibrating severity, and refining
+  "What NOT to Flag" exclusion boundaries. Classifies false positives (scope creep, severity
+  inflation, context blindness, speculative, already-handled), drafts precise exclusions, applies
+  changes to both subagent and CI files synchronously, and logs for calibration tracking.
+when_to_use: >
+  Trigger when the user says "false positive", "reviewer too noisy", "tune reviewer", "wrong
+  severity", "shouldn't have flagged", "add exclusion", "calibrate reviewer", or reports a
+  reviewer producing unhelpful findings. Also when analyzing review output quality or when the
+  user pastes a review finding they disagree with.
 ---
 
 # Reviewer Prompt Tuning

@@ -1,6 +1,13 @@
 ---
 name: tokens
-description: Create, modify, validate, and build design tokens in DTCG format. Use when adding new tokens (colors, spacing, typography, etc.), modifying existing token values, running Style Dictionary builds, or troubleshooting token-to-CSS-variable pipeline issues. Also use when asked about token naming, DTCG format, or the primitive/semantic token architecture.
+description: >
+  Create, modify, validate, and build design tokens in DTCG format. Covers the full pipeline:
+  Figma → DTCG JSON → Style Dictionary v5 → CSS variables + TS constants. 2-tier token system
+  (primitive/, semantic/, theme/), SD-driven naming, theme switching (light/dark), and validation.
+when_to_use: >
+  Trigger when adding new tokens (colors, spacing, typography, shadows), modifying existing token
+  values, running Style Dictionary builds, troubleshooting token-to-CSS-variable pipeline issues,
+  or asking about token naming, DTCG format, or primitive/semantic token architecture.
 ---
 
 # Design Tokens Workflow

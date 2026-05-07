@@ -1,12 +1,14 @@
 ---
 name: turborepo-monorepo
-description:
-  Turborepo monorepo setup, configuration, and management with pnpm workspace. Covers monorepo
-  structure, package organization, turborepo configuration (turbo.json), build optimization, caching
-  strategies, package management with pnpm, TypeScript project references, workspace protocols,
-  catalog dependencies, development commands, and performance optimization. Use when setting up
-  monorepo, configuring Turborepo, managing packages, optimizing builds, or working with monorepo
-  workflows.
+description: >
+  Turborepo monorepo setup, configuration, and management with pnpm workspace. Covers recommended
+  structure (apps/, packages/, tools/), turbo.json task config, pnpm catalog dependencies,
+  workspace:* protocol, TypeScript project references, build optimization (caching, inputs/outputs,
+  parallelization), and common issues/solutions.
+when_to_use: >
+  Trigger when setting up a new monorepo, configuring Turborepo tasks, managing packages
+  (add/update/organize), optimizing builds and caching, setting up TypeScript project references,
+  configuring pnpm workspace, or debugging monorepo build issues.
 ---
 
 # Turborepo Monorepo Setup & Management

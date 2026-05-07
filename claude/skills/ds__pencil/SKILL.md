@@ -1,7 +1,15 @@
 ---
 name: pencil-design
 description: >
-  Create high-quality visual designs â€” websites, app screens, dashboards, slides, marketing materials, social media graphics â€” using the Pencil CLI tool. Use this skill whenever the user wants to create, generate, or visualize any kind of UI design, mockup, wireframe, layout, webpage, app screen, presentation slide, poster, banner, or marketing asset. Also use it when the user says things like "design me a...", "make a visual for...", "create a mockup of...", "what would X look like?", or wants to turn an idea into a visual. Even if the user doesn't mention "Pencil" or "design tool" explicitly â€” if they want something visual created, this is the skill to use.
+  Create high-quality visual designs using the Pencil CLI tool. Handles setup, authentication,
+  prompt construction, PNG export, and iteration (--in flag for revisions). Covers websites, app
+  screens, dashboards, slides, marketing materials, and social media graphics. Passes user's
+  request verbatim as prompt — does not over-specify design details.
+when_to_use: >
+  Trigger whenever the user wants to create, generate, or visualize any UI design, mockup,
+  wireframe, layout, webpage, app screen, slide, poster, banner, or marketing asset. Also on
+  “design me a...”, “make a visual for...”, “create a mockup of...”, “what would X look like?”.
+  If the user wants something visual created, this is the skill — even without mentioning Pencil.
 ---
 
 # Pencil Design

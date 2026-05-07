@@ -1,11 +1,14 @@
 ---
 name: caching
-description:
-  Add a caching layer to an existing infrastructure adapter or NestJS endpoint. Covers Redis-backed
-  cache adapters implementing existing ports, TanStack Query staleTime configuration, Cache-Control
-  headers in NestJS, and Redis client tracking for distributed invalidation. Use when adding caching
-  to an existing repository, external API client, or API endpoint — NOT for new features from
-  scratch (use the testing skill first).
+description: >
+  Add a caching layer to an existing infrastructure adapter or NestJS endpoint using the
+  port/adapter pattern. Covers Redis-backed cache adapters wrapping real adapters, DI container
+  wiring, Redis client tracking for distributed invalidation, NestJS Cache-Control interceptors,
+  and TanStack Query staleTime/gcTime configuration. Includes a decision matrix for cache layer.
+when_to_use: >
+  Trigger when adding caching to an existing repository, external API client, or API endpoint.
+  NOT for new features from scratch (use the testing skill first). Also when configuring Redis
+  caching, TanStack Query cache settings, or Cache-Control headers.
 ---
 
 # Caching — Skill

@@ -1,15 +1,14 @@
 ---
 name: npm-security
-description: >-
-  Audit and harden npm/pnpm/bun project security posture against supply chain
-  attacks. Use this skill whenever the user asks to audit npm security, check
-  dependency security, harden a project's dependencies, review npm security best
-  practices, or secure a project's supply chain. Also trigger when the user asks
-  about lockfile injection, postinstall script risks, dependency confusion,
-  provenance attestations, or npm publishing security. Covers both a full
-  security posture audit (reads project config and reports findings with fix
-  suggestions) and an actionable reference guide for all 14 npm security best
-  practices.
+description: >
+  Audit and harden npm/pnpm/bun project security posture against supply chain attacks. Dual-mode:
+  audit (detect package manager, run 13 checks across install hardening, dependency hygiene,
+  secrets isolation, and publishing security, report pass/fail with fixes) or reference guide
+  (all 14 npm security best practices with implementation details).
+when_to_use: >
+  Trigger when the user asks to audit npm security, check dependency security, harden
+  dependencies, or review npm security best practices. Also on lockfile injection, postinstall
+  script risks, dependency confusion, provenance attestations, or npm publishing security.
 effort: medium
 allowed-tools: >-
   Bash(cat:*), Bash(pnpm list:*), Bash(npm list:*), Bash(npx lockfile-lint:*),

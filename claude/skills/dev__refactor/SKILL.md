@@ -1,8 +1,13 @@
 ---
 name: refactor
-description:
-  'TDD REFACTOR phase: Improve code quality without changing behavior. Test files remain locked —
-  tests must stay green throughout.'
+description: >
+  TDD REFACTOR phase: improve code quality without changing behavior. Enforces test-green
+  constraint throughout, runs LCOM cohesion analysis per code type, verifies architecture tests,
+  and requires test execution after every single refactoring step. Test files remain hook-locked.
+when_to_use: >
+  Trigger during active TDD cycle after the GREEN phase. Use when improving code structure,
+  naming, duplication, extracting methods/classes, or applying domain patterns while keeping
+  all tests green.
 disable-model-invocation: true
 argument-hint: "<what to refactor or 'all recent changes'>"
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob

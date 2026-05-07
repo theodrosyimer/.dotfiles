@@ -1,6 +1,12 @@
 ---
 name: plan-feature
-description: Plan a feature using TDD. Explores the codebase, identifies affected modules, and produces a structured implementation plan with test cases. Does NOT write any code.
+description: >
+  Plan a feature using TDD. Explores the codebase in a read-only forked context, identifies affected
+  modules and files, designs a test strategy ordered by Transformation Priority Premise (each test
+  requires only one TPP step), and produces a structured implementation plan. Does NOT write code.
+when_to_use: >
+  Trigger when planning feature implementation before coding, designing test-first strategies,
+  or breaking down complex features into TPP-ordered test sequences. Use before /write-tests.
 context: fork
 agent: Plan
 argument-hint: "<feature description>"

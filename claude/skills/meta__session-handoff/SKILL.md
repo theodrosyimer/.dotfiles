@@ -1,16 +1,15 @@
 ---
 name: session-handoff
-description: >-
-  Generate a structured handoff document for Claude Code session transitions.
-  Use this skill whenever a session is ending (naturally or due to context
-  degradation), when handing off work between agents or sessions, when the
-  user says "handoff", "wrap up", "session summary", "pick up later",
-  "continue in new session", "context is getting heavy", or when a long-running
-  task needs to be split across multiple sessions. Also use when the user asks
-  to "save progress", "checkpoint", or "pause and resume". This skill is
-  critical for combating context degradation in long-running agentic tasks —
-  even if the user doesn't explicitly ask for a handoff doc, suggest it when
-  you detect the session has been running long or context quality is declining.
+description: >
+  Generate a structured handoff document for Claude Code session transitions. Gathers task scope,
+  git state, build/test state, changed files, in-progress work, design decisions, and next steps.
+  Writes to .claude/handoffs/YYYY-MM-DD-{task}.md with a quality checklist (verifiable claims,
+  reasoning included, gotchas flagged). Combats context degradation in long-running tasks.
+when_to_use: >
+  Trigger when a session is ending, handing off between agents/sessions, or when the user says
+  "handoff", "wrap up", "session summary", "pick up later", "continue in new session", "save
+  progress", "checkpoint", or "pause and resume". Also suggest proactively when detecting 30+ min
+  sessions, context quality decline, or tasks that won't finish in the current session.
 disable-model-invocation: true
 allowed-tools: Read, Grep, Glob, Bash
 argument-hint: "<task-name or blank for auto-detect>"

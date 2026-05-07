@@ -1,6 +1,14 @@
 ---
 name: react-patterns
-description: React/React Native UI patterns with components, custom hooks, and dependency injection. Use when building React components, creating hooks, or implementing UI layer separation. Covers component-only presentation logic, hooks as glue layer to domain, Context-based DI, and framework-agnostic architecture.
+description: >
+  React/React Native UI architecture patterns. Separates generic components (pure UI blocks),
+  domain components (business-context), custom hooks (glue layer to domain logic), and
+  Context-based dependency injection. Emphasizes framework-agnostic domain — React is just
+  a UI execution environment.
+when_to_use: >
+  Trigger when building React/React Native components, creating custom hooks, implementing UI
+  layer separation, setting up dependency injection for React, or ensuring domain logic stays
+  out of components.
 ---
 
 # React/React Native Patterns

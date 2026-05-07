@@ -1,14 +1,15 @@
 ---
 name: api-docs
 description: >
-  Scaffold a Fumadocs-powered API documentation website from an OpenAPI spec file.
-  Use when the user wants to create, set up, or generate API docs, technical documentation,
-  or a developer portal from a Swagger/OpenAPI JSON or YAML file. Trigger on phrases like
-  "create API docs", "generate docs from OpenAPI", "set up documentation site",
-  "developer portal", "API reference site", or when the user provides an OpenAPI spec
-  and wants browsable documentation. Produces a ready-to-run Next.js app with sidebar
-  navigation, code samples, dark mode, and full visual customization — delivered as a
-  directory for placement in a monorepo.
+  Scaffold a Fumadocs-powered API documentation website from an OpenAPI spec file. Locates the
+  spec, gathers customization options (title, brand color, code sample languages), generates a
+  Next.js app with sidebar navigation, static MDX grouped by tag, code samples, dark mode, and
+  full visual customization — delivered as a monorepo-ready directory.
+when_to_use: >
+  Trigger when the user wants to create, set up, or generate API docs, technical documentation,
+  or a developer portal from a Swagger/OpenAPI JSON or YAML file. Phrases: "create API docs",
+  "generate docs from OpenAPI", "set up documentation site", "developer portal", "API reference
+  site", or when the user provides an OpenAPI spec and wants browsable documentation.
 effort: high
 ---
 

@@ -1,6 +1,15 @@
 ---
 name: skill-evaluator
-description: Evaluate skill efficiency by measuring output vs expected output with variance analysis. Use when the user wants to test a skill's quality, benchmark skill performance, create eval suites for skills, run structural assertions + LLM judge evaluation, measure consistency across runs, or compare with-skill vs without-skill baselines. Also use when phrases like "evaluate my skill", "test skill quality", "benchmark skill", "skill efficiency", "does my skill work", or "run evals" appear. Do NOT use for creating new skills (use skill-creator) or optimizing skill descriptions/triggering (use skill-creator's description optimization).
+description: >
+  Evaluate skill efficiency using a hybrid structural assertions + LLM judge approach with variance
+  analysis. Layer 1: deterministic binary pass/fail checks. Layer 2: fuzzy rubric scoring (1-5
+  scale). Runs 3-10 parallel evaluations, aggregates scores (40% structural + 60% rubric), and
+  measures consistency. Do NOT use for creating skills (use skill-creator).
+when_to_use: >
+  Trigger when the user wants to test a skill's quality, benchmark performance, create eval suites,
+  run structural + LLM judge evaluation, measure consistency across runs, or compare with-skill vs
+  without-skill baselines. Phrases: "evaluate my skill", "test skill quality", "benchmark skill",
+  "skill efficiency", "does my skill work", "run evals".
 effort: high
 ---
 

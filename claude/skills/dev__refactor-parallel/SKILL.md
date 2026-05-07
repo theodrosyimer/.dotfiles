@@ -1,6 +1,13 @@
 ---
 name: refactor-parallel
-description: "Dependency-aware parallel refactor across monorepo modules. Spawns workers per module respecting dependency tiers."
+description: >
+  Dependency-aware parallel refactor across monorepo modules. Discovers all modules and builds a
+  dependency tier hierarchy, runs baseline tests/type-checks, spawns parallel workers per tier
+  (starting from Tier 0 upstream), collects results tier-by-tier, and verifies full monorepo
+  test/type-check success.
+when_to_use: >
+  Trigger when applying a consistent refactoring across many modules: renaming a cross-module API,
+  updating a shared pattern, or rolling out a breaking change in dependency order.
 disable-model-invocation: true
 context: fork
 argument-hint: "<describe the change to apply across modules>"

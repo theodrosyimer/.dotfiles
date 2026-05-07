@@ -1,6 +1,13 @@
 ---
 name: implement-feature
-description: "TDD GREEN phase: Implement the minimum code to make failing tests pass. Test files are locked — cannot be edited. TPP reviewer validates transformation choices on completion."
+description: >
+  TDD GREEN phase: implement the minimum code to make failing tests pass. Applies only the simplest
+  Transformation Priority Premise (TPP) transformation per test. Test files are hook-locked.
+  Automated TPP reviewer agent validates transformation choices on completion.
+when_to_use: >
+  Trigger during active TDD flow after the RED phase (tests written and failing). Use when making
+  failing tests pass with minimal code, or when the user says "make it green", "implement this",
+  or invokes after /write-tests.
 disable-model-invocation: true
 argument-hint: "<feature or test to make pass>"
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob

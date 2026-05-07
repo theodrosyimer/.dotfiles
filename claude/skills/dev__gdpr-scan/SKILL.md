@@ -1,6 +1,14 @@
 ---
 name: gdpr-scan
-description: GDPR PII scanning methodology + module characteristic assessment. Classification rules, scanning patterns, risk levels, and gdpr-modules.json output for the decision matrix. Calibration state managed by the gdpr-scan agent (memory: project).
+description: >
+  GDPR compliance auditing: scans TypeScript domain types for PII field patterns, assesses all
+  13 module-level GDPR characteristics (tax retention, payment handling, health data, geolocation,
+  etc.), and produces both a human-readable markdown report and a machine-readable gdpr-modules.json
+  decision matrix. Calibration state managed by the gdpr-scan agent (memory: project).
+when_to_use: >
+  Trigger when auditing code for PII exposure in event payloads, assessing module-level GDPR
+  compliance, generating compliance inventories for legal review, or analyzing cross-module data
+  flows for PII risk. Also on "GDPR scan", "PII audit", or "compliance check".
 context: fork
 allowed-tools: Read, Grep, Glob
 ---

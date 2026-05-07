@@ -1,6 +1,14 @@
 ---
 name: conventional-commit
-description: Generates clear, conventional commit messages from git diffs. Use when writing commit messages, reviewing staged changes, or preparing releases. Runs git diff --staged to analyze changes and produces commitlint-compliant messages. Stages and commits changes after user confirmation.
+description: >
+  Generate commitlint-compliant conventional commit messages from git diffs. Reviews git context
+  (status, staged/unstaged diffs, branch, recent commits), classifies changed files, picks commit
+  type from 11 allowed types, enforces strict formatting (max 72 char header, imperative mood),
+  and stages + commits after user confirmation.
+when_to_use: >
+  Trigger when writing commit messages, reviewing staged changes, or preparing releases. Also
+  when the user says "commit", "commit this", "write a commit message", or wants to commit
+  with conventional format.
 allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*), Read, Grep
 effort: low
 hooks:

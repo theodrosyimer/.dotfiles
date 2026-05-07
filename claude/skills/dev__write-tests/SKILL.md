@@ -1,6 +1,13 @@
 ---
 name: write-tests
-description: "TDD RED phase: Write failing tests for a planned feature. Can only create/edit test files — production code is locked by a hook. TPP reviewer validates test ordering on completion."
+description: >
+  TDD RED phase: write failing tests for a planned feature. Constrained to test/fake/fixture files
+  only — production code is hook-locked. Orders tests by Transformation Priority Premise so each
+  incrementally requires simpler transformations. Stop hook calls tpp-reviewer agent to validate
+  test ordering on completion.
+when_to_use: >
+  Trigger after /plan-feature when entering the TDD RED phase. Use when writing failing tests
+  for a feature, or when the user says "write tests for X". All tests must fail initially.
 disable-model-invocation: true
 argument-hint: "<feature or test description>"
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob

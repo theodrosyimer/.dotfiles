@@ -1,6 +1,14 @@
 ---
 name: rn-patterns
-description: "React Native layout, composition, and screen patterns using Uniwind and Expo. Use when building RN screens, laying out components, creating lists, handling forms, or implementing interactions. Covers safe area handling, FlashList v2, Pressable, keyboard-controller, EaseView animations, platform-specific patterns. All styling via Uniwind className strings with semantic tokens."
+description: >
+  React Native layout, composition, and screen patterns using Uniwind and Expo. 13 major areas:
+  screen containers, flexbox layouts, cards, forms (keyboard-controller, Switch), typography,
+  interactions (Link vs Pressable, EaseView/Reanimated animations, haptics), images (blurhash,
+  FlashList v2), dark mode, and Uniwind utilities. All styling via className with semantic tokens.
+when_to_use: >
+  Trigger when building RN screens, laying out components, creating lists, handling forms,
+  implementing interactions or animations, choosing between Link and Pressable, handling safe
+  areas, or styling with Uniwind semantic tokens.
 ---
 
 # React Native Patterns

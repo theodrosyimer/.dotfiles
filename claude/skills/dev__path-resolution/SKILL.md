@@ -1,6 +1,13 @@
 ---
 name: path-resolution
-description: "Decision knowledge for choosing the correct file path resolution strategy when writing scripts. Provides a decision matrix for __file__/__dirname (script-anchored) vs environment variables vs os.chdir(), with language-specific patterns for Python, Node.js (CommonJS and ES Modules), and Bash. Inject into any agent that creates or modifies scripts to prevent CWD-dependent path bugs in cron, Docker, CI/CD, and cross-package imports."
+description: >
+  Decision knowledge for choosing the correct file path resolution strategy in scripts. Provides
+  a decision matrix for __file__/__dirname (script-anchored) vs environment variables vs os.chdir(),
+  with language-specific patterns for Python, Node.js (CJS and ESM), and Bash.
+when_to_use: >
+  Inject into any agent that creates or modifies scripts. Prevents CWD-dependent path bugs in
+  cron, Docker, CI/CD, and cross-package imports. Trigger when writing scripts with file path
+  references, config loaders, or cross-directory imports.
 user-invocable: false
 ---
 

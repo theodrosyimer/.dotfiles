@@ -1,6 +1,14 @@
 ---
 name: coupling-analysis
-description: "Analyze coupling dimensions for a slice, module boundary, or external integration. Use when evaluating a new dependency, reviewing an integration, adding a Gateway call, connecting to an external service, or when the user says /coupling. Applies Nygard's 5-dimension framework (operational, development, semantic, functional, incidental) to produce a structured coupling matrix with concrete recommendations."
+description: >
+  Analyze coupling across Nygard's 5 dimensions (operational, development, semantic, functional,
+  incidental) for inter-module, intra-module, or external dependencies. Discovers stack context,
+  rates each dimension with justification, detects anti-patterns (semantic polymers, long arrows,
+  shared DB coupling), and generates stack-aware recommendations with tradeoffs.
+when_to_use: >
+  Trigger when evaluating a new dependency, reviewing an integration, adding a Gateway call,
+  connecting to an external service, or assessing module boundary coupling. Also on /coupling
+  or any discussion about how tightly two modules or services are connected.
 ---
 
 # Coupling Analysis — Skill

@@ -1,6 +1,13 @@
 ---
 name: figma-sync
-description: Synchronize design tokens between Figma and DTCG JSON files. Use when pulling token updates from Figma, pushing local token changes to Figma, resolving sync conflicts, or setting up initial Figma-to-code token pipeline. Requires FIGMA_ACCESS_TOKEN and FIGMA_FILE_KEY environment variables.
+description: >
+  Two-way sync between Figma design variables and DTCG JSON token files. Pull from Figma (fetch
+  variables, map collections/modes, write to tokens/), push to Figma (create/update variables),
+  and resolve conflicts. Maps Figma variable structure (Primitives, Semantic, Light/Dark modes)
+  to directory layout. Requires FIGMA_ACCESS_TOKEN and FIGMA_FILE_KEY.
+when_to_use: >
+  Trigger when pulling token updates from Figma, pushing local token changes to Figma, resolving
+  sync conflicts, or setting up the initial Figma-to-code token pipeline.
 ---
 
 # Figma Token Sync

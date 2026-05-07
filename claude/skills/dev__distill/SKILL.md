@@ -1,6 +1,14 @@
 ---
 name: distill
-description: "Convert any source material — YouTube video, blog post, PDF, DOCX, Markdown, or pasted text — into a well-structured project knowledge markdown file. Trigger when the user says 'distill this', 'distill this blog', 'distill this PDF', 'create knowledge doc from', 'convert this to knowledge', or provides a YouTube transcript (pasted or attached) and wants it organized into a structured knowledge document. Also trigger when the user provides a YouTube URL and asks to create a knowledge document from it. The skill auto-detects input type and produces a single .md file following strict diagram and documentation conventions, ready to be added as project knowledge."
+description: >
+  Convert any source material into a structured project knowledge markdown file. Auto-detects
+  input type (YouTube, blog, PDF, DOCX, Markdown, pasted text), extracts via appropriate method,
+  analyzes for core thesis and key concepts, grounds in project context via codebase discovery,
+  and produces a single .md file following strict diagram and documentation conventions.
+when_to_use: >
+  Trigger when the user says "distill this", "distill this blog", "distill this PDF", "create
+  knowledge doc from", "convert this to knowledge", or provides a YouTube transcript/URL and
+  wants it organized into a structured knowledge document.
 effort: medium
 ---
 
