@@ -142,7 +142,7 @@ function fnm_remove() {
 function nodelts_to_nvmrc() {
   local node_lts_version=$(node_lts_version)
   local node_lts_version_without_v=$(echo ${node_lts_version:1})
-  echo $node_lts_version_without_v > .nvmrc
+  echo $node_lts_version_without_v > "${1:-$PWD}/.nvmrc"
 }
 
 function nclean() {
