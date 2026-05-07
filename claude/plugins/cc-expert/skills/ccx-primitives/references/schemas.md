@@ -359,17 +359,27 @@ Each event uses a different JSON structure for its response. Prompt/agent hooks 
 
 Top-level `decision`/`reason` deprecated for PreToolUse. Old `"approve"`→`"allow"`, `"block"`→`"deny"`.
 
-#### PostToolUse / Stop / SubagentStop — top-level `decision`
+#### PostToolUse / PostToolBatch — top-level `decision`
 
 ```jsonc
 {
   "decision": "block",                // "block" only — omit to allow
   "reason": "shown to Claude",
   "hookSpecificOutput": {
-    "hookEventName": "PostToolUse",
+    "hookEventName": "PostToolUse",   // or "PostToolBatch"
     "additionalContext": "...",        // optional: context for Claude
     "updatedMCPToolOutput": "..."      // optional: rewrite MCP tool output (PostToolUse only)
   }
+}
+```
+
+#### Stop / SubagentStop — top-level fields only
+
+```jsonc
+{
+  "decision": "block",                // "block" only — omit to allow
+  "reason": "shown to Claude",
+  "systemMessage": "shown to user"    // ⚠️ use this, NOT hookSpecificOutput (validation rejects it)
 }
 ```
 
@@ -595,7 +605,8 @@ Located at `.claude-plugin/plugin.json` in the plugin root.
 - **Command hooks**: exit 0 + JSON on stdout OR exit 2 + stderr. Exit 2 ignores stdout entirely. JSON only parsed on exit 0.
 - **Prompt/agent hooks**: return `{"ok": true}` or `{"ok": false, "reason": "..."}` — different format from command/http hooks
 - **PreToolUse** (command/http): `hookSpecificOutput.permissionDecision` (`allow`|`deny`|`ask`|`defer`) + `permissionDecisionReason`. Top-level `decision`/`reason` deprecated.
-- **PostToolUse / Stop / SubagentStop** (command/http): top-level `decision: "block"` + `reason`. `hookSpecificOutput` for `additionalContext` and `updatedMCPToolOutput` only.
+- **PostToolUse / PostToolBatch** (command/http): top-level `decision: "block"` + `reason`. `hookSpecificOutput` for `additionalContext` (and `updatedMCPToolOutput` PostToolUse only).
+- **Stop / SubagentStop** (command/http): top-level `decision: "block"` + `reason`. ⚠️ `hookSpecificOutput` is NOT supported — use top-level `systemMessage` for context instead.
 - **PermissionRequest** (command/http): `hookSpecificOutput.decision.behavior` (`allow`|`deny`) + `updatedPermissions`
 - **PermissionDenied**: `hookSpecificOutput.retry: true` only
 - **Multiple PreToolUse decisions**: precedence is `deny` > `defer` > `ask` > `allow`

@@ -28,7 +28,7 @@ hooks:
           command: |
             F="${TMPDIR:-/tmp}/claude-${CLAUDE_SESSION_ID}-ccx-schemas-dirty"
             [ -f "$F" ] || exit 0
-            printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"Stop","additionalContext":"Reminder: schemas.md was refreshed this session. Sync the downstream claude-code-schemas repo by running /schema-sync there."}}'
+            printf '%s\n' '{"systemMessage":"Reminder: schemas.md was refreshed this session. Sync the downstream claude-code-schemas repo by running /schema-sync there."}'
 ---
 
 # ccx-primitives — Claude Code Schema Reference
