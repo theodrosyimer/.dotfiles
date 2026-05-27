@@ -65,6 +65,7 @@ export PATH="$PATH:$HOME/dev/tools/flutter/bin"
 ### Add my dirs to `$PATH`
 export PATH="$PATH:$BIN"
 export PATH="$PATH:$HOME/.js"
+export PATH="$PATH:$BIN"
 
 # Script Kit
 export PATH="$PATH:$HOME/.kit/bin"
@@ -75,6 +76,8 @@ export PATH="$PATH:$HOME/.kenv/bin"
 export DOTFILES="$HOME/.dotfiles"
 export ZDOTDIR="$DOTFILES/zsh"
 export BIN="$DOTFILES/bin"
+export FREELANCE_REPO_DIR="$HOME/dev/freelance"
+export FREELANCE_SCRIPTS="$FREELANCE_REPO_DIR/playbooks/00-global/shell-automation"
 
 # Karabiner
 export GOKU_EDN_CONFIG_FILE="$DOTFILES/karabiner/karabiner.edn"
