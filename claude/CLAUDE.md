@@ -193,8 +193,8 @@ TDD non-negotiable. Every production line responds to a failing test.
 - Expo React Native (mobile + web), TanStack Query, UniWind (never NativeWind),
 - Tanstack Start for web only
 - Turborepo + pnpm (never npm/yarn)
-- uuid v7, date-fns (migrate to Temporal when stable), native fetch (never
-  Axios)
+- uuid v4 (public facing IDs), date-fns (migrate to Temporal when stable),
+  native fetch (never Axios)
 - BullMQ for async jobs
 - TanStack Form
 - Swagger for API docs
