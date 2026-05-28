@@ -51,6 +51,8 @@ function ccsync() {
 
   local pairs=(
     ~/.dotfiles/claude/skills ~/.claude/skills
+    ~/.dotfiles/claude/skills ~/.agents/skills
+    ~/.dotfiles/claude/skills ~/.codex/skills
     ~/.dotfiles/claude/hooks  ~/.claude/hooks
     ~/.dotfiles/claude/rules  ~/.claude/rules
   )
