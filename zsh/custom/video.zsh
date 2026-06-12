@@ -1,3 +1,6 @@
+# Backward compatibility alias
+alias ytd='vd'
+
 # FORMAT:
 #
 # see: https://github.com/yt-dlp/yt-dlp#FORMAT-selection
@@ -171,5 +174,24 @@ function vd() {
   return $?
 }
 
-# Backward compatibility alias
-alias ytd='vd'
+function vd-doctor() {
+  local VIDEO_URL
+
+  [[ -z "$1" ]] && VIDEO_URL="$(chrome_get_front_window_url)" || VIDEO_URL="$1"
+
+  if ! _is_valid_url "$VIDEO_URL"; then
+    printf "%s\n" "$_red\nInvalid URL or no supported video found in chrome's front tab.$_reset"
+    return 1
+  fi
+
+  printf "%s\n" "yt-dlp: $(yt-dlp --version)"
+  printf "%s\n" "node: $(node --version 2>/dev/null || echo 'not found')"
+  printf "%s\n" "Testing formats for: $_cyan$VIDEO_URL$_reset"
+
+  yt-dlp \
+    --verbose \
+    --cookies-from-browser chrome \
+    --js-runtimes node \
+    --remote-components ejs:npm \
+    -F "$VIDEO_URL"
+}
