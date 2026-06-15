@@ -1,0 +1,4 @@
+interface:
+  display_name: "Freelance Codebase Audit"
+  short_description: "Paid codebase audit workflow"
+  default_prompt: "Use $freelance-audit-codebase to run a paid codebase audit and produce an implementation estimate."
