@@ -1,0 +1,4 @@
+interface:
+  display_name: "Freelance Codebase Triage"
+  short_description: "Pre-proposal codebase triage"
+  default_prompt: "Use $freelance-triage-codebase to run a bounded pre-proposal technical triage."
