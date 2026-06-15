@@ -1,3 +1,4 @@
+alias ginit='git_init'
 # git-init.zsh — Repository initialization with GitHub remote creation
 #
 # Creates a local git repo + GitHub remote (personal or org) in one command.
