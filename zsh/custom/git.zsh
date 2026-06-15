@@ -1,5 +1,4 @@
 # Aliases
-alias ginit=git_init
 alias gop='git_open_project_at_gh'
 alias gob='git_open_current_branch_remote_at_gh'
 alias gbdev=git_create_dev_branch
@@ -22,6 +21,7 @@ alias gstsb="git status -sb"
 alias gdis="git_disable_signing"
 alias gfp="git fetch origin && git pull"
 alias gpf="git push --force-with-lease --force-if-includes"
+alias guntrack='git_untrack'
 
 function git_add_all_commit() {
   local commit_message="${1:-Initial commit}"
@@ -523,4 +523,43 @@ function git_branch_rename() {
 
 function git_disable_signing() {
   git -C "${1:-.}" config commit.gpgsign false && echo "🔇 Commit signing disabled in ${1:-.}"
+}
+
+function git_untrack() {
+  local target_path="$1"
+
+  if [ -z "$target_path" ]; then
+    echo "Usage: git_untrack <path>"
+    return 1
+  fi
+
+  if [ ! -e "$target_path" ]; then
+    echo "Error: path does not exist: $target_path"
+    return 1
+  fi
+
+  if [ ! -f ".gitignore" ]; then
+    touch .gitignore
+  fi
+
+  local ignore_entry="$target_path"
+
+  if [ -d "$target_path" ]; then
+    ignore_entry="${target_path%/}/"
+  fi
+
+  if ! grep -qxF "$ignore_entry" .gitignore; then
+    printf "%s\n" "$ignore_entry" >> .gitignore
+    echo "Added to .gitignore: $ignore_entry"
+  else
+    echo "Already in .gitignore: $ignore_entry"
+  fi
+
+  git rm -r --cached "$target_path"
+
+  echo
+  echo "Review changes:"
+  git status --short
+  echo
+  git diff -- .gitignore
 }
