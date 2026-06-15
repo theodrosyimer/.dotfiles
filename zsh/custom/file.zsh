@@ -44,4 +44,7 @@ function isFileEmpty() {
   [[ -s "${1}" ]] && return 1 || return 0
 }
 
-
+function get_file_creation_date() {
+  local file="${1:-$PWD}"
+  stat -f '%SB' -t '%Y%m%d%H%M%S' "${file}"
+}
