@@ -4,6 +4,14 @@ export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 export PATH="$HOME/.fnm:$PATH"
 export FNM_COREPACK_ENABLED=false
 
+# pnpm
+export PNPM_HOME="/Users/ty/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
+
 # rtk
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -12,10 +20,6 @@ export COREPACK_ENABLE_AUTO_PIN=1
 
 # Remove an annoying warning
 # export NODE_OPTIONS='--disable-warning=ExperimentalWarning'
-
-# pnpm
-export PNPM_HOME="$HOME/Library/pnpm"
-export PATH="$PNPM_HOME:$PATH"
 
 # MySQL@8.4
 export PATH="/opt/homebrew/opt/mysql@8.4/bin:$PATH"
@@ -123,5 +127,3 @@ export VIDEOS_INBOX="$HOME/Movies/@inbox"
 export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PROJECTS"/oss "$CODE_PROJECTS"/oss/@theodrosyimer/ "$CODE_PROJECTS"/oss/@theodrosyimer/cli "$CODE_PERSONAL" "$CODE_WORK"/** "$JS_SANDBOX" "$JS_SANDBOX"/* "$CODE_REFS" "$CODE_TEMPLATES" "$CODE_TEMPLATES"/* "$CODE_TEMPLATES"/dev/* "$CODE_COURSES" "$DOTFILES" "$CODE/design" "$HOME")
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
-
-
