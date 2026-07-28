@@ -89,18 +89,6 @@ export GOKU_EDN_CONFIG_FILE="$DOTFILES/karabiner/karabiner.edn"
 # Starship
 export STARSHIP_CONFIG="$DOTFILES/starship/starship.toml"
 
-export CODE="$HOME/dev"
-export CODE_REFS="$CODE/refs"
-export CODE_TEMPLATES="$CODE/templates"
-export CODE_PROJECTS="$CODE/projects"
-export CODE_PERSONAL="$CODE_PROJECTS/personal"
-export CODE_COURSES="$CODE/courses"
-export CODE_WORK="$CODE_PROJECTS/work"
-export JS_SANDBOX="$CODE_REFS/js-sandbox"
-export DOCSETS="$CODE_PERSONAL/mydocsets"
-export TABLES="$CODE_PERSONAL/mytables"
-export TAGS="$HOME/.my_tags"
-
 export ICLOUD="$HOME/Library/Mobile Documents"
 export MM="$ICLOUD/iCloud~com~toketaware~ios~ithoughts/Documents"
 
@@ -124,6 +112,18 @@ export VIDEOS="$AUDIO_LIBRARIES/Videos"
 # export VIDEOS="$HOME/Movies"
 export VIDEOS_INBOX="$HOME/Movies/@inbox"
 
-export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PROJECTS"/oss "$CODE_PROJECTS"/oss/@theodrosyimer/ "$CODE_PROJECTS"/oss/@theodrosyimer/cli "$CODE_PERSONAL" "$CODE_WORK"/** "$JS_SANDBOX" "$JS_SANDBOX"/* "$CODE_REFS" "$CODE_TEMPLATES" "$CODE_TEMPLATES"/* "$CODE_TEMPLATES"/dev/* "$CODE_COURSES" "$DOTFILES" "$CODE/design" "$HOME")
+export CODE="$HOME/dev"
+export CODE_REFS="$CODE/refs"
+export CODE_TEMPLATES="$CODE/templates"
+export CODE_PROJECTS="$CODE/projects"
+export CODE_PERSONAL="$CODE_PROJECTS/personal"
+export CODE_COURSES="$CODE/courses"
+export CODE_WORK="$CODE_PROJECTS/work"
+export JS_SANDBOX="$CODE_REFS/js-sandbox"
+export DOCSETS="$CODE_PERSONAL/mydocsets"
+export TABLES="$CODE_PERSONAL/mytables"
+export TAGS="$HOME/.my_tags"
+
+export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PROJECTS"/oss/* "$CODE_PROJECTS"/freelance/* "$CODE_PERSONAL" "$CODE_WORK"/** "$JS_SANDBOX" "$JS_SANDBOX"/* "$CODE_REFS" "$CODE_TEMPLATES" "$CODE_TEMPLATES"/* "$CODE_TEMPLATES"/dev/* "$CODE_COURSES" "$DOTFILES" "$CODE/design" "$HOME")
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
