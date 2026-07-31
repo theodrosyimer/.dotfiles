@@ -99,3 +99,13 @@ function to_webp() {
 
   time parallel --shuf --eta -j+0 cwebp -q 80 {1} -o {1.}.webp ::: ${images[@]}
 }
+
+function pdf_to_img() {
+  local pdf_file="$1"
+  local filename="${pdf_file:t:r}"
+  local output_dir="${2:-"$(pwd)/_pdf_to_img"}"
+
+  [[ ! -d "$output_dir" ]] && mkdir -p "$output_dir"
+
+  magick "$pdf_file" "$output_dir"/"$filename"-%02d.png
+}
