@@ -29,21 +29,22 @@ function _node_install_global_tooling() {
 # for those aliases to work. Aliases are not expanded inside a function, so `command -v`
 # checks the real binaries here.
 function _node_verify_tooling() {
-  local status=0
+  # NOTE: do not name this `status` - that is a read-only special parameter in zsh.
+  local ret=0
 
   if command -v pnpm >/dev/null 2>&1; then
     printf "%b\n" "$GREEN""pnpm $(command pnpm -v) ready on node $(command node -v)$RESET"
   else
     printf "%b\n" "$RED""pnpm is NOT on PATH for $(command node -v) - run: corepack install -g pnpm@latest$RESET" >&2
-    status=1
+    ret=1
   fi
 
   if ! command -v npq-hero >/dev/null 2>&1; then
     printf "%b\n" "$RED""npq-hero is NOT on PATH - the p/pnpm/npm aliases will fail. Run: npm i -g npq$RESET" >&2
-    status=1
+    ret=1
   fi
 
-  return $status
+  return $ret
 }
 
 function node_version_updater() {
