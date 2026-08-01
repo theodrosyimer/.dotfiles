@@ -5,7 +5,7 @@ export PATH="$HOME/.fnm:$PATH"
 export FNM_COREPACK_ENABLED=false
 
 # pnpm
-export PNPM_HOME="/Users/ty/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME/bin:"*) ;;
   *) export PATH="$PNPM_HOME/bin:$PATH" ;;
