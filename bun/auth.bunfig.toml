@@ -1,0 +1,15 @@
+# Used only by the `buns` wrapper (zsh/custom/package-manager.zsh), via
+# `bun --config`. bun has no NPM_CONFIG_*/BUN_CONFIG_* env override for auth, so
+# the token is passed through this file's $NPM_TOKEN expansion instead.
+# Contains a placeholder only — no secret — so it is safe to commit.
+#
+# CAVEAT 1 — `bun --config=<path>` names *the* config file, so a project-local
+# `bunfig.toml` is NOT loaded during `buns` invocations. Plain `bun` is
+# unaffected. If a project needs its own bunfig settings while installing
+# private deps, merge them here or run plain `bun` instead.
+#
+# CAVEAT 2 — bun does not warn when $NPM_TOKEN is unset: it silently expands to
+# an empty token and the registry answers 401. The `buns` wrapper always sets
+# the variable, so this only bites if this file is passed to `bun` by hand.
+[install]
+registry = { url = "https://registry.npmjs.org", token = "$NPM_TOKEN" }
