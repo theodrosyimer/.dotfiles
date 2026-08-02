@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-claude plugin marketplace add ~/.dotfiles/claude
+claude plugin marketplace add "${CLAUDE_SRC:-$HOME/dev/projects/personal/claude-code}"

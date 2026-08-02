@@ -5,7 +5,7 @@ Two configs:
 | file | used by |
 |---|---|
 | `starship.toml` | interactive shell prompt |
-| `starship-claude.toml` | Claude Code statusline (`~/.dotfiles/claude/scripts/statusline.sh`) |
+| `starship-claude.toml` | Claude Code statusline (`~/dev/projects/personal/claude-code/scripts/statusline.sh`) |
 
 ## Why a Claude-specific variant
 
@@ -63,4 +63,4 @@ If the bytes after `"` are only `20` (space), the glyphs were stripped — resto
 
 ## Related
 
-- `~/.dotfiles/claude/scripts/statusline.sh` — caller for the Claude variant. Documents the pty-width gotcha at the call site.
+- `~/dev/projects/personal/claude-code/scripts/statusline.sh` — caller for the Claude variant. Documents the pty-width gotcha at the call site.

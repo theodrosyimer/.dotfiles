@@ -103,9 +103,15 @@ step "bootstrap/omz.sh — oh-my-zsh + custom plugins"
 step "brew bundle --global"
 brew bundle --global
 
-# ── §9. ccsync — depth-2 per-item symlinks for claude/ ──
-step "ccsync — sync ~/.claude"
-zsh -ic 'ccsync'
+# ── §8b. bootstrap/claude.sh — clone the private Claude Code config repo ──
+# Must run BEFORE §9, which links items out of it into ~/.claude, ~/.agents
+# and ~/.codex. It is a separate private repo, not part of these dotfiles.
+step "bootstrap/claude.sh — clone private claude config"
+"$DOTFILES_DIR/bootstrap/claude.sh"
+
+# ── §9. ccsync — depth-2 per-item symlinks from the claude config repo ──
+step "ccsync — sync ~/.claude, ~/.agents, ~/.codex"
+zsh -ic 'ccsync --adopt'
 
 # ── §10. op signin ──
 step "op signin"

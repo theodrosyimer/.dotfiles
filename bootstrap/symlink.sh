@@ -9,7 +9,7 @@
 #
 # LINK GRANULARITY
 #   Top-level entries of each package. A tracked directory becomes one
-#   directory symlink (e.g. ~/.claude/skills → ~/.dotfiles/claude/skills).
+#   directory symlink (e.g. ~/.claude/skills → ~/dev/projects/personal/claude-code/skills).
 #   A tracked file becomes a file symlink (e.g. ~/.zshenv).
 #
 # USAGE
