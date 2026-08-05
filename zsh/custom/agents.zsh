@@ -219,6 +219,8 @@ function ccsync() {
   mkdir -p "$HOME/.claude"
   print "\n── link: $(_cc_tilde "$CLAUDE_SRC") → $(_cc_tilde "$HOME/.claude") ──"
   _cc_sync_file "$CLAUDE_SRC/CLAUDE.md"     "$HOME/.claude/CLAUDE.md"
+  _cc_sync_file "$CLAUDE_SRC/CLAUDE.md"     "$HOME/.codex/AGENTS.md"
+  _cc_sync_file "$CLAUDE_SRC/CLAUDE.md"     "$HOME/.agents/AGENTS.md"
   _cc_sync_file "$CLAUDE_SRC/settings.json" "$HOME/.claude/settings.json"
 
   # ── pass 1: adopt ──────────────────────────────────────────────────────────
