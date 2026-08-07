@@ -37,6 +37,7 @@ alias cs.='cs .'
 
 alias cc='claude'
 alias ccs="CLAUDE_CONFIG_DIR=\"${CLAUDE_SRC:-$HOME/dev/projects/personal/claude-code}\" claude"
+alias agsync="node ${CLAUDE_SRC:-$HOME/dev/projects/personal/claude-code}/tools/agsync/src/main.ts"
 alias ccdash='python3 cli.py dashboard'
 
 alias sd='fzf_code_projects'
