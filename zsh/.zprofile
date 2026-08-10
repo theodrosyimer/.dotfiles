@@ -126,4 +126,6 @@ export TAGS="$HOME/.my_tags"
 
 export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PROJECTS"/oss/* "$CODE_PROJECTS"/freelance/* "$CODE_PERSONAL" "$CODE_WORK"/** "$JS_SANDBOX" "$JS_SANDBOX"/* "$CODE_REFS" "$CODE_TEMPLATES" "$CODE_TEMPLATES"/* "$CODE_TEMPLATES"/dev/* "$CODE_COURSES" "$DOTFILES" "$CODE/design" "$HOME")
 
+export CLAUDE_SRC="$CODE_PERSONAL/claude-code"
+
 eval "$(/opt/homebrew/bin/brew shellenv)"
