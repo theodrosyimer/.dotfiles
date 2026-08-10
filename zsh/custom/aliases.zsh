@@ -36,7 +36,8 @@ alias cs='open -b com.todesktop.230313mzl4w4u92' # Cursor
 alias cs.='cs .'
 
 alias cc='claude'
-alias ccs="CLAUDE_CONFIG_DIR=\"${CLAUDE_SRC:-$HOME/dev/projects/personal/claude-code}\" claude"
+alias ccbox="$CLAUDE_SRC/hooks/ccbox/ccbox"
+# alias ccs="CLAUDE_CONFIG_DIR=\"${CLAUDE_SRC:-$HOME/dev/projects/personal/claude-code}\" claude"
 alias agsync="node ${CLAUDE_SRC:-$HOME/dev/projects/personal/claude-code}/tools/agsync/src/main.ts"
 alias ccdash='python3 cli.py dashboard'
 
