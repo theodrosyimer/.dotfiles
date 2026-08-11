@@ -83,13 +83,16 @@ a specific step of `bootstrap.sh`.
     brew bundle --global
     ```
 
-10. **Sync `~/.claude`** — depth-2 per-item symlinks inside `skills/`,
-    `hooks/`, `rules/`, plus file-level links for `CLAUDE.md` and
-    `settings.json`. Uses the `ccsync` zsh function (loaded via
-    `zsh/custom/agents.zsh` after step 7's `exec zsh`):
+10. **Sync `~/.claude`, `~/.agents`, `~/.codex`** — per-item symlinks inside
+    `skills/`, `hooks/`, `rules/`, plus file-level links for `CLAUDE.md` and
+    `settings.json`, then a generate stage for the artifacts Codex needs in
+    its own format. Uses the `agsync` alias (defined in
+    `zsh/custom/aliases.zsh` after step 7's `exec zsh`). Preview first —
+    `--dry-run` writes nothing:
 
     ```bash
-    ccsync
+    agsync --dry-run
+    agsync
     ```
 
 11. **Sign in to the 1Password CLI**:

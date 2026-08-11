@@ -26,9 +26,10 @@
 #   or delete the real path, then re-run.
 #
 # NOT HANDLED HERE
-#   The `claude` package is managed by the `ccsync` zsh function
-#   (zsh/custom/agents.zsh). It uses depth-2 per-item symlinking inside
-#   skills/, hooks/, rules/ — different granularity than this script.
+#   The private claude-code config repo is managed by `agsync` (aliased in
+#   zsh/custom/aliases.zsh), not by this script. It links per item inside
+#   skills/, hooks/, rules/ — a different granularity — and then generates
+#   the artifacts Codex needs in its own format.
 
 set -euo pipefail
 

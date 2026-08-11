@@ -4,9 +4,10 @@
 #
 # Why this exists: global agent configuration — skills, hooks, rules, the `ty`
 # plugin marketplace, CLAUDE.md, settings.json — lives in its own PRIVATE repo,
-# not in this public dotfiles repo. `ccsync` (zsh/custom/agents.zsh) symlinks
-# items out of it into ~/.claude/, ~/.agents/ and ~/.codex/, so this must run
-# BEFORE the ccsync step in bootstrap.sh or ccsync has no source to link from.
+# not in this public dotfiles repo. `agsync` (aliased in zsh/custom/aliases.zsh)
+# symlinks items out of it into ~/.claude/, ~/.agents/ and ~/.codex/, so this
+# must run BEFORE the agsync step in bootstrap.sh or agsync has no source to
+# link from.
 #
 # It is a separate repo rather than a submodule on purpose: a submodule pointer
 # in the public dotfiles repo would expose the private repo's URL and break

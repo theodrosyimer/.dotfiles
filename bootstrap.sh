@@ -94,7 +94,7 @@ step "bootstrap/symlink.sh — symlink tracked dotfiles"
 source "$HOME/.zshenv" 2>/dev/null || true
 
 # ── §7b. bootstrap/omz.sh — oh-my-zsh + external custom plugins ──
-# Must run BEFORE anything that launches an interactive zsh (§9 ccsync),
+# Must run BEFORE anything that launches an interactive zsh (§9 agsync),
 # because ~/.zshrc now sources $ZSH/oh-my-zsh.sh.
 step "bootstrap/omz.sh — oh-my-zsh + custom plugins"
 "$DOTFILES_DIR/bootstrap/omz.sh"
@@ -109,9 +109,17 @@ brew bundle --global
 step "bootstrap/claude.sh — clone private claude config"
 "$DOTFILES_DIR/bootstrap/claude.sh"
 
-# ── §9. ccsync — depth-2 per-item symlinks from the claude config repo ──
-step "ccsync — sync ~/.claude, ~/.agents, ~/.codex"
-zsh -ic 'ccsync --adopt'
+# ── §9. agsync — symlink from the claude config repo, then generate ──
+# agsync runs two stages: sync (symlinks skills/, hooks/, rules/, CLAUDE.md,
+# settings.json into ~/.claude, ~/.agents, ~/.codex) and generate (the Codex
+# artifacts it needs in its own format). Bare `agsync` runs both.
+#
+# --adopt REFUSES on a dirty claude-code tree and exits 1 — "commit or stash
+# first, so the moves are reversible" (verified 2026-08-12). On a fresh clone
+# the tree is clean, so bootstrap is the one place it is reliably safe; it is
+# what moves any config already sitting in ~/.claude back into the repo.
+step "agsync --adopt — sync ~/.claude, ~/.agents, ~/.codex"
+zsh -ic 'agsync --adopt'
 
 # ── §10. op signin ──
 step "op signin"
