@@ -97,5 +97,9 @@ link_pkg yt-dlp       "$HOME/.config/yt-dlp"
 
 # macOS-specific
 link_pkg keybindings  "$HOME/Library/KeyBindings"
+# rtk reads this path and ONLY this path — no --config flag, no RTK_CONFIG env
+# var, and XDG_CONFIG_HOME is ignored (all three measured 2026-08-12), so a
+# symlink is the only way to track it.
+link_pkg rtk          "$HOME/Library/Application Support/rtk"
 
-echo "✓ bootstrap/symlink.sh done — now run 'ccsync' to sync the claude/ package"
+echo "✓ bootstrap/symlink.sh done — now run 'agsync' to sync ~/.claude, ~/.agents and ~/.codex"
