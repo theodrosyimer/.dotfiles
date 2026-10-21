@@ -107,6 +107,9 @@ function node_version_updater() {
     # the version that was active before.
     fnm use "$latest_lts_version" || { error_exit "Failed to switch to LTS version $latest_lts_version"; return 1; }
     _node_install_global_tooling || { error_exit "Failed to install global tooling on $latest_lts_version"; return 1; }
+    # Verify while the new version is still the active one: after the restore below, the
+    # check would read the restored version's tooling. A failure keeps the previous LTS.
+    _node_verify_tooling || return 1
 
     # Uninstall previous aliased "lts" version - safe now that it is not the active one
     printf "\n%b\n" "$YELLOW""Previous LTS version: $RESET$previous_lts_version"
@@ -124,8 +127,6 @@ function node_version_updater() {
         printf "%b\n" "$CYAN""Restored active version: $RESET$original_version"
       fi
     fi
-
-    _node_verify_tooling || return 1
   fi
 
   # Handle latest version update
