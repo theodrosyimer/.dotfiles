@@ -107,4 +107,5 @@ compinit
 # Vite+ bin (https://viteplus.dev)
 . "$HOME/.vite-plus/env"
 
+source /Users/ty/.config/op/plugins.sh
 # zprof
