@@ -65,7 +65,7 @@ zvm_after_init_commands+=("[ -f $(brew --prefix)/opt/fzf/shell/key-bindings.zsh 
 autoload zmv
 
 eval "$(starship init zsh)"
-eval "$(fnm env --use-on-cd --version-file-strategy=recursive)"
+# fnm is set up in fnm.zsh, sourced from .zshenv and .zprofile, so non-interactive shells get it too
 eval "$(rbenv init -)"
 eval "$(pyenv init - zsh)"
 eval "$(zoxide init zsh)"

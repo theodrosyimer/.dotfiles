@@ -99,3 +99,6 @@ _ZO_RESOLVE_SYMLINKS=1
 
 # Vite+ bin (https://viteplus.dev)
 . "$HOME/.vite-plus/env"
+
+# Node from the nearest .nvmrc, in every shell (interactive or not)
+source $HOME/.dotfiles/zsh/fnm.zsh
