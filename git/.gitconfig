@@ -21,7 +21,7 @@
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
 
 [core]
-  editor = cursor --wait
+  editor = code --wait
   pager = delta
   excludesfile = ~/.gitignore_global
   autocrlf = input
@@ -85,17 +85,17 @@ helper = osxkeychain
     diffFilter = delta --color-only
 
 [diff]
-  tool = cursor
+  tool = code
   colorMoved = default  # Highlight moved code blocks
 
-[difftool "cursor"]
+[difftool "code"]
   cmd = $EDITOR --wait --diff \"$LOCAL\" \"$REMOTE\"
 
 [merge]
-  tool = cursor
+  tool = code
   log = true
 
-[mergetool "cursor"]
+[mergetool "code"]
   cmd = $EDITOR --wait \"$MERGED\"
   trustExitCode = true
 
