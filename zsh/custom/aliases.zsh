@@ -78,8 +78,8 @@ alias pci='pnpm ci'
 alias pa='pnpm add -E'
 alias pad='pnpm add -DE'
 alias pf='pnpm --filter'
-alias pfa='pnpm --filter add -E'
-alias pfad='pnpm --filter add -DE'
+alias pfa='pnpm add -E --filter'
+alias pfad='pnpm add -DE --filter'
 alias px='pnpm dlx'
 # alias pr='pnpm run'
 alias b='bun'
@@ -230,3 +230,4 @@ alias aemlight="adb shell 'cmd uimode night no'"
 alias audio="SwitchAudioSource -s \"\$(SwitchAudioSource -a | fzf)\""
 
 alias rmbg='remove-bg'
+alias tddbox="$HOME/dev/projects/personal/claude-code/plugins/tdd/bin/tddbox"
