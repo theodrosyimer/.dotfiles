@@ -39,11 +39,16 @@ DRY="${DRY_RUN:-}"
 
 # Top-level entries to skip per package.
 # Reason: tracked in git but not meant to be symlinked into the target.
-declare -A SKIP=(
-  [zsh]="custom"       # loaded via $ZSH_CUSTOM, not via ~/custom symlink
-  [git]="templates"    # referenced via init.templateDir, not via ~/templates
-  [node-shims]="fnm-exec"  # the script the name links point at, not a program of its own
-)
+# A function, not an associative array: bootstrap.sh runs this script (§7) before
+# `brew bundle` installs Homebrew's bash (§8), so it must work on macOS's bash 3.2,
+# which has no `declare -A`.
+skip_entries() {
+  case $1 in
+    zsh) echo "custom" ;;           # loaded via $ZSH_CUSTOM, not via ~/custom symlink
+    git) echo "templates" ;;        # referenced via init.templateDir, not via ~/templates
+    node-shims) echo "fnm-exec" ;;  # the script the name links point at, not a program of its own
+  esac
+}
 
 link_pkg() {
   local pkg="$1" target="$2"
@@ -56,7 +61,8 @@ link_pkg() {
     return
   fi
 
-  local skip="${SKIP[$pkg]:-}"
+  local skip
+  skip=$(skip_entries "$pkg")
   printf '→ %-14s → %s\n' "$pkg" "$target"
   [[ -n "$DRY" ]] || mkdir -p "$target"
 
