@@ -67,6 +67,10 @@ export PATH="$PATH:$GOPATH/bin"
 export PATH="$PATH:$HOME/dev/tools/flutter/bin"
 
 ### Add my dirs to `$PATH`
+# Defined here, before the lines below use them: an empty $BIN adds an empty PATH entry,
+# which makes the shell run programs from the current folder
+export DOTFILES="$HOME/.dotfiles"
+export BIN="$DOTFILES/bin"
 export PATH="$PATH:$BIN"
 export PATH="$PATH:$HOME/.js"
 export PATH="$PATH:$BIN"
@@ -77,9 +81,8 @@ export PATH="$PATH:$HOME/.kenv/bin"
 # export PATH="$PATH:$HOME/.knode/bin"
 
 ### Paths i use for my automation
-export DOTFILES="$HOME/.dotfiles"
+# DOTFILES and BIN are defined above, in "Add my dirs to `$PATH`"
 export ZDOTDIR="$DOTFILES/zsh"
-export BIN="$DOTFILES/bin"
 export FREELANCE_REPO_DIR="$HOME/dev/freelance"
 export FREELANCE_SCRIPTS="$FREELANCE_REPO_DIR/playbooks/00-global/shell-automation"
 
