@@ -42,6 +42,7 @@ DRY="${DRY_RUN:-}"
 declare -A SKIP=(
   [zsh]="custom"       # loaded via $ZSH_CUSTOM, not via ~/custom symlink
   [git]="templates"    # referenced via init.templateDir, not via ~/templates
+  [node-shims]="fnm-exec"  # the script the name links point at, not a program of its own
 )
 
 link_pkg() {
@@ -85,6 +86,10 @@ link_pkg ripgrep      "$HOME"
 link_pkg markdownlint "$HOME"
 link_pkg ncu          "$HOME"
 link_pkg yaml         "$HOME"
+
+# ~/.local/bin is on PATH for every shell and for apps that start programs without a
+# shell (MCP servers), so the Node shims reach all of them. See node-shims/fnm-exec.
+link_pkg node-shims   "$HOME/.local/bin"
 
 # ~/.config/<tool>
 link_pkg nvim         "$HOME/.config/nvim"

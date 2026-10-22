@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# node-shims/fnm-exec — run node, npm, npx, corepack, pnpm, pnpx, yarn or yarnpkg with the
+# Node version from the nearest .nvmrc (searched up to the repo root), or fnm's default
+# version when there is none.
+#
+# Every other entry of node-shims/ is a link to this file, named after one of those programs,
+# and bootstrap/symlink.sh links them into ~/.local/bin. That folder is on PATH for every
+# shell and for apps that start programs without a shell (MCP servers), so no shell startup
+# file needs any fnm setup.
+#
+# Inside `fnm exec` the real version's folder comes first on PATH, so programs Node starts
+# get the real binaries: only the outermost call pays fnm's cost (about 8 ms, measured
+# 2026-10-22 with hyperfine).
+
+name=${0##*/}
+if [ "$name" = fnm-exec ]; then
+  echo "fnm-exec: run it through a link named after the program (node, npm, pnpm, …)" >&2
+  exit 64
+fi
+
+FNM_VERSION_FILE_STRATEGY=recursive exec /opt/homebrew/bin/fnm --log-level quiet exec -- "$name" "$@"

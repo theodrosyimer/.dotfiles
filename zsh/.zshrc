@@ -65,7 +65,7 @@ zvm_after_init_commands+=("[ -f $(brew --prefix)/opt/fzf/shell/key-bindings.zsh 
 autoload zmv
 
 eval "$(starship init zsh)"
-# fnm is set up in fnm.zsh, sourced from .zshenv and .zprofile, so non-interactive shells get it too
+# Node needs no shell setup: the shims in ~/.local/bin (node-shims/fnm-exec) pick the version per command
 eval "$(rbenv init -)"
 eval "$(pyenv init - zsh)"
 eval "$(zoxide init zsh)"

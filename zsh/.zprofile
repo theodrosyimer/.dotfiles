@@ -131,6 +131,3 @@ export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PROJECTS"/oss/ "$CODE_PROJECTS
 export CLAUDE_SRC="$CODE_PERSONAL/claude-code"
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
-
-# Line 1 resets PATH, which drops the fnm directory .zshenv added: add it again for login shells
-source $HOME/.dotfiles/zsh/fnm.zsh

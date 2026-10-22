@@ -9,6 +9,8 @@ karabiner/automatic_backups
 karabiner/assets
 
 npm
+# the Node shim named npm is tracked like the others in node-shims/
+!node-shims/npm
 # Brewfile
 ansible/*
 nvim/undo
