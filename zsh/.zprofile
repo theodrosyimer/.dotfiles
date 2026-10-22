@@ -73,7 +73,6 @@ export DOTFILES="$HOME/.dotfiles"
 export BIN="$DOTFILES/bin"
 export PATH="$PATH:$BIN"
 export PATH="$PATH:$HOME/.js"
-export PATH="$PATH:$BIN"
 
 # Script Kit
 export PATH="$PATH:$HOME/.kit/bin"
