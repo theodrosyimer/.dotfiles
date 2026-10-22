@@ -131,3 +131,7 @@ export CODE_DIRS=("$CODE" "$CODE_PROJECTS" "$CODE_PROJECTS"/oss/ "$CODE_PROJECTS
 export CLAUDE_SRC="$CODE_PERSONAL/claude-code"
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Vite+ bin (https://viteplus.dev). Its installer put this in .zshenv, where line 1
+# of this file dropped the PATH entry in login shells.
+. "$HOME/.vite-plus/env"
