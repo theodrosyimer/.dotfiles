@@ -187,7 +187,7 @@ alias rmds="fd -H --no-ignore '.DS_Store' -X /bin/rm"
 alias du='du -hd 1'
 
 alias cfv="code $DOTFILES/nvim/init.vim"
-alias env='env | sort -s'
+alias envs='env | sort -s'
 
 # npm-check-updates
 alias ncu="ncu --configFileName .ncurc.json --configFilePath $DOTFILES/ncu"
